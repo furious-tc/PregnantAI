@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
@@ -10,7 +11,8 @@ import {
   TextInput,
   Alert,
   Dimensions,
-  ScrollView
+  ScrollView,
+  Modal
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -29,6 +31,62 @@ interface OnboardingData {
   interests: string[];
 }
 
+// Вставить перед компонентом OnboardingScreen:
+const OnboardingCard = ({
+  image,
+  step,
+  totalSteps,
+  title,
+  onSkip,
+  progressAnim,
+  children
+}: {
+  image: string,
+  step: number,
+  totalSteps: number,
+  title: string,
+  onSkip: () => void,
+  progressAnim: any,
+  children?: React.ReactNode
+}) => (
+  <View style={styles.visualCard}>
+    <View style={styles.visualCardImageWrapper}>
+      <Image
+        source={{ uri: image }}
+        style={styles.visualCardImage}
+        resizeMode="cover"
+      />
+      {/* Overlay: прогресс-бар, шаг, заголовок, Пропустить */}
+      <View style={styles.visualOverlay}>
+        <View style={styles.visualHeaderRow}>
+          <FontAwesome5 name="heart" size={16} color="#ec4899" solid style={styles.visualHeartIcon} />
+          <TouchableOpacity onPress={onSkip}>
+            <Text style={styles.visualSkipText}>Пропустить</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.visualProgressBarBg}>
+          <Animated.View 
+            style={[
+              styles.visualProgressBarFill,
+              { 
+                width: progressAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: ['0%', '100%']
+                })
+              }
+            ]}
+          />
+        </View>
+        <View style={styles.visualProgressLabels}>
+          <Text style={styles.visualProgressStep}>Шаг {step} из {totalSteps}</Text>
+          <Text style={styles.visualProgressTitle}>{title}</Text>
+        </View>
+      </View>
+    </View>
+    {children}
+  </View>
+);
+
 export const OnboardingScreen: React.FC = () => {
   const dispatch = useDispatch();
   const [currentScreen, setCurrentScreen] = useState(1);
@@ -38,6 +96,62 @@ export const OnboardingScreen: React.FC = () => {
   const [showPermissions, setShowPermissions] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
+  const [showTrimesterDropdown, setShowTrimesterDropdown] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState(8); // Сентябрь (0-based)
+  const [currentYear, setCurrentYear] = useState(2025);
+
+  // Функции для работы с календарем
+  const monthNames = [
+    'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+    'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+  ];
+
+  const getDaysInMonth = (month: number, year: number) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (month: number, year: number) => {
+    const firstDay = new Date(year, month, 1).getDay();
+    return firstDay === 0 ? 6 : firstDay - 1; // Понедельник = 0
+  };
+
+  const goToPreviousMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
+      setCurrentYear(currentYear - 1);
+    } else {
+      setCurrentMonth(currentMonth - 1);
+    }
+  };
+
+  const goToNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
+      setCurrentYear(currentYear + 1);
+    } else {
+      setCurrentMonth(currentMonth + 1);
+    }
+  };
+
+  const generateCalendarDays = () => {
+    const daysInMonth = getDaysInMonth(currentMonth, currentYear);
+    const firstDay = getFirstDayOfMonth(currentMonth, currentYear);
+    const days = [];
+
+    // Пустые ячейки для начала месяца
+    for (let i = 0; i < firstDay; i++) {
+      days.push(null);
+    }
+
+    // Дни месяца
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(day);
+    }
+
+    return days;
+  };
+  
 
   // Animations
   const bounceAnim = useRef(new Animated.Value(0.3)).current;
@@ -546,17 +660,21 @@ export const OnboardingScreen: React.FC = () => {
 
               <View style={styles.inputGroup}>
                 <Text style={styles.inputLabel}>На какой неделе беременности?</Text>
-                <View style={styles.weekInputsContainer}>
+                <View style={styles.pregnancyWeekContainer}>
+                  <View style={styles.trimesterContainer}>
+                    <TouchableOpacity 
+                      style={styles.trimesterDropdown}
+                      onPress={() => setShowTrimesterDropdown(!showTrimesterDropdown)}
+                    >
+                      <Text style={styles.trimesterText}>
+                        {onboardingData.trimester ? `${onboardingData.trimester} трим` : '1 трим'}
+                      </Text>
+                      <FontAwesome5 name="chevron-down" size={12} color="#6b7280" />
+                    </TouchableOpacity>
+                    
+                  </View>
                   <TextInput
-                    style={styles.weekInput}
-                    placeholder="1 триместр"
-                    placeholderTextColor="#9ca3af"
-                    keyboardType="numeric"
-                    value={onboardingData.trimester?.toString() || ''}
-                    onChangeText={(text) => setOnboardingData({ ...onboardingData, trimester: parseInt(text) || undefined })}
-                  />
-                  <TextInput
-                    style={styles.weekInput}
+                    style={styles.weekInputSeparate}
                     placeholder="Неделя"
                     placeholderTextColor="#9ca3af"
                     keyboardType="numeric"
@@ -564,7 +682,7 @@ export const OnboardingScreen: React.FC = () => {
                     onChangeText={(text) => setOnboardingData({ ...onboardingData, week: parseInt(text) || undefined })}
                   />
                   <TextInput
-                    style={styles.weekInput}
+                    style={styles.weekInputSeparate}
                     placeholder="День"
                     placeholderTextColor="#9ca3af"
                     keyboardType="numeric"
@@ -572,17 +690,20 @@ export const OnboardingScreen: React.FC = () => {
                     onChangeText={(text) => setOnboardingData({ ...onboardingData, day: parseInt(text) || undefined })}
                   />
                 </View>
+                
               </View>
 
               <View style={styles.inputGroup}>
                 <Text style={styles.inputLabel}>Дата родов (приблизительно)</Text>
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="ДД.ММ.ГГГГ"
-                  placeholderTextColor="#9ca3af"
-                  value={onboardingData.dueDate || ''}
-                  onChangeText={(dueDate) => setOnboardingData({ ...onboardingData, dueDate })}
-                />
+                <TouchableOpacity 
+                  style={styles.datePickerButton}
+                  onPress={() => setShowDatePicker(true)}
+                >
+                  <Text style={styles.datePickerText}>
+                    {onboardingData.dueDate || 'ДД.ММ.ГГГГ'}
+                  </Text>
+                  <FontAwesome5 name="calendar-alt" size={16} color="#6b7280" />
+                </TouchableOpacity>
               </View>
 
               <View style={styles.inputGroup}>
@@ -656,6 +777,241 @@ export const OnboardingScreen: React.FC = () => {
               </Text>
             </View>
           </ScrollView>
+          
+          {/* Dropdown триместров вне ScrollView */}
+          {showTrimesterDropdown && (
+            <View style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 99999,
+            }}>
+              {/* Невидимый backdrop для закрытия */}
+              <TouchableOpacity 
+                style={{ flex: 1 }}
+                onPress={() => setShowTrimesterDropdown(false)}
+              />
+              {/* Сам dropdown */}
+              <View style={{
+                position: 'absolute',
+                top: '39%', // Процентное позиционирование
+                left: '6%', // Левее, чтобы совпадал с кнопкой
+                width: 120,
+                backgroundColor: 'white',
+                borderRadius: 8,
+                borderWidth: 1,
+                borderColor: '#e5e7eb',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.15,
+                shadowRadius: 8,
+                elevation: 100,
+              }}>
+              <TouchableOpacity 
+                onPress={() => {
+                  setOnboardingData({ ...onboardingData, trimester: 1 });
+                  setShowTrimesterDropdown(false);
+                }}
+                style={{ 
+                  paddingVertical: 12, 
+                  paddingHorizontal: 16, 
+                  borderBottomWidth: 1, 
+                  borderBottomColor: '#f3f4f6',
+                  backgroundColor: onboardingData.trimester === 1 ? '#3b82f6' : 'transparent'
+                }}
+              >
+                <Text style={{ 
+                  fontSize: 14, 
+                  color: onboardingData.trimester === 1 ? 'white' : '#374151', 
+                  textAlign: 'center',
+                  fontWeight: onboardingData.trimester === 1 ? '500' : 'normal'
+                }}>1 трим</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                onPress={() => {
+                  setOnboardingData({ ...onboardingData, trimester: 2 });
+                  setShowTrimesterDropdown(false);
+                }}
+                style={{ 
+                  paddingVertical: 12, 
+                  paddingHorizontal: 16, 
+                  borderBottomWidth: 1, 
+                  borderBottomColor: '#f3f4f6',
+                  backgroundColor: onboardingData.trimester === 2 ? '#3b82f6' : 'transparent'
+                }}
+              >
+                <Text style={{ 
+                  fontSize: 14, 
+                  color: onboardingData.trimester === 2 ? 'white' : '#374151', 
+                  textAlign: 'center',
+                  fontWeight: onboardingData.trimester === 2 ? '500' : 'normal'
+                }}>2 трим</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                onPress={() => {
+                  setOnboardingData({ ...onboardingData, trimester: 3 });
+                  setShowTrimesterDropdown(false);
+                }}
+                style={{ 
+                  paddingVertical: 12, 
+                  paddingHorizontal: 16,
+                  backgroundColor: onboardingData.trimester === 3 ? '#3b82f6' : 'transparent'
+                }}
+              >
+                <Text style={{ 
+                  fontSize: 14, 
+                  color: onboardingData.trimester === 3 ? 'white' : '#374151', 
+                  textAlign: 'center',
+                  fontWeight: onboardingData.trimester === 3 ? '500' : 'normal'
+                }}>3 трим</Text>
+              </TouchableOpacity>
+            </View>
+            </View>
+          )}
+          
+          {/* Календарь для выбора даты */}
+          {showDatePicker && (
+            <View style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 99999,
+            }}>
+              <View style={{
+                backgroundColor: 'white',
+                borderRadius: 12,
+                padding: 20,
+                marginHorizontal: 20,
+                maxWidth: 400,
+                width: '90%',
+              }}>
+                <Text style={{
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                  marginBottom: 20,
+                  color: '#1f2937',
+                }}>Выберите дату родов</Text>
+                
+{/* Простой календарь */}
+                <View style={{
+                  backgroundColor: '#f8f9fa',
+                  borderRadius: 8,
+                  padding: 15,
+                }}>
+                  {/* Заголовок с навигацией */}
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginBottom: 15,
+                  }}>
+                    <TouchableOpacity onPress={goToPreviousMonth} style={{
+                      padding: 8,
+                    }}>
+                      <FontAwesome5 name="chevron-left" size={16} color="#3b82f6" />
+                    </TouchableOpacity>
+                    
+                    <Text style={{
+                      fontSize: 16,
+                      fontWeight: 'bold',
+                      color: '#1f2937',
+                    }}>{monthNames[currentMonth]} {currentYear}</Text>
+                    
+                    <TouchableOpacity onPress={goToNextMonth} style={{
+                      padding: 8,
+                    }}>
+                      <FontAwesome5 name="chevron-right" size={16} color="#3b82f6" />
+                    </TouchableOpacity>
+                  </View>
+                  
+                  {/* Заголовки дней недели */}
+                  <View style={{
+                    flexDirection: 'row',
+                    marginBottom: 10,
+                  }}>
+                    {['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map((day, index) => (
+                      <View key={index} style={{ flex: 1, alignItems: 'center' }}>
+                        <Text style={{
+                          fontSize: 12,
+                          color: '#6b7280',
+                          fontWeight: '500',
+                        }}>{day}</Text>
+                      </View>
+                    ))}
+                  </View>
+                  
+                  {/* Динамическая сетка дат */}
+                  <View style={{
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                  }}>
+                    {generateCalendarDays().map((day, index) => {
+                      if (day === null) {
+                        // Пустая ячейка
+                        return (
+                          <View key={index} style={{
+                            width: `${100/7}%`,
+                            alignItems: 'center',
+                            paddingVertical: 8,
+                          }} />
+                        );
+                      }
+                      
+                      return (
+                        <TouchableOpacity 
+                          key={index}
+                          style={{
+                            width: `${100/7}%`,
+                            alignItems: 'center',
+                            paddingVertical: 8,
+                            backgroundColor: day === 15 ? '#3b82f6' : 'transparent', // Пример выделенной даты
+                            borderRadius: 8,
+                          }}
+                          onPress={() => {
+                            const formattedDate = `${day.toString().padStart(2, '0')}.${(currentMonth + 1).toString().padStart(2, '0')}.${currentYear}`;
+                            setOnboardingData({ ...onboardingData, dueDate: formattedDate });
+                            setShowDatePicker(false);
+                          }}
+                        >
+                          <Text style={{
+                            fontSize: 16,
+                            color: day === 15 ? 'white' : '#374151',
+                            fontWeight: day === 15 ? 'bold' : 'normal',
+                          }}>{day}</Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                </View>
+                
+                <TouchableOpacity 
+                  style={{
+                    backgroundColor: '#f3f4f6',
+                    paddingHorizontal: 20,
+                    paddingVertical: 12,
+                    borderRadius: 8,
+                    marginTop: 20,
+                  }}
+                  onPress={() => setShowDatePicker(false)}
+                >
+                  <Text style={{
+                    textAlign: 'center',
+                    color: '#6b7280',
+                    fontWeight: '500',
+                  }}>Отмена</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+          
         </SafeAreaView>
       </View>
     );
@@ -673,89 +1029,50 @@ export const OnboardingScreen: React.FC = () => {
             style={styles.fullScreen}
           >
             <View style={styles.onboardingContent}>
-              {/* Floating header */}
-              <View style={styles.floatingHeader}>
-                <View style={styles.headerLogo}>
-                  <FontAwesome5 name="heart" size={14} color="#ec4899" solid />
-                </View>
-                <TouchableOpacity onPress={skipOnboarding}>
-                  <Text style={styles.skipText}>Пропустить</Text>
-                </TouchableOpacity>
-              </View>
-
-              {/* Progress bar */}
-              <View style={styles.progressContainer}>
-                <View style={styles.progressTrack}>
-                  <Animated.View 
-                    style={[
-                      styles.progressFill,
-                      { 
-                        width: progressAnim.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: ['0%', '100%']
-                        })
-                      }
-                    ]}
-                  />
-                </View>
-                <View style={styles.progressLabels}>
-                  <Text style={styles.progressStep}>Шаг {currentScreen} из 4</Text>
-                  <Text style={styles.progressTitle}>{getStepTitle()}</Text>
-                </View>
-              </View>
-
-              {/* Content */}
-              <View style={styles.screenContentContainer}>
-                <Animated.View style={[styles.heroImageContainer, { transform: [{ scale: bounceAnim }] }]}>
-                  <Image
-                    source={{ uri: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/8a42a5716e-f2f6be344a51add23326.png' }}
-                    style={styles.heroImage}
-                    resizeMode="cover"
-                  />
-                </Animated.View>
-
-                <Animated.View style={[styles.heroText, { opacity: fadeAnim }]}>
-                  <Text style={styles.heroTitle}>
-                    Добро пожаловать в{'\n'}
-                    <Text style={styles.brandText}>BabyJoy</Text>
-                  </Text>
-                  <Text style={styles.heroSubtitle}>
-                    Твой персональный спутник на пути к материнству. Мы поддержим тебя каждый день этого удивительного путешествия.
-                  </Text>
-                </Animated.View>
-
-                <View style={styles.bottomSection}>
-                  <View style={styles.featuresRow}>
-                    <View style={styles.featureCard}>
-                      <FontAwesome5 name="baby" size={24} color="#ec4899" solid style={styles.featureIcon} />
-                      <Text style={styles.featureLabel}>Развитие малыша</Text>
-                    </View>
-                    <View style={styles.featureCard}>
-                      <FontAwesome5 name="heart" size={24} color="#059669" solid style={styles.featureIcon} />
-                      <Text style={styles.featureLabel}>Здоровье мамы</Text>
-                    </View>
-                    <View style={styles.featureCard}>
-                      <FontAwesome5 name="robot" size={24} color="#8b5cf6" solid style={styles.featureIcon} />
-                      <Text style={styles.featureLabel}>AI помощник</Text>
-                    </View>
+              <OnboardingCard
+                image={'https://storage.googleapis.com/uxpilot-auth.appspot.com/8a42a5716e-f2f6be344a51add23326.png'}
+                step={currentScreen}
+                totalSteps={4}
+                title={getStepTitle()}
+                onSkip={skipOnboarding}
+                progressAnim={progressAnim}
+              />
+              <View style={styles.screenContentContainerVisual}>
+                <Text style={styles.heroTitleVisual}>
+                  Добро пожаловать в
+                  <Text style={styles.brandTextVisual}> BabyJoy</Text>
+                </Text>
+                <Text style={styles.heroSubtitleVisual}>
+                  Твой персональный спутник на пути к материнству. Мы поддержим тебя каждый день этого удивительного путешествия.
+                </Text>
+                <View style={styles.featuresRowVisual}>
+                  <View style={styles.featureCardVisual}>
+                    <FontAwesome5 name="baby" size={24} color="#ec4899" solid style={styles.featureIconVisual} />
+                    <Text style={styles.featureLabelVisual}>Развитие малыша</Text>
                   </View>
-
-                  <TouchableOpacity style={styles.startButton} onPress={nextScreen}>
-                    <LinearGradient
-                      colors={['#ec4899', '#8b5cf6']}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 0 }}
-                      style={styles.startButtonGradient}
-                    >
-                      <Text style={styles.startButtonText}>Начать путешествие</Text>
-                    </LinearGradient>
-                  </TouchableOpacity>
+                  <View style={styles.featureCardVisual}>
+                    <FontAwesome5 name="heart" size={24} color="#059669" solid style={styles.featureIconVisual} />
+                    <Text style={styles.featureLabelVisual}>Здоровье мамы</Text>
+                  </View>
+                  <View style={styles.featureCardVisual}>
+                    <FontAwesome5 name="robot" size={24} color="#8b5cf6" solid style={styles.featureIconVisual} />
+                    <Text style={styles.featureLabelVisual}>AI помощник</Text>
+                  </View>
                 </View>
+                <TouchableOpacity style={styles.startButtonVisual} onPress={nextScreen}>
+                  <LinearGradient
+                    colors={['#ec4899', '#8b5cf6']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={styles.startButtonGradientVisual}
+                  >
+                    <Text style={styles.startButtonTextVisual}>Начать путешествие</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
               </View>
             </View>
           </LinearGradient>
         );
-
       case 2:
         return (
           <LinearGradient
@@ -765,96 +1082,65 @@ export const OnboardingScreen: React.FC = () => {
             style={styles.fullScreen}
           >
             <View style={styles.onboardingContent}>
-              <View style={styles.floatingHeader}>
-                <View style={styles.headerLogo}>
-                  <FontAwesome5 name="heart" size={14} color="#ec4899" solid />
-                </View>
-                <TouchableOpacity onPress={skipOnboarding}>
-                  <Text style={styles.skipText}>Пропустить</Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.progressContainer}>
-                <View style={styles.progressTrack}>
-                  <Animated.View 
-                    style={[
-                      styles.progressFill,
-                      { 
-                        width: progressAnim.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: ['0%', '100%']
-                        })
-                      }
-                    ]}
-                  />
-                </View>
-                <View style={styles.progressLabels}>
-                  <Text style={styles.progressStep}>Шаг {currentScreen} из 4</Text>
-                  <Text style={styles.progressTitle}>{getStepTitle()}</Text>
-                </View>
-              </View>
-
-              <View style={styles.screenContentContainer}>
-                <Animated.View style={[styles.heroImageContainer, { transform: [{ scale: bounceAnim }] }]}>
-                  <Image
-                    source={{ uri: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/10dafd2227-0d77a0f92f8a07c0412d.png' }}
-                    style={styles.heroImage}
-                    resizeMode="cover"
-                  />
-                </Animated.View>
-
-                <Animated.View style={[styles.heroText, { opacity: fadeAnim }]}>
-                  <Text style={styles.heroTitle}>
-                    Умный <Text style={styles.emeraldText}>AI помощник</Text>
-                  </Text>
-                  <Text style={styles.heroSubtitle}>
-                    Получай персональные советы, отвечай на вопросы и получай поддержку 24/7 от нашего умного помощника.
-                  </Text>
-                </Animated.View>
-
-                <View style={styles.bottomSection}>
-                  <View style={styles.aiFeaturesList}>
-                    <View style={styles.aiFeatureItem}>
-                      <View style={styles.aiFeatureHeader}>
-                        <FontAwesome5 name="question-circle" size={16} color="#059669" solid />
-                        <Text style={styles.aiFeatureTitle}>Можно ли мне...?</Text>
-                      </View>
-                      <Text style={styles.aiFeatureDescription}>Быстрые ответы на ежедневные вопросы</Text>
+              <OnboardingCard
+                image={'https://storage.googleapis.com/uxpilot-auth.appspot.com/10dafd2227-0d77a0f92f8a07c0412d.png'}
+                step={currentScreen}
+                totalSteps={4}
+                title={getStepTitle()}
+                onSkip={skipOnboarding}
+                progressAnim={progressAnim}
+              />
+              <View style={styles.aiContentContainer}>
+                <Text style={styles.aiTitleRow}>
+                  <Text style={styles.aiTitleBlack}>Умный </Text>
+                  <Text style={styles.aiTitleGreen}>AI помощник</Text>
+                </Text>
+                <Text style={styles.aiDesc}>
+                  Получай персональные советы, отвечай на вопросы и получай поддержку 24/7 от нашего умного помощника.
+                </Text>
+                <View style={styles.aiFeatureList}>
+                  <View style={styles.aiFeatureCard}>
+                    <View style={[styles.aiIconCircle, { backgroundColor: '#059669' }]}> 
+                      <FontAwesome5 name="question-circle" size={16} color="#fff" solid />
                     </View>
-
-                    <View style={styles.aiFeatureItem}>
-                      <View style={styles.aiFeatureHeader}>
-                        <FontAwesome5 name="lightbulb" size={16} color="#2563eb" solid />
-                        <Text style={styles.aiFeatureTitle}>Что делать если...?</Text>
-                      </View>
-                      <Text style={styles.aiFeatureDescription}>Советы для любой ситуации</Text>
-                    </View>
-
-                    <View style={styles.aiFeatureItem}>
-                      <View style={styles.aiFeatureHeader}>
-                        <FontAwesome5 name="microphone" size={16} color="#8b5cf6" solid />
-                        <Text style={styles.aiFeatureTitle}>Голосовые сообщения</Text>
-                      </View>
-                      <Text style={styles.aiFeatureDescription}>Говори как с лучшей подругой</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.aiFeatureTitleNew}>Можно ли мне...?</Text>
+                      <Text style={styles.aiFeatureDesc}>Быстрые ответы на ежедневные вопросы</Text>
                     </View>
                   </View>
-
-                  <TouchableOpacity style={styles.startButton} onPress={nextScreen}>
-                    <LinearGradient
-                      colors={['#059669', '#2563eb']}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 0 }}
-                      style={styles.startButtonGradient}
-                    >
-                      <Text style={styles.startButtonText}>Звучит отлично!</Text>
-                    </LinearGradient>
-                  </TouchableOpacity>
+                  <View style={styles.aiFeatureCard}>
+                    <View style={[styles.aiIconCircle, { backgroundColor: '#2563eb' }]}> 
+                      <FontAwesome5 name="lightbulb" size={16} color="#fff" solid />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.aiFeatureTitleNew}>Что делать если...?</Text>
+                      <Text style={styles.aiFeatureDesc}>Советы для любой ситуации</Text>
+                    </View>
+                  </View>
+                  <View style={styles.aiFeatureCard}>
+                    <View style={[styles.aiIconCircle, { backgroundColor: '#8b5cf6' }]}> 
+                      <FontAwesome5 name="microphone" size={16} color="#fff" solid />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.aiFeatureTitleNew}>Голосовые сообщения</Text>
+                      <Text style={styles.aiFeatureDesc}>Говори как с лучшей подругой</Text>
+                    </View>
+                  </View>
                 </View>
+                <TouchableOpacity style={styles.aiButton} onPress={nextScreen}>
+                  <LinearGradient
+                    colors={['#059669', '#2563eb']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={styles.aiButtonGradient}
+                  >
+                    <Text style={styles.aiButtonText}>Звучит отлично!</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
               </View>
             </View>
           </LinearGradient>
         );
-
       case 3:
         return (
           <LinearGradient
@@ -864,104 +1150,58 @@ export const OnboardingScreen: React.FC = () => {
             style={styles.fullScreen}
           >
             <View style={styles.onboardingContent}>
-              <View style={styles.floatingHeader}>
-                <View style={styles.headerLogo}>
-                  <FontAwesome5 name="heart" size={14} color="#ec4899" solid />
-                </View>
-                <TouchableOpacity onPress={skipOnboarding}>
-                  <Text style={styles.skipText}>Пропустить</Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.progressContainer}>
-                <View style={styles.progressTrack}>
-                  <Animated.View 
-                    style={[
-                      styles.progressFill,
-                      { 
-                        width: progressAnim.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: ['0%', '100%']
-                        })
-                      }
-                    ]}
-                  />
-                </View>
-                <View style={styles.progressLabels}>
-                  <Text style={styles.progressStep}>Шаг {currentScreen} из 4</Text>
-                  <Text style={styles.progressTitle}>{getStepTitle()}</Text>
-                </View>
-              </View>
-
-              <View style={styles.screenContentContainer}>
-                <Animated.View style={[styles.heroImageContainer, { transform: [{ scale: bounceAnim }] }]}>
-                  <Image
-                    source={{ uri: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/d67032ddd3-1c2867ad7da78e6fd8e3.png' }}
-                    style={styles.heroImage}
-                    resizeMode="cover"
-                  />
-                </Animated.View>
-
-                <Animated.View style={[styles.heroText, { opacity: fadeAnim }]}>
-                  <Text style={styles.heroTitle}>
-                    Отслеживай <Text style={styles.pinkText}>развитие</Text>
-                  </Text>
-                  <Text style={styles.heroSubtitle}>
-                    Следи за ростом малыша, записывай симптомы и веди дневник самых важных моментов беременности.
-                  </Text>
-                </Animated.View>
-
-                <View style={styles.bottomSection}>
-                  <View style={styles.trackingGrid}>
-                    <View style={styles.trackingCard}>
-                      <View style={styles.trackingIconContainer}>
-                        <FontAwesome5 name="calendar-check" size={16} color="#ec4899" solid />
-                      </View>
-                      <Text style={styles.trackingTitle}>Календарь</Text>
-                      <Text style={styles.trackingDescription}>40 недель развития</Text>
-                    </View>
-
-                    <View style={styles.trackingCard}>
-                      <View style={styles.trackingIconContainer}>
-                        <FontAwesome5 name="heartbeat" size={16} color="#ea580c" solid />
-                      </View>
-                      <Text style={styles.trackingTitle}>Симптомы</Text>
-                      <Text style={styles.trackingDescription}>Ежедневный трекер</Text>
-                    </View>
-
-                    <View style={styles.trackingCard}>
-                      <View style={styles.trackingIconContainer}>
-                        <FontAwesome5 name="book" size={16} color="#059669" solid />
-                      </View>
-                      <Text style={styles.trackingTitle}>Дневник</Text>
-                      <Text style={styles.trackingDescription}>Твоя история</Text>
-                    </View>
-
-                    <View style={styles.trackingCard}>
-                      <View style={styles.trackingIconContainer}>
-                        <FontAwesome5 name="chart-line" size={16} color="#2563eb" solid />
-                      </View>
-                      <Text style={styles.trackingTitle}>Графики</Text>
-                      <Text style={styles.trackingDescription}>Визуальный прогресс</Text>
-                    </View>
+              <OnboardingCard
+                image={'https://storage.googleapis.com/uxpilot-auth.appspot.com/d67032ddd3-1c2867ad7da78e6fd8e3.png'}
+                step={currentScreen}
+                totalSteps={4}
+                title={getStepTitle()}
+                onSkip={skipOnboarding}
+                progressAnim={progressAnim}
+              />
+              <View style={styles.screenContentContainerVisual}>
+                <Text style={styles.trackTitleRow}>
+                  <Text style={styles.trackTitleBlack}>Отслеживай </Text>
+                  <Text style={styles.trackTitlePink}>развитие</Text>
+                </Text>
+                <Text style={styles.trackDesc}>
+                  Следи за ростом малыша, записывай симптомы и веди дневник самых важных моментов беременности.
+                </Text>
+                <View style={styles.trackGrid2x2}>
+                  <View style={styles.trackFeatureCard}>
+                    <FontAwesome5 name="calendar-check" size={28} color="#ec4899" solid style={styles.trackFeatureIcon} />
+                    <Text style={styles.trackFeatureTitle}>Календарь</Text>
+                    <Text style={styles.trackFeatureDesc}>40 недель развития</Text>
                   </View>
-
-                  <TouchableOpacity style={styles.startButton} onPress={nextScreen}>
-                    <LinearGradient
-                      colors={['#ec4899', '#ea580c']}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 0 }}
-                      style={styles.startButtonGradient}
-                    >
-                      <Text style={styles.startButtonText}>Готова отслеживать</Text>
-                    </LinearGradient>
-                  </TouchableOpacity>
+                  <View style={styles.trackFeatureCard}>
+                    <FontAwesome5 name="heartbeat" size={28} color="#ea580c" solid style={styles.trackFeatureIcon} />
+                    <Text style={styles.trackFeatureTitle}>Симптомы</Text>
+                    <Text style={styles.trackFeatureDesc}>Ежедневный трекер</Text>
+                  </View>
+                  <View style={styles.trackFeatureCard}>
+                    <FontAwesome5 name="book" size={28} color="#059669" solid style={styles.trackFeatureIcon} />
+                    <Text style={styles.trackFeatureTitle}>Дневник</Text>
+                    <Text style={styles.trackFeatureDesc}>Твоя история</Text>
+                  </View>
+                  <View style={styles.trackFeatureCard}>
+                    <FontAwesome5 name="chart-line" size={28} color="#2563eb" solid style={styles.trackFeatureIcon} />
+                    <Text style={styles.trackFeatureTitle}>Графики</Text>
+                    <Text style={styles.trackFeatureDesc}>Визуальный прогресс</Text>
+                  </View>
                 </View>
+                <TouchableOpacity style={styles.trackButton} onPress={nextScreen}>
+                  <LinearGradient
+                    colors={['#ec4899', '#ea580c']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={styles.trackButtonGradient}
+                  >
+                    <Text style={styles.trackButtonText}>Готова отслеживать</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
               </View>
             </View>
           </LinearGradient>
         );
-
       case 4:
         return (
           <LinearGradient
@@ -971,108 +1211,78 @@ export const OnboardingScreen: React.FC = () => {
             style={styles.fullScreen}
           >
             <View style={styles.onboardingContent}>
-              <View style={styles.floatingHeader}>
-                <View style={styles.headerLogo}>
-                  <FontAwesome5 name="heart" size={14} color="#ec4899" solid />
-                </View>
-                <TouchableOpacity onPress={skipOnboarding}>
-                  <Text style={styles.skipText}>Пропустить</Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.progressContainer}>
-                <View style={styles.progressTrack}>
-                  <Animated.View 
-                    style={[
-                      styles.progressFill,
-                      { 
-                        width: progressAnim.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: ['0%', '100%']
-                        })
-                      }
-                    ]}
-                  />
-                </View>
-                <View style={styles.progressLabels}>
-                  <Text style={styles.progressStep}>Шаг {currentScreen} из 4</Text>
-                  <Text style={styles.progressTitle}>{getStepTitle()}</Text>
-                </View>
-              </View>
-
-              <View style={styles.screenContentContainer}>
-                <Animated.View style={[styles.heroImageContainer, { transform: [{ scale: bounceAnim }] }]}>
-                  <Image
-                    source={{ uri: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/6a15c26b7b-57c194c53675f07ef759.png' }}
-                    style={styles.heroImage}
-                    resizeMode="cover"
-                  />
-                </Animated.View>
-
-                <Animated.View style={[styles.heroText, { opacity: fadeAnim }]}>
-                  <Text style={styles.heroTitle}>
-                    Найди свою <Text style={styles.blueText}>поддержку</Text>
-                  </Text>
-                  <Text style={styles.heroSubtitle}>
-                    Присоединяйся к сообществу будущих мам, делись опытом и получай поддержку от тех, кто понимает.
-                  </Text>
-                </Animated.View>
-
-                <View style={styles.bottomSection}>
-                  <View style={styles.communityFeatures}>
-                    <View style={styles.communityFeatureCard}>
-                      <View style={styles.communityIconContainer}>
-                        <FontAwesome5 name="users" size={16} color="#2563eb" solid />
-                      </View>
-                      <View style={styles.communityFeatureText}>
-                        <Text style={styles.communityFeatureTitle}>Группы по неделям</Text>
-                        <Text style={styles.communityFeatureSubtitle}>Общайся с мамами на том же сроке</Text>
-                      </View>
+              <OnboardingCard
+                image={'https://storage.googleapis.com/uxpilot-auth.appspot.com/6a15c26b7b-57c194c53675f07ef759.png'}
+                step={currentScreen}
+                totalSteps={4}
+                title={getStepTitle()}
+                onSkip={skipOnboarding}
+                progressAnim={progressAnim}
+              />
+              <View style={styles.supportContentContainer}>
+                <Text style={styles.supportTitleRow}>
+                  <Text style={styles.supportTitleBlack}>Найди свою </Text>
+                  <Text style={styles.supportTitleBlue}>поддержку</Text>
+                </Text>
+                <Text style={styles.supportDesc}>
+                  Присоединяйся к сообществу будущих мам, делись опытом и получай поддержку от тех, кто понимает.
+                </Text>
+                <View style={styles.supportFeatureList}>
+                  <View style={styles.supportFeatureCard}>
+                    <View style={[styles.supportIconCircle, { backgroundColor: '#2563eb' }]}> 
+                      <FontAwesome5 name="users" size={18} color="#fff" solid />
                     </View>
-
-                    <View style={styles.communityFeatureCard}>
-                      <View style={styles.communityIconContainer}>
-                        <FontAwesome5 name="comments" size={16} color="#059669" solid />
-                      </View>
-                      <View style={styles.communityFeatureText}>
-                        <Text style={styles.communityFeatureTitle}>Чаты по интересам</Text>
-                        <Text style={styles.communityFeatureSubtitle}>Питание, спорт, подготовка к родам</Text>
-                      </View>
-                    </View>
-
-                    <View style={styles.communityFeatureCard}>
-                      <View style={styles.communityIconContainer}>
-                        <FontAwesome5 name="heart" size={16} color="#8b5cf6" solid />
-                      </View>
-                      <View style={styles.communityFeatureText}>
-                        <Text style={styles.communityFeatureTitle}>Поддержка 24/7</Text>
-                        <Text style={styles.communityFeatureSubtitle}>Кто-то всегда онлайн и готов помочь</Text>
-                      </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.supportFeatureTitle}>Группы по неделям</Text>
+                      <Text style={styles.supportFeatureDesc}>Общайся с мамами на том же сроке</Text>
                     </View>
                   </View>
-
-                  <TouchableOpacity style={styles.startButton} onPress={nextScreen}>
-                    <LinearGradient
-                      colors={['#2563eb', '#8b5cf6']}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 0 }}
-                      style={styles.startButtonGradient}
-                    >
-                      <Text style={styles.startButtonText}>Начать использовать BabyJoy</Text>
-                    </LinearGradient>
-                  </TouchableOpacity>
+                  <View style={styles.supportFeatureCard}>
+                    <View style={[styles.supportIconCircle, { backgroundColor: '#059669' }]}> 
+                      <FontAwesome5 name="comments" size={18} color="#fff" solid />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.supportFeatureTitle}>Чаты по интересам</Text>
+                      <Text style={styles.supportFeatureDesc}>Питание, спорт, подготовка к родам</Text>
+                    </View>
+                  </View>
+                  <View style={styles.supportFeatureCard}>
+                    <View style={[styles.supportIconCircle, { backgroundColor: '#8b5cf6' }]}> 
+                      <FontAwesome5 name="heart" size={18} color="#fff" solid />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.supportFeatureTitle}>Поддержка 24/7</Text>
+                      <Text style={styles.supportFeatureDesc}>Кто-то всегда онлайн и готов помочь</Text>
+                    </View>
+                  </View>
                 </View>
+                <TouchableOpacity style={styles.supportButton} onPress={nextScreen}>
+                  <LinearGradient
+                    colors={['#2563eb', '#8b5cf6']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={styles.supportButtonGradient}
+                  >
+                    <Text style={styles.supportButtonText}>Начать использовать BabyJoy</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
               </View>
             </View>
           </LinearGradient>
         );
-
       default:
         return null;
     }
   };
 
-  return renderOnboardingScreen();
+  
+  return (
+    <View style={{ flex: 1 }}>
+      {renderOnboardingScreen()}
+      
+      
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -1082,6 +1292,7 @@ const styles = StyleSheet.create({
   onboardingContent: {
     flex: 1,
     position: 'relative',
+    justifyContent: 'flex-start',
   },
   floatingHeader: {
     position: 'absolute',
@@ -1383,6 +1594,8 @@ const styles = StyleSheet.create({
   },
   inputGroup: {
     gap: 12,
+    position: 'relative',
+    zIndex: 1, // Низкий zIndex для обычных полей
   },
   inputLabel: {
     fontSize: 14,
@@ -1399,21 +1612,72 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#1f2937',
   },
-  weekInputsContainer: {
+  pregnancyWeekContainer: {
     flexDirection: 'row',
     gap: 12,
+    alignItems: 'flex-start',
   },
-  weekInput: {
-    flex: 1,
+  trimesterContainer: {
+    width: 120,
+    position: 'relative',
+    zIndex: 99999, // Максимальный zIndex для контейнера
+  },
+  trimesterDropdown: {
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    minHeight: 52,
+  },
+  trimesterText: {
+    fontSize: 16,
+    color: '#1f2937',
+  },
+  trimesterOptions: {
+    position: 'absolute',
+    top: 54,
+    left: 0,
+    right: 0,
+    backgroundColor: '#ffffff',
+    borderWidth: 3,
+    borderColor: '#ec4899',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.5,
+    shadowRadius: 20,
+    elevation: 25,
+    zIndex: 99999,
+  },
+  trimesterOption: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderBottomWidth: 2,
+    borderBottomColor: '#ec4899',
+    backgroundColor: '#ffffff',
+  },
+  trimesterOptionText: {
+    fontSize: 18,
+    color: '#000000',
+    fontWeight: '700',
+  },
+  weekInputSeparate: {
+    width: 100,
     backgroundColor: '#ffffff',
     borderWidth: 1,
     borderColor: '#d1d5db',
     borderRadius: 16,
     paddingHorizontal: 12,
-    paddingVertical: 12,
-    fontSize: 14,
+    paddingVertical: 14,
+    fontSize: 16,
     color: '#1f2937',
     textAlign: 'center',
+    minHeight: 52,
   },
   pregnancyOptionsContainer: {
     flexDirection: 'row',
@@ -1914,5 +2178,814 @@ const styles = StyleSheet.create({
   loadingBarFill: {
     height: '100%',
     borderRadius: 4,
+  },
+  onboardingCard: {
+    backgroundColor: '#fff',
+    borderRadius: 32,
+    marginTop: 48,
+    marginHorizontal: 16,
+    paddingHorizontal: 24,
+    paddingTop: 20,
+    paddingBottom: 24,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+  floatingHeaderRow: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  progressContainerCard: {
+    width: '100%',
+    marginBottom: 16,
+  },
+  heroImageContainerCard: {
+    marginBottom: 0,
+    width: 220,
+    height: 220,
+    borderRadius: 24,
+    overflow: 'hidden',
+    backgroundColor: '#fdf2f8',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#fbcfe8',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.8,
+    shadowRadius: 30,
+    elevation: 8,
+  },
+  heroImageCard: {
+    width: 220,
+    height: 220,
+    borderRadius: 24,
+  },
+  screenContentContainerCard: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingHorizontal: 24,
+    paddingTop: 32,
+    width: '100%',
+  },
+  floatingHeaderNew: {
+    marginTop: 48,
+    marginHorizontal: 24,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 4,
+    zIndex: 50,
+  },
+  progressContainerNew: {
+    marginTop: 8,
+    marginHorizontal: 24,
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+    elevation: 2,
+    zIndex: 40,
+  },
+  htmlHeader: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 50,
+    paddingHorizontal: 24,
+    paddingTop: 36,
+    paddingBottom: 8,
+  },
+  htmlHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  htmlHeaderIconBg: {
+    width: 40,
+    height: 40,
+    backgroundColor: 'rgba(255,255,255,0.20)',
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    // Можно добавить blur через backdropFilter, если поддерживается
+  },
+  htmlSkipText: {
+    color: 'rgba(255,255,255,0.8)',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  htmlProgressSection: {
+    position: 'absolute',
+    top: 64,
+    left: 0,
+    right: 0,
+    zIndex: 40,
+    paddingHorizontal: 24,
+    paddingTop: 8,
+    paddingBottom: 0,
+  },
+  htmlProgressBarBg: {
+    backgroundColor: 'rgba(255,255,255,0.20)',
+    borderRadius: 16,
+    height: 8,
+    overflow: 'hidden',
+  },
+  htmlProgressBarFill: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    height: 8,
+  },
+  htmlProgressLabels: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  htmlProgressStep: {
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.7)',
+    fontWeight: '500',
+  },
+  htmlProgressTitle: {
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.7)',
+    fontWeight: '500',
+  },
+  cardContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 32,
+    marginTop: 32,
+    marginHorizontal: 16,
+    paddingHorizontal: 0,
+    paddingTop: 16,
+    paddingBottom: 0,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.10,
+    shadowRadius: 24,
+    elevation: 12,
+  },
+  cardHeaderRow: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    marginBottom: 8,
+  },
+  skipTextCard: {
+    color: 'rgba(0,0,0,0.18)',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  cardImageWrapper: {
+    width: 320,
+    height: 320,
+    borderRadius: 24,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    marginBottom: 0,
+  },
+  cardImage: {
+    width: 320,
+    height: 320,
+    borderRadius: 24,
+  },
+  cardProgressOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    paddingTop: 16,
+    paddingHorizontal: 16,
+    zIndex: 10,
+  },
+  cardProgressBarBg: {
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    borderRadius: 8,
+    height: 6,
+    overflow: 'hidden',
+  },
+  cardProgressBarFill: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    height: 6,
+  },
+  cardProgressLabels: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 6,
+    paddingHorizontal: 2,
+  },
+  cardProgressStep: {
+    fontSize: 12,
+    color: 'rgba(0,0,0,0.18)',
+    fontWeight: '500',
+  },
+  cardProgressTitle: {
+    fontSize: 12,
+    color: 'rgba(0,0,0,0.18)',
+    fontWeight: '500',
+  },
+  heroTitleCard: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#23232B',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  brandTextCard: {
+    color: '#ec4899',
+    fontWeight: 'bold',
+  },
+  heroSubtitleCard: {
+    fontSize: 16,
+    color: '#6b7280',
+    textAlign: 'center',
+    marginBottom: 24,
+    marginTop: 0,
+    lineHeight: 22,
+  },
+  featuresRowCard: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 24,
+    gap: 12,
+  },
+  featureCardCard: {
+    flex: 1,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginHorizontal: 4,
+    shadowColor: '#fbcfe8',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.10,
+    shadowRadius: 12,
+    elevation: 4,
+  },
+  featureIconCard: {
+    marginBottom: 8,
+  },
+  featureLabelCard: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#23232B',
+    textAlign: 'center',
+  },
+  startButtonCard: {
+    width: '100%',
+    borderRadius: 20,
+    marginTop: 0,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.10,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  startButtonGradientCard: {
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 20,
+    alignItems: 'center',
+  },
+  startButtonTextCard: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  visualCard: {
+    backgroundColor: '#fff',
+    borderRadius: 32,
+    marginTop: 32,
+    marginHorizontal: 16,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.10,
+    shadowRadius: 24,
+    elevation: 12,
+    padding: 0,
+    width: Math.min(width - 32, 360),
+    height: Math.min(width - 32, 360),
+    alignSelf: 'center',
+    overflow: 'hidden', // чтобы картинка не выходила за края
+  },
+  visualCardImageWrapper: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 32,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    margin: 0,
+    padding: 0,
+  },
+  visualCardImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 32,
+    margin: 0,
+    padding: 0,
+  },
+  visualOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    paddingTop: 18,
+    paddingHorizontal: 18,
+    zIndex: 10,
+  },
+  visualHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  visualHeartIcon: {
+    backgroundColor: 'rgba(255,255,255,0.20)',
+    borderRadius: 20,
+    width: width >= 380 ? 36 : 32,
+    height: width >= 380 ? 36 : 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    paddingTop: 8,
+  },
+  visualSkipText: {
+    color: 'rgba(255,255,255,0.8)',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  visualProgressBarBg: {
+    backgroundColor: 'rgba(255,255,255,0.20)',
+    borderRadius: 8,
+    height: 6,
+    overflow: 'hidden',
+    marginTop: 4,
+  },
+  visualProgressBarFill: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    height: 6,
+  },
+  visualProgressLabels: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 6,
+    paddingHorizontal: 2,
+  },
+  visualProgressStep: {
+    fontSize: width >= 380 ? 13 : 12,
+    color: 'rgba(255,255,255,0.7)',
+    fontWeight: '500',
+  },
+  visualProgressTitle: {
+    fontSize: width >= 380 ? 13 : 12,
+    color: 'rgba(255,255,255,0.7)',
+    fontWeight: '500',
+  },
+  screenContentContainerVisual: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingHorizontal: 24,
+    paddingTop: 32,
+    paddingBottom: 16,
+    width: '100%',
+  },
+  heroTitleVisual: {
+    fontSize: width >= 380 ? 30 : 24,
+    fontWeight: 'bold',
+    color: '#23232B',
+    textAlign: 'center',
+    marginBottom: 6,
+  },
+  brandTextVisual: {
+    color: '#ec4899',
+    fontWeight: 'bold',
+  },
+  heroSubtitleVisual: {
+    fontSize: width >= 380 ? 18 : 15,
+    color: '#6b7280',
+    textAlign: 'center',
+    marginBottom: 16,
+    marginTop: 0,
+    lineHeight: 22,
+  },
+  featuresRowVisual: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 16,
+    gap: 10,
+  },
+  featureCardVisual: {
+    flex: 1,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginHorizontal: 4,
+    shadowColor: '#fbcfe8',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.10,
+    shadowRadius: 12,
+    elevation: 4,
+  },
+  featureIconVisual: {
+    marginBottom: 8,
+  },
+  featureLabelVisual: {
+    fontSize: width >= 380 ? 14 : 12,
+    fontWeight: '500',
+    color: '#23232B',
+    textAlign: 'center',
+  },
+  startButtonVisual: {
+    width: '100%',
+    borderRadius: 20,
+    marginTop: 0,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.10,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  startButtonGradientVisual: {
+    paddingVertical: width >= 380 ? 16 : 14,
+    paddingHorizontal: 24,
+    borderRadius: 20,
+    alignItems: 'center',
+  },
+  startButtonTextVisual: {
+    fontSize: width >= 380 ? 18 : 16,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  trackTitleRow: {
+    flexDirection: 'row',
+    textAlign: 'center',
+    fontSize: 26,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  trackTitleBlack: {
+    color: '#23232B',
+    fontWeight: 'bold',
+    fontSize: 26,
+  },
+  trackTitlePink: {
+    color: '#ec4899',
+    fontWeight: 'bold',
+    fontSize: 26,
+  },
+  trackDesc: {
+    fontSize: 17,
+    color: '#374151',
+    textAlign: 'center',
+    marginBottom: 24,
+    marginTop: 0,
+    lineHeight: 26,
+    fontWeight: '400',
+  },
+  trackGrid2x2: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 24,
+    gap: 12,
+  },
+  trackFeatureCard: {
+    width: '48%',
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    paddingVertical: 18,
+    alignItems: 'center',
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 4,
+  },
+  trackFeatureIcon: {
+    marginBottom: 8,
+  },
+  trackFeatureTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#23232B',
+    textAlign: 'center',
+    marginBottom: 2,
+  },
+  trackFeatureDesc: {
+    fontSize: 13,
+    color: '#6b7280',
+    textAlign: 'center',
+  },
+  trackButton: {
+    width: '100%',
+    borderRadius: 20,
+    marginTop: 0,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.10,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  trackButtonGradient: {
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 20,
+    alignItems: 'center',
+  },
+  trackButtonText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  supportContentContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingHorizontal: 24,
+    paddingTop: 32,
+    paddingBottom: 0,
+    width: '100%',
+  },
+  supportTitleRow: {
+    flexDirection: 'row',
+    textAlign: 'center',
+    fontSize: 26,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  supportTitleBlack: {
+    color: '#23232B',
+    fontWeight: 'bold',
+    fontSize: 26,
+  },
+  supportTitleBlue: {
+    color: '#2563eb',
+    fontWeight: 'bold',
+    fontSize: 26,
+  },
+  supportDesc: {
+    fontSize: 17,
+    color: '#374151',
+    textAlign: 'center',
+    marginBottom: 24,
+    marginTop: 0,
+    lineHeight: 26,
+    fontWeight: '400',
+  },
+  supportFeatureList: {
+    width: '100%',
+    marginBottom: 24,
+    gap: 12,
+  },
+  supportFeatureCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 4,
+  },
+  supportIconCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 16,
+  },
+  supportFeatureTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#23232B',
+    marginBottom: 2,
+  },
+  supportFeatureDesc: {
+    fontSize: 13,
+    color: '#6b7280',
+  },
+  supportButton: {
+    width: '100%',
+    borderRadius: 20,
+    marginTop: 0,
+    marginBottom: 28,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.10,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  supportButtonGradient: {
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 20,
+    alignItems: 'center',
+  },
+  supportButtonText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  // AI screen styles
+  aiContentContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingHorizontal: 24,
+    paddingTop: 32,
+    paddingBottom: 0,
+    width: '100%',
+  },
+  aiTitleRow: {
+    flexDirection: 'row',
+    textAlign: 'center',
+    fontSize: 26,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  aiTitleBlack: {
+    color: '#23232B',
+    fontWeight: 'bold',
+    fontSize: 26,
+  },
+  aiTitleGreen: {
+    color: '#059669',
+    fontWeight: 'bold',
+    fontSize: 26,
+  },
+  aiDesc: {
+    fontSize: 17,
+    color: '#374151',
+    textAlign: 'center',
+    marginBottom: 24,
+    marginTop: 0,
+    lineHeight: 26,
+    fontWeight: '400',
+  },
+  aiFeatureList: {
+    width: '100%',
+    marginBottom: 24,
+    gap: 12,
+  },
+  aiFeatureCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 4,
+  },
+  aiIconCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 16,
+  },
+  aiFeatureTitleNew: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#23232B',
+    marginBottom: 2,
+  },
+  aiFeatureDesc: {
+    fontSize: 13,
+    color: '#6b7280',
+  },
+  aiButton: {
+    width: '100%',
+    borderRadius: 20,
+    marginTop: 0,
+    marginBottom: 28,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.10,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  aiButtonGradient: {
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 20,
+    alignItems: 'center',
+  },
+  aiButtonText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  // Глобальный dropdown overlay
+  globalDropdownOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 99999,
+  },
+  backdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 0, 0, 0.5)', // Красный полупрозрачный фон для отладки
+  },
+  globalDropdownList: {
+    width: 200,
+    backgroundColor: 'yellow', // Желтый фон для отладки
+    borderWidth: 5,
+    borderColor: 'blue',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+    elevation: 100,
+  },
+  dropdownItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f3f4f6',
+  },
+  dropdownItemActive: {
+    backgroundColor: '#3b82f6',
+  },
+  dropdownItemText: {
+    fontSize: 14,
+    color: '#374151',
+    textAlign: 'center',
+  },
+  dropdownItemTextActive: {
+    color: 'white',
+    fontWeight: '500',
+  },
+  // Стили для выбора даты
+  datePickerButton: {
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    borderRadius: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  datePickerText: {
+    fontSize: 16,
+    color: '#374151',
   },
 });
