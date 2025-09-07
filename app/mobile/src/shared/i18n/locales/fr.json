@@ -1,0 +1,77 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "retry": "Réessayer",
+    "cancel": "Annuler",
+    "save": "Sauvegarder",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer",
+    "next": "Suivant",
+    "back": "Retour",
+    "done": "Terminé"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "calendar": "Calendrier",
+    "journal": "Journal",
+    "achievements": "Succès",
+    "profile": "Profil"
+  },
+  "dashboard": {
+    "appName": "BabyJoy",
+    "tagline": "Votre compagnon",
+    "weekTitle": "Vous êtes à {{week}} semaines",
+    "trimester": "{{trimester}} trimestre • {{day}} jours",
+    "babySize": "Taille du bébé",
+    "length": "longueur",
+    "weight": "poids",
+    "fruitComparison": "Comme une {{fruit}}",
+    "developing": "Le bébé se développe activement",
+    "tipsTitle": "Conseils du jour",
+    "allTips": "Tous les conseils",
+    "moodTitle": "Comment vous sentez-vous?",
+    "moodExcellent": "Excellent",
+    "moodGood": "Bien",
+    "moodNormal": "Normal",
+    "moodSad": "Triste"
+  },
+  "tips": {
+    "nutrition": {
+      "title": "Nutrition",
+      "ironTip": "Ajoutez des aliments riches en fer à votre alimentation : bœuf, épinards, lentilles. Cela aidera à prévenir l'anémie."
+    },
+    "exercise": {
+      "title": "Exercice",
+      "yogaTip": "Essayez le yoga prénatal. 15 minutes par jour aideront à renforcer votre dos et à vous préparer à l'accouchement."
+    },
+    "sleep": {
+      "title": "Sommeil",
+      "positionTip": "Dormez sur le côté gauche avec un oreiller entre les jambes. Cela améliorera la circulation sanguine vers le bébé."
+    },
+    "mental": {
+      "title": "Santé mentale",
+      "relaxTip": "Pratiquez la méditation et les exercices de respiration pour réduire le stress."
+    }
+  },
+  "onboarding": {
+    "welcome": "Bienvenue dans BabyJoy",
+    "subtitle": "Votre compagnon personnel sur le chemin de la maternité",
+    "startJourney": "Commencer le voyage",
+    "aiHelper": "Assistant IA intelligent",
+    "tracking": "Suivre le développement",
+    "community": "Trouvez votre soutien"
+  },
+  "ai": {
+    "greeting": "Bonjour, rayon de soleil! ✨",
+    "intro": "Je suis Maya - votre assistante intelligente pour la maternité. Prête à vous soutenir à chaque étape de ce voyage magique!",
+    "quickQuestions": "Réponses rapides",
+    "canI": "Puis-je...?",
+    "isItNormal": "Est-ce normal?",
+    "whatToDo": "Que dois-je faire?",
+    "popularTopics": "Sujets populaires",
+    "typing": "Maya tape...",
+    "placeholder": "Partagez vos pensées..."
+  }
+}

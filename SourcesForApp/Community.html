@@ -1,0 +1,860 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #fef7f0 0%, #fdf2f8 100%); }
+        .baby-glow { box-shadow: 0 0 30px rgba(251, 207, 232, 0.3); }
+        .floating-animation { animation: float 3s ease-in-out infinite; }
+        .pulse-dot { animation: pulse-dot 2s infinite; }
+        .typing-indicator { animation: typing 1.4s infinite ease-in-out; }
+        .slide-in { animation: slideIn 0.3s ease-out; }
+        .message-bubble { animation: messageAppear 0.4s ease-out; }
+        .group-hover-scale { transition: transform 0.2s ease; }
+        .group-hover-scale:hover { transform: scale(1.02); }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes pulse-dot {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.7; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes messageAppear {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .online-dot { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+    <script>tailwind.config = {
+  "theme": {
+    "extend": {
+      "colors": {
+        "pregnancy-pink": "#fdf2f8",
+        "pregnancy-beige": "#fef7f0",
+        "pregnancy-mint": "#f0fdfa",
+        "pregnancy-sky": "#f0f9ff",
+        "soft-pink": "#fbcfe8",
+        "soft-beige": "#fed7aa",
+        "soft-mint": "#a7f3d0",
+        "soft-sky": "#bae6fd"
+      },
+      "fontFamily": {
+        "sans": [
+          "Inter",
+          "sans-serif"
+        ]
+      }
+    }
+  }
+};</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"><style>
+  .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  </style></head>
+<body class="bg-gradient-to-br from-pregnancy-beige to-pregnancy-pink min-h-screen">
+
+<div id="mobile-container" class="max-w-sm mx-auto bg-white shadow-2xl relative overflow-hidden h-screen">
+
+    <div id="header" class="bg-white/90 backdrop-blur-lg px-4 py-3 sticky top-0 z-50 border-b border-pink-100">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <button id="back-button" class="w-10 h-10 bg-gradient-to-r from-soft-pink to-soft-beige rounded-full flex items-center justify-center">
+                    <i class="fas fa-arrow-left text-pink-600 text-sm"></i>
+                </button>
+                <div>
+                    <h1 class="text-lg font-semibold text-gray-800">Сообщество</h1>
+                    <p class="text-xs text-gray-500">Общение с мамами</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button class="w-10 h-10 bg-pregnancy-mint rounded-full flex items-center justify-center">
+                    <i class="fas fa-search text-emerald-600 text-sm"></i>
+                </button>
+                <button class="w-10 h-10 bg-pregnancy-sky rounded-full flex items-center justify-center">
+                    <i class="fas fa-plus text-blue-600 text-sm"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="community-stats-section" class="px-4 py-4 gradient-bg">
+        <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-semibold text-gray-800">Активность сегодня</h3>
+                <div class="flex items-center space-x-1">
+                    <div class="w-2 h-2 bg-green-400 rounded-full online-dot"></div>
+                    <span class="text-xs text-gray-600">156 онлайн</span>
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+                <div class="text-center">
+                    <div class="text-xl font-bold text-pink-600">23</div>
+                    <div class="text-xs text-gray-600">Новые темы</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-xl font-bold text-emerald-600">347</div>
+                    <div class="text-xs text-gray-600">Сообщения</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-xl font-bold text-blue-600">89</div>
+                    <div class="text-xs text-gray-600">Новых мам</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="featured-discussions-section" class="px-4 py-4">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">🔥 Горячие обсуждения</h3>
+        <div class="space-y-3">
+            <div class="bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl p-4 border border-red-100 group-hover-scale">
+                <div class="flex items-start space-x-3">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="User" class="w-10 h-10 rounded-full border-2 border-red-200">
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-2 mb-1">
+                            <h4 class="font-medium text-gray-800 text-sm">Анна К.</h4>
+                            <span class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">23 нед</span>
+                        </div>
+                        <p class="text-sm text-gray-700 mb-2">"Сильные толчки ночью - это нормально? Малыш не дает спать 😴"</p>
+                        <div class="flex items-center space-x-4 text-xs text-gray-500">
+                            <div class="flex items-center space-x-1">
+                                <i class="fas fa-comment"></i>
+                                <span>34 ответа</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <i class="fas fa-heart text-red-400"></i>
+                                <span>67</span>
+                            </div>
+                            <span>5 мин назад</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-emerald-50 to-mint-50 rounded-2xl p-4 border border-emerald-100 group-hover-scale">
+                <div class="flex items-start space-x-3">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" alt="User" class="w-10 h-10 rounded-full border-2 border-emerald-200">
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-2 mb-1">
+                            <h4 class="font-medium text-gray-800 text-sm">Мария В.</h4>
+                            <span class="text-xs bg-emerald-100 text-emerald-600 px-2 py-1 rounded-full">28 нед</span>
+                        </div>
+                        <p class="text-sm text-gray-700 mb-2">"Поделюсь списком вещей в роддом - может пригодится 👶"</p>
+                        <div class="flex items-center space-x-4 text-xs text-gray-500">
+                            <div class="flex items-center space-x-1">
+                                <i class="fas fa-comment"></i>
+                                <span>18 ответов</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <i class="fas fa-heart text-emerald-400"></i>
+                                <span>45</span>
+                            </div>
+                            <span>12 мин назад</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mini-groups-section" class="px-4 py-4 bg-white">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Мини-группы</h3>
+            <button class="text-pink-600 text-sm font-medium">Все группы</button>
+        </div>
+        
+        <div class="space-y-3">
+            <div id="group-moms-2024" class="bg-gradient-to-r from-pregnancy-pink to-white rounded-2xl p-4 border border-pink-100 group-hover-scale">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <div class="w-12 h-12 bg-gradient-to-r from-pink-400 to-pink-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-users text-white text-sm"></i>
+                            </div>
+                            <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white flex items-center justify-center">
+                                <div class="w-2 h-2 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Мамы 2024 🤱</h4>
+                            <p class="text-xs text-gray-600">234 участницы • 45 онлайн</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                            <span class="text-xs text-white font-medium">12</span>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">2 мин</div>
+                    </div>
+                </div>
+                <div class="bg-pink-50 rounded-xl p-3 mb-3">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" alt="User" class="w-6 h-6 rounded-full">
+                        <span class="text-sm font-medium text-gray-800">Елена С.</span>
+                        <span class="text-xs text-gray-500">только что</span>
+                    </div>
+                    <p class="text-sm text-gray-700">"Девочки, кто-нибудь чувствует икоту малыша? У меня уже третий день подряд 😊"</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex -space-x-2">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="User" class="w-6 h-6 rounded-full border-2 border-white">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" alt="User" class="w-6 h-6 rounded-full border-2 border-white">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-7.jpg" alt="User" class="w-6 h-6 rounded-full border-2 border-white">
+                        <div class="w-6 h-6 bg-gray-200 rounded-full border-2 border-white flex items-center justify-center">
+                            <span class="text-xs text-gray-600">+8</span>
+                        </div>
+                    </div>
+                    <span class="text-xs text-gray-500">печатают...</span>
+                </div>
+            </div>
+
+            <div id="group-healthy-eating" class="bg-gradient-to-r from-pregnancy-mint to-white rounded-2xl p-4 border border-emerald-100 group-hover-scale">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <div class="w-12 h-12 bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-leaf text-white text-sm"></i>
+                            </div>
+                            <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-orange-400 rounded-full border-2 border-white flex items-center justify-center">
+                                <div class="w-2 h-2 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Здоровое питание 🥗</h4>
+                            <p class="text-xs text-gray-600">89 участниц • 12 онлайн</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
+                            <span class="text-xs text-white font-medium">5</span>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">1 ч</div>
+                    </div>
+                </div>
+                <div class="bg-emerald-50 rounded-xl p-3 mb-3">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="User" class="w-6 h-6 rounded-full">
+                        <span class="text-sm font-medium text-gray-800">Ольга М.</span>
+                        <span class="text-xs text-gray-500">1 час назад</span>
+                    </div>
+                    <p class="text-sm text-gray-700">"Рецепт смузи с железом: шпинат + банан + клубника + семена чиа ✨"</p>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex -space-x-2">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" alt="User" class="w-6 h-6 rounded-full border-2 border-white">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-7.jpg" alt="User" class="w-6 h-6 rounded-full border-2 border-white">
+                        <div class="w-6 h-6 bg-gray-200 rounded-full border-2 border-white flex items-center justify-center">
+                            <span class="text-xs text-gray-600">+3</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-heart text-red-400 text-sm"></i>
+                        <span class="text-xs text-gray-500">23</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="group-fitness" class="bg-gradient-to-r from-pregnancy-sky to-white rounded-2xl p-4 border border-blue-100 group-hover-scale">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <div class="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-dumbbell text-white text-sm"></i>
+                            </div>
+                            <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-gray-400 rounded-full border-2 border-white"></div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Фитнес для мам 💪</h4>
+                            <p class="text-xs text-gray-600">156 участниц • 8 онлайн</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                            <span class="text-xs text-white font-medium">3</span>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">3 ч</div>
+                    </div>
+                </div>
+                <div class="bg-blue-50 rounded-xl p-3 mb-3">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" alt="User" class="w-6 h-6 rounded-full">
+                        <span class="text-sm font-medium text-gray-800">Катя Л.</span>
+                        <span class="text-xs text-gray-500">3 часа назад</span>
+                    </div>
+                    <p class="text-sm text-gray-700">"Сегодня попробовала йогу для беременных - ощущения потрясающие! 🧘‍♀️"</p>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex -space-x-2">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" alt="User" class="w-6 h-6 rounded-full border-2 border-white">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-7.jpg" alt="User" class="w-6 h-6 rounded-full border-2 border-white">
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-heart text-red-400 text-sm"></i>
+                        <span class="text-xs text-gray-500">15</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="group-first-time-moms" class="bg-gradient-to-r from-purple-50 to-white rounded-2xl p-4 border border-purple-100 group-hover-scale">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <div class="w-12 h-12 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-baby text-white text-sm"></i>
+                            </div>
+                            <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white flex items-center justify-center">
+                                <div class="w-2 h-2 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Первая беременность 👶</h4>
+                            <p class="text-xs text-gray-600">312 участниц • 67 онлайн</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
+                            <span class="text-xs text-white font-medium">8</span>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">15 мин</div>
+                    </div>
+                </div>
+                <div class="bg-purple-50 rounded-xl p-3 mb-3">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-7.jpg" alt="User" class="w-6 h-6 rounded-full">
+                        <span class="text-sm font-medium text-gray-800">Света П.</span>
+                        <span class="text-xs text-gray-500">15 мин назад</span>
+                    </div>
+                    <p class="text-sm text-gray-700">"Девочки, подскажите что взять на курсы подготовки к родам? 🤔"</p>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex -space-x-2">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" alt="User" class="w-6 h-6 rounded-full border-2 border-white">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="User" class="w-6 h-6 rounded-full border-2 border-white">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" alt="User" class="w-6 h-6 rounded-full border-2 border-white">
+                        <div class="w-6 h-6 bg-gray-200 rounded-full border-2 border-white flex items-center justify-center">
+                            <span class="text-xs text-gray-600">+5</span>
+                        </div>
+                    </div>
+                    <span class="text-xs text-gray-500">печатают...</span>
+                </div>
+            </div>
+
+            <div id="group-birth-stories" class="bg-gradient-to-r from-orange-50 to-white rounded-2xl p-4 border border-orange-100 group-hover-scale">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <div class="w-12 h-12 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-heart text-white text-sm"></i>
+                            </div>
+                            <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full border-2 border-white flex items-center justify-center">
+                                <div class="w-2 h-2 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Истории родов 📖</h4>
+                            <p class="text-xs text-gray-600">78 участниц • 5 онлайн</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
+                            <span class="text-xs text-white font-medium">2</span>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">6 ч</div>
+                    </div>
+                </div>
+                <div class="bg-orange-50 rounded-xl p-3 mb-3">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" alt="User" class="w-6 h-6 rounded-full">
+                        <span class="text-sm font-medium text-gray-800">Наташа К.</span>
+                        <span class="text-xs text-gray-500">6 часов назад</span>
+                    </div>
+                    <p class="text-sm text-gray-700">"Поделюсь своим опытом естественных родов - все прошло замечательно! ❤️"</p>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex -space-x-2">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="User" class="w-6 h-6 rounded-full border-2 border-white">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" alt="User" class="w-6 h-6 rounded-full border-2 border-white">
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-heart text-red-400 text-sm"></i>
+                        <span class="text-xs text-gray-500">12</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="expert-advice-section" class="px-4 py-4 bg-gradient-to-r from-pregnancy-beige to-pregnancy-pink">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">👩‍⚕️ Советы экспертов</h3>
+        <div class="space-y-3">
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-orange-100">
+                <div class="flex items-start space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user-md text-white text-sm"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-2 mb-1">
+                            <h4 class="font-semibold text-gray-800">Dr. Анна Петрова</h4>
+                            <div class="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 mb-2">Акушер-гинеколог • 15 лет опыта</p>
+                        <p class="text-sm text-gray-700">"На 23 неделе важно следить за движениями малыша. Нормально чувствовать 10-15 движений в час в период активности."</p>
+                        <div class="flex items-center space-x-4 mt-3 text-xs text-gray-500">
+                            <div class="flex items-center space-x-1">
+                                <i class="fas fa-thumbs-up text-blue-400"></i>
+                                <span>234</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <i class="fas fa-comment"></i>
+                                <span>67 вопросов</span>
+                            </div>
+                            <span>2 часа назад</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-emerald-100">
+                <div class="flex items-start space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-apple-alt text-white text-sm"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-2 mb-1">
+                            <h4 class="font-semibold text-gray-800">Мария Соколова</h4>
+                            <div class="w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 mb-2">Диетолог • Специалист по питанию беременных</p>
+                        <p class="text-sm text-gray-700">"Во втором триместре увеличьте потребление белка до 75г в день. Отличные источники: рыба, мясо, бобовые, орехи."</p>
+                        <div class="flex items-center space-x-4 mt-3 text-xs text-gray-500">
+                            <div class="flex items-center space-x-1">
+                                <i class="fas fa-thumbs-up text-emerald-400"></i>
+                                <span>156</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <i class="fas fa-comment"></i>
+                                <span>23 вопроса</span>
+                            </div>
+                            <span>4 часа назад</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="trending-topics-section" class="px-4 py-4">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">📈 Популярные темы</h3>
+        <div class="flex flex-wrap gap-2 mb-4">
+            <div class="bg-gradient-to-r from-pink-100 to-pink-200 px-3 py-2 rounded-full">
+                <span class="text-sm font-medium text-pink-700">#движения_малыша</span>
+            </div>
+            <div class="bg-gradient-to-r from-emerald-100 to-emerald-200 px-3 py-2 rounded-full">
+                <span class="text-sm font-medium text-emerald-700">#питание</span>
+            </div>
+            <div class="bg-gradient-to-r from-blue-100 to-blue-200 px-3 py-2 rounded-full">
+                <span class="text-sm font-medium text-blue-700">#подготовка_к_родам</span>
+            </div>
+            <div class="bg-gradient-to-r from-purple-100 to-purple-200 px-3 py-2 rounded-full">
+                <span class="text-sm font-medium text-purple-700">#сон</span>
+            </div>
+            <div class="bg-gradient-to-r from-orange-100 to-orange-200 px-3 py-2 rounded-full">
+                <span class="text-sm font-medium text-orange-700">#упражнения</span>
+            </div>
+        </div>
+        
+        <div class="space-y-3">
+            <div class="bg-white rounded-2xl p-4 border border-gray-100">
+                <div class="flex items-center justify-between mb-2">
+                    <h4 class="font-medium text-gray-800">Как справиться с изжогой?</h4>
+                    <span class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">Горячая</span>
+                </div>
+                <p class="text-sm text-gray-600 mb-3">Обсуждают 89 мам • 156 сообщений</p>
+                <div class="flex items-center space-x-4 text-xs text-gray-500">
+                    <span>Последнее сообщение 3 мин назад</span>
+                    <div class="flex items-center space-x-1">
+                        <i class="fas fa-fire text-red-400"></i>
+                        <span>Тренд дня</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 border border-gray-100">
+                <div class="flex items-center justify-between mb-2">
+                    <h4 class="font-medium text-gray-800">Выбор коляски - советы опытных мам</h4>
+                    <span class="text-xs bg-emerald-100 text-emerald-600 px-2 py-1 rounded-full">Активная</span>
+                </div>
+                <p class="text-sm text-gray-600 mb-3">Обсуждают 45 мам • 78 сообщений</p>
+                <div class="flex items-center space-x-4 text-xs text-gray-500">
+                    <span>Последнее сообщение 8 мин назад</span>
+                    <div class="flex items-center space-x-1">
+                        <i class="fas fa-comments text-emerald-400"></i>
+                        <span>Много ответов</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="quick-actions-section" class="px-4 py-4 bg-gradient-to-r from-pregnancy-mint to-pregnancy-sky">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">⚡ Быстрые действия</h3>
+        <div class="grid grid-cols-2 gap-3">
+            <button class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 text-center border border-pink-100 hover:scale-105 transition-transform">
+                <div class="w-12 h-12 bg-gradient-to-r from-pink-400 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-plus text-white"></i>
+                </div>
+                <h4 class="font-medium text-gray-800 mb-1">Создать тему</h4>
+                <p class="text-xs text-gray-600">Задай вопрос сообществу</p>
+            </button>
+
+            <button class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 text-center border border-emerald-100 hover:scale-105 transition-transform">
+                <div class="w-12 h-12 bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-search text-white"></i>
+                </div>
+                <h4 class="font-medium text-gray-800 mb-1">Найти группу</h4>
+                <p class="text-xs text-gray-600">По интересам и неделе</p>
+            </button>
+
+            <button class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 text-center border border-blue-100 hover:scale-105 transition-transform">
+                <div class="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-calendar text-white"></i>
+                </div>
+                <h4 class="font-medium text-gray-800 mb-1">События</h4>
+                <p class="text-xs text-gray-600">Онлайн встречи мам</p>
+            </button>
+
+            <button class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 text-center border border-purple-100 hover:scale-105 transition-transform">
+                <div class="w-12 h-12 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-gift text-white"></i>
+                </div>
+                <h4 class="font-medium text-gray-800 mb-1">Обмен вещами</h4>
+                <p class="text-xs text-gray-600">Детские товары б/у</p>
+            </button>
+        </div>
+    </div>
+
+    <div id="community-achievements-section" class="px-4 py-4">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">🏆 Достижения сообщества</h3>
+        <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-4 border border-yellow-200">
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                    <i class="fas fa-trophy text-white text-xl"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Активное сообщество!</h4>
+                    <p class="text-sm text-gray-600">1000+ полезных ответов за месяц</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-4 mb-4">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-heart text-pink-600"></i>
+                    </div>
+                    <div class="text-lg font-bold text-gray-800">2.5k</div>
+                    <div class="text-xs text-gray-600">Лайков</div>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-comments text-emerald-600"></i>
+                    </div>
+                    <div class="text-lg font-bold text-gray-800">1.2k</div>
+                    <div class="text-xs text-gray-600">Ответов</div>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-users text-blue-600"></i>
+                    </div>
+                    <div class="text-lg font-bold text-gray-800">890</div>
+                    <div class="text-xs text-gray-600">Новых мам</div>
+                </div>
+            </div>
+            
+            <div class="bg-white/70 rounded-xl p-3">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-gray-800">До следующего уровня</span>
+                    <span class="text-sm font-bold text-orange-600">73%</span>
+                </div>
+                <div class="bg-gray-200 rounded-full h-2">
+                    <div class="bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full" style="width: 73%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="chat-preview-section" class="px-4 py-4 bg-white">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">💬 Активные чаты</h3>
+            <button class="text-pink-600 text-sm font-medium">Все чаты</button>
+        </div>
+        
+        <div class="space-y-3">
+            <div class="bg-gradient-to-r from-pink-50 to-white rounded-2xl p-4 border border-pink-100">
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="User" class="w-12 h-12 rounded-full border-2 border-pink-200">
+                        <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white"></div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-1">
+                            <h4 class="font-medium text-gray-800">Анна К.</h4>
+                            <span class="text-xs text-gray-500">сейчас</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="typing-indicator flex space-x-1">
+                                <div class="w-2 h-2 bg-pink-400 rounded-full"></div>
+                                <div class="w-2 h-2 bg-pink-400 rounded-full"></div>
+                                <div class="w-2 h-2 bg-pink-400 rounded-full"></div>
+                            </div>
+                            <span class="text-sm text-pink-600">печатает...</span>
+                        </div>
+                    </div>
+                    <div class="w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center">
+                        <span class="text-xs text-white font-medium">3</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-emerald-50 to-white rounded-2xl p-4 border border-emerald-100">
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" alt="User" class="w-12 h-12 rounded-full border-2 border-emerald-200">
+                        <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full border-2 border-white"></div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-1">
+                            <h4 class="font-medium text-gray-800">Мария В.</h4>
+                            <span class="text-xs text-gray-500">2 мин</span>
+                        </div>
+                        <p class="text-sm text-gray-600 truncate">Спасибо за рецепт! Обязательно попробую 😊</p>
+                    </div>
+                    <div class="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
+                        <span class="text-xs text-white font-medium">1</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-blue-50 to-white rounded-2xl p-4 border border-blue-100">
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-7.jpg" alt="User" class="w-12 h-12 rounded-full border-2 border-blue-200">
+                        <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-gray-400 rounded-full border-2 border-white"></div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-1">
+                            <h4 class="font-medium text-gray-800">Света П.</h4>
+                            <span class="text-xs text-gray-500">1 ч</span>
+                        </div>
+                        <p class="text-sm text-gray-600 truncate">Девочки, у кого есть опыт с курсами?</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="floating-ai-button" class="fixed bottom-20 right-6 z-50">
+        <button class="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full shadow-lg flex items-center justify-center floating-animation hover:shadow-xl transition-all">
+            <i class="fas fa-robot text-white text-xl"></i>
+        </button>
+        <div class="absolute -top-12 right-0 bg-gray-800 text-white px-3 py-1 rounded-lg text-xs opacity-0 hover:opacity-100 transition-opacity">
+            AI помощник
+        </div>
+    </div>
+
+    <div id="bottom-navigation" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2">
+        <div class="max-w-sm mx-auto flex items-center justify-between">
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-home text-lg"></i>
+                <span class="text-xs">Главная</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-calendar text-lg"></i>
+                <span class="text-xs">Календарь</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-book text-lg"></i>
+                <span class="text-xs">Дневник</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-pink-600">
+                <i class="fas fa-users text-lg"></i>
+                <span class="text-xs font-medium">Сообщество</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-user text-lg"></i>
+                <span class="text-xs">Профиль</span>
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const backButton = document.querySelector('#back-button');
+    const groupCards = document.querySelectorAll('[id^="group-"]');
+    const quickActionButtons = document.querySelectorAll('#quick-actions-section button');
+    const aiButton = document.querySelector('#floating-ai-button button');
+    const navItems = document.querySelectorAll('.nav-item');
+
+    backButton.addEventListener('click', function() {
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.style.transform = 'scale(1)';
+            console.log('Navigate back to main screen');
+        }, 150);
+    });
+
+    groupCards.forEach(card => {
+        card.addEventListener('click', function() {
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+                console.log('Open group chat:', this.id);
+            }, 150);
+        });
+    });
+
+    quickActionButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            this.classList.add('scale-95');
+            setTimeout(() => {
+                this.classList.remove('scale-95');
+            }, 150);
+        });
+    });
+
+    aiButton.addEventListener('click', function() {
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.style.transform = 'scale(1)';
+        }, 150);
+    });
+
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            navItems.forEach(nav => nav.classList.remove('text-pink-600'));
+            navItems.forEach(nav => nav.classList.add('text-gray-400'));
+            navItems.forEach(nav => nav.querySelector('span').classList.remove('font-medium'));
+            
+            this.classList.remove('text-gray-400');
+            this.classList.add('text-pink-600');
+            this.querySelector('span').classList.add('font-medium');
+        });
+    });
+
+    function simulateTypingIndicators() {
+        const typingElements = document.querySelectorAll('.typing-indicator');
+        typingElements.forEach(element => {
+            const dots = element.querySelectorAll('div');
+            dots.forEach((dot, index) => {
+                setTimeout(() => {
+                    dot.style.animationDelay = `${index * 0.2}s`;
+                }, index * 200);
+            });
+        });
+    }
+
+    function simulateOnlineStatus() {
+        const onlineDots = document.querySelectorAll('.online-dot');
+        onlineDots.forEach(dot => {
+            setInterval(() => {
+                dot.style.opacity = dot.style.opacity === '0.5' ? '1' : '0.5';
+            }, 2000);
+        });
+    }
+
+    function addPullToRefresh() {
+        let startY = 0;
+        let pullDistance = 0;
+        const threshold = 80;
+        
+        document.addEventListener('touchstart', (e) => {
+            if (window.scrollY === 0) {
+                startY = e.touches[0].clientY;
+            }
+        });
+        
+        document.addEventListener('touchmove', (e) => {
+            if (startY > 0) {
+                pullDistance = e.touches[0].clientY - startY;
+                if (pullDistance > 0 && pullDistance < threshold) {
+                    document.body.style.transform = `translateY(${pullDistance / 3}px)`;
+                }
+            }
+        });
+        
+        document.addEventListener('touchend', () => {
+            if (pullDistance > threshold) {
+                console.log('Refresh community data');
+                setTimeout(() => {
+                    document.body.style.transform = 'translateY(0)';
+                    pullDistance = 0;
+                    startY = 0;
+                }, 500);
+            } else {
+                document.body.style.transform = 'translateY(0)';
+                pullDistance = 0;
+                startY = 0;
+            }
+        });
+    }
+
+    simulateTypingIndicators();
+    simulateOnlineStatus();
+    addPullToRefresh();
+
+    setInterval(() => {
+        const unreadCounters = document.querySelectorAll('.bg-red-500, .bg-emerald-500, .bg-blue-500, .bg-purple-500, .bg-orange-500, .bg-pink-500');
+        unreadCounters.forEach(counter => {
+            const currentCount = parseInt(counter.textContent);
+            if (Math.random() > 0.7) {
+                counter.textContent = currentCount + 1;
+                counter.classList.add('animate-pulse');
+                setTimeout(() => {
+                    counter.classList.remove('animate-pulse');
+                }, 1000);
+            }
+        });
+    }, 10000);
+});
+</script>
+
+
+</body></html>

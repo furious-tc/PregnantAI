@@ -1,0 +1,966 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #fef7f0 0%, #fdf2f8 100%); }
+        .baby-glow { box-shadow: 0 0 30px rgba(251, 207, 232, 0.3); }
+        .floating-animation { animation: float 3s ease-in-out infinite; }
+        .slide-in { animation: slideIn 0.6s ease-out forwards; }
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        .bounce-in { animation: bounceIn 0.7s ease-out forwards; }
+        .progress-fill { animation: progressFill 2s ease-out forwards; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes progressFill {
+            from { width: 0%; }
+            to { width: var(--progress-width); }
+        }
+    </style>
+    <script>tailwind.config = {
+  "theme": {
+    "extend": {
+      "colors": {
+        "pregnancy-pink": "#fdf2f8",
+        "pregnancy-beige": "#fef7f0",
+        "pregnancy-mint": "#f0fdfa",
+        "pregnancy-sky": "#f0f9ff",
+        "soft-pink": "#fbcfe8",
+        "soft-beige": "#fed7aa",
+        "soft-mint": "#a7f3d0",
+        "soft-sky": "#bae6fd"
+      },
+      "fontFamily": {
+        "sans": [
+          "Inter",
+          "sans-serif"
+        ]
+      }
+    }
+  }
+};</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"><style>
+  .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  </style></head>
+<body class="bg-gradient-to-br from-pregnancy-beige to-pregnancy-pink min-h-screen overflow-x-hidden">
+
+<div id="mobile-onboarding-container" class="max-w-sm mx-auto bg-white shadow-2xl relative overflow-hidden min-h-screen">
+
+    <div id="onboarding-header" class="absolute top-0 left-0 right-0 z-50 p-6">
+        <div class="flex items-center justify-between">
+            <div class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                <i class="fas fa-heart text-pink-600 text-sm"></i>
+            </div>
+            <button id="skip-button" class="text-white/80 text-sm font-medium hover:text-white transition-colors">
+                Пропустить
+            </button>
+        </div>
+    </div>
+
+    <div id="progress-bar-section" class="absolute top-20 left-0 right-0 z-40 px-6">
+        <div class="bg-white/20 backdrop-blur-sm rounded-full h-2">
+            <div id="progress-fill" class="bg-white rounded-full h-2 transition-all duration-500 ease-out" style="width: 25%;"></div>
+        </div>
+        <div class="flex justify-between mt-2">
+            <span class="text-xs text-white/70">Шаг 1 из 4</span>
+            <span class="text-xs text-white/70">Добро пожаловать</span>
+        </div>
+    </div>
+
+    <div id="onboarding-screen-1" class="onboarding-screen active min-h-screen flex flex-col justify-center items-center p-6 gradient-bg relative">
+        <div class="text-center space-y-8">
+            <div class="bounce-in">
+                <img class="w-80 h-80 mx-auto rounded-3xl shadow-2xl baby-glow" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/8a42a5716e-f2f6be344a51add23326.png" alt="pregnant woman holding belly with soft pastel illustration baby floating above minimalist style warm colors">
+            </div>
+            
+            <div class="fade-in space-y-4">
+                <h1 class="text-3xl font-bold text-gray-800 leading-tight">
+                    Добро пожаловать в<br>
+                    <span class="text-pink-600">BabyJoy</span>
+                </h1>
+                <p class="text-gray-600 text-lg leading-relaxed px-4">
+                    Твой персональный спутник на пути к материнству. Мы поддержим тебя каждый день этого удивительного путешествия.
+                </p>
+            </div>
+
+            <div class="space-y-6 w-full">
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4 text-center">
+                        <i class="fas fa-baby text-pink-600 text-2xl mb-2"></i>
+                        <p class="text-xs font-medium text-gray-700">Развитие малыша</p>
+                    </div>
+                    <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4 text-center">
+                        <i class="fas fa-heart text-emerald-600 text-2xl mb-2"></i>
+                        <p class="text-xs font-medium text-gray-700">Здоровье мамы</p>
+                    </div>
+                    <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4 text-center">
+                        <i class="fas fa-robot text-purple-600 text-2xl mb-2"></i>
+                        <p class="text-xs font-medium text-gray-700">AI помощник</p>
+                    </div>
+                </div>
+
+                <button id="next-button-1" class="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
+                    Начать путешествие
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="onboarding-screen-2" class="onboarding-screen min-h-screen flex flex-col justify-center items-center p-6 bg-gradient-to-br from-pregnancy-mint to-pregnancy-sky relative hidden">
+        <div class="text-center space-y-8">
+            <div class="bounce-in">
+                <img class="w-80 h-80 mx-auto rounded-3xl shadow-2xl baby-glow" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/10dafd2227-0d77a0f92f8a07c0412d.png" alt="AI chatbot interface with cute baby illustration pregnancy advice chat bubbles soft colors">
+            </div>
+            
+            <div class="fade-in space-y-4">
+                <h1 class="text-3xl font-bold text-gray-800 leading-tight">
+                    Умный <span class="text-emerald-600">AI помощник</span>
+                </h1>
+                <p class="text-gray-600 text-lg leading-relaxed px-4">
+                    Получай персональные советы, отвечай на вопросы и получай поддержку 24/7 от нашего умного помощника.
+                </p>
+            </div>
+
+            <div class="space-y-6 w-full">
+                <div class="space-y-3">
+                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 text-left">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <i class="fas fa-question-circle text-emerald-600"></i>
+                            <span class="font-medium text-gray-800">Можно ли мне...?</span>
+                        </div>
+                        <p class="text-sm text-gray-600">Быстрые ответы на ежедневные вопросы</p>
+                    </div>
+                    
+                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 text-left">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <i class="fas fa-lightbulb text-blue-600"></i>
+                            <span class="font-medium text-gray-800">Что делать если...?</span>
+                        </div>
+                        <p class="text-sm text-gray-600">Советы для любой ситуации</p>
+                    </div>
+                    
+                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 text-left">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <i class="fas fa-microphone text-purple-600"></i>
+                            <span class="font-medium text-gray-800">Голосовые сообщения</span>
+                        </div>
+                        <p class="text-sm text-gray-600">Говори как с лучшей подругой</p>
+                    </div>
+                </div>
+
+                <button id="next-button-2" class="w-full bg-gradient-to-r from-emerald-500 to-blue-600 text-white py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
+                    Звучит отлично!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="onboarding-screen-3" class="onboarding-screen min-h-screen flex flex-col justify-center items-center p-6 bg-gradient-to-br from-pregnancy-pink to-pregnancy-beige relative hidden">
+        <div class="text-center space-y-8">
+            <div class="bounce-in">
+                <img class="w-80 h-80 mx-auto rounded-3xl shadow-2xl baby-glow" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/d67032ddd3-1c2867ad7da78e6fd8e3.png" alt="pregnancy tracking calendar with baby development illustrations weekly progress soft pastel colors">
+            </div>
+            
+            <div class="fade-in space-y-4">
+                <h1 class="text-3xl font-bold text-gray-800 leading-tight">
+                    Отслеживай <span class="text-pink-600">развитие</span>
+                </h1>
+                <p class="text-gray-600 text-lg leading-relaxed px-4">
+                    Следи за ростом малыша, записывай симптомы и веди дневник самых важных моментов беременности.
+                </p>
+            </div>
+
+            <div class="space-y-6 w-full">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 text-center">
+                        <div class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-calendar-check text-pink-600"></i>
+                        </div>
+                        <h4 class="font-medium text-gray-800 mb-1">Календарь</h4>
+                        <p class="text-xs text-gray-600">40 недель развития</p>
+                    </div>
+                    
+                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 text-center">
+                        <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-heartbeat text-orange-600"></i>
+                        </div>
+                        <h4 class="font-medium text-gray-800 mb-1">Симптомы</h4>
+                        <p class="text-xs text-gray-600">Ежедневный трекер</p>
+                    </div>
+                    
+                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 text-center">
+                        <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-book-heart text-emerald-600"></i>
+                        </div>
+                        <h4 class="font-medium text-gray-800 mb-1">Дневник</h4>
+                        <p class="text-xs text-gray-600">Твоя история</p>
+                    </div>
+                    
+                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 text-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-chart-line text-blue-600"></i>
+                        </div>
+                        <h4 class="font-medium text-gray-800 mb-1">Графики</h4>
+                        <p class="text-xs text-gray-600">Визуальный прогресс</p>
+                    </div>
+                </div>
+
+                <button id="next-button-3" class="w-full bg-gradient-to-r from-pink-500 to-orange-600 text-white py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
+                    Готова отслеживать
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="onboarding-screen-4" class="onboarding-screen min-h-screen flex flex-col justify-center items-center p-6 bg-gradient-to-br from-pregnancy-sky to-pregnancy-mint relative hidden">
+        <div class="text-center space-y-8">
+            <div class="bounce-in">
+                <img class="w-80 h-80 mx-auto rounded-3xl shadow-2xl baby-glow" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/6a15c26b7b-57c194c53675f07ef759.png" alt="community of pregnant women supporting each other group chat illustration warm friendly colors">
+            </div>
+            
+            <div class="fade-in space-y-4">
+                <h1 class="text-3xl font-bold text-gray-800 leading-tight">
+                    Найди свою <span class="text-blue-600">поддержку</span>
+                </h1>
+                <p class="text-gray-600 text-lg leading-relaxed px-4">
+                    Присоединяйся к сообществу будущих мам, делись опытом и получай поддержку от тех, кто понимает.
+                </p>
+            </div>
+
+            <div class="space-y-6 w-full">
+                <div class="space-y-3">
+                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-users text-blue-600"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="font-medium text-gray-800">Группы по неделям</h4>
+                            <p class="text-sm text-gray-600">Общайся с мамами на том же сроке</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-comments text-emerald-600"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="font-medium text-gray-800">Чаты по интересам</h4>
+                            <p class="text-sm text-gray-600">Питание, спорт, подготовка к родам</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-heart text-purple-600"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="font-medium text-gray-800">Поддержка 24/7</h4>
+                            <p class="text-sm text-gray-600">Кто-то всегда онлайн и готов помочь</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="start-button" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
+                    Начать использовать BabyJoy
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="registration-section" class="min-h-screen flex flex-col justify-center items-center p-6 bg-white relative hidden">
+        <div class="w-full space-y-8">
+            <div class="text-center space-y-4">
+                <div class="w-20 h-20 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center mx-auto">
+                    <i class="fas fa-heart text-white text-2xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800">Расскажи о себе</h1>
+                <p class="text-gray-600">Это поможет нам персонализировать твой опыт</p>
+            </div>
+
+            <div class="space-y-6">
+                <div class="space-y-3">
+                    <label class="block text-sm font-medium text-gray-700">Как тебя зовут?</label>
+                    <input type="text" placeholder="Введи свое имя" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                </div>
+
+                <div class="space-y-3">
+                    <label class="block text-sm font-medium text-gray-700">На какой неделе беременности?</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <select class="px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                            <option>1 триместр</option>
+                            <option>2 триместр</option>
+                            <option>3 триместр</option>
+                        </select>
+                        <input type="number" placeholder="Неделя" min="1" max="42" class="px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                        <input type="number" placeholder="День" min="0" max="6" class="px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <label class="block text-sm font-medium text-gray-700">Дата родов (приблизительно)</label>
+                    <input type="date" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                </div>
+
+                <div class="space-y-3">
+                    <label class="block text-sm font-medium text-gray-700">Это твоя первая беременность?</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button class="pregnancy-option px-4 py-3 border-2 border-gray-300 rounded-2xl text-center hover:border-pink-500 hover:bg-pink-50 transition-all">
+                            <i class="fas fa-baby text-pink-600 mb-2"></i>
+                            <div class="font-medium text-gray-800">Да, первая</div>
+                        </button>
+                        <button class="pregnancy-option px-4 py-3 border-2 border-gray-300 rounded-2xl text-center hover:border-pink-500 hover:bg-pink-50 transition-all">
+                            <i class="fas fa-children text-pink-600 mb-2"></i>
+                            <div class="font-medium text-gray-800">Нет, уже есть дети</div>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <label class="block text-sm font-medium text-gray-700">Что тебя больше всего интересует?</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button class="interest-option px-4 py-3 border-2 border-gray-300 rounded-2xl text-center hover:border-emerald-500 hover:bg-emerald-50 transition-all">
+                            <i class="fas fa-heartbeat text-emerald-600 mb-2"></i>
+                            <div class="text-sm font-medium text-gray-800">Здоровье</div>
+                        </button>
+                        <button class="interest-option px-4 py-3 border-2 border-gray-300 rounded-2xl text-center hover:border-blue-500 hover:bg-blue-50 transition-all">
+                            <i class="fas fa-apple-alt text-blue-600 mb-2"></i>
+                            <div class="text-sm font-medium text-gray-800">Питание</div>
+                        </button>
+                        <button class="interest-option px-4 py-3 border-2 border-gray-300 rounded-2xl text-center hover:border-purple-500 hover:bg-purple-50 transition-all">
+                            <i class="fas fa-dumbbell text-purple-600 mb-2"></i>
+                            <div class="text-sm font-medium text-gray-800">Фитнес</div>
+                        </button>
+                        <button class="interest-option px-4 py-3 border-2 border-gray-300 rounded-2xl text-center hover:border-orange-500 hover:bg-orange-50 transition-all">
+                            <i class="fas fa-baby-carriage text-orange-600 mb-2"></i>
+                            <div class="text-sm font-medium text-gray-800">Подготовка</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <button id="complete-registration" class="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
+                    Завершить регистрацию
+                </button>
+                
+                <div class="text-center">
+                    <p class="text-xs text-gray-500 leading-relaxed">
+                        Нажимая "Завершить регистрацию", ты соглашаешься с 
+                        <span class="text-pink-600 underline cursor-pointer">Условиями использования</span> и 
+                        <span class="text-pink-600 underline cursor-pointer">Политикой конфиденциальности</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="welcome-success-section" class="min-h-screen flex flex-col justify-center items-center p-6 bg-gradient-to-br from-pregnancy-mint to-pregnancy-sky relative hidden">
+        <div class="text-center space-y-8">
+            <div class="bounce-in">
+                <div class="w-32 h-32 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full flex items-center justify-center mx-auto shadow-2xl">
+                    <i class="fas fa-check text-white text-4xl"></i>
+                </div>
+            </div>
+            
+            <div class="fade-in space-y-4">
+                <h1 class="text-3xl font-bold text-gray-800">
+                    Добро пожаловать в<br>
+                    <span class="text-emerald-600">BabyJoy!</span>
+                </h1>
+                <p class="text-gray-600 text-lg leading-relaxed px-4">
+                    Твой аккаунт создан! Теперь ты можешь начать отслеживать свою беременность и получать персональные советы.
+                </p>
+            </div>
+
+            <div class="space-y-6 w-full">
+                <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Что тебя ждет:</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-baby text-pink-600 text-sm"></i>
+                            </div>
+                            <span class="text-sm text-gray-700">Еженедельные обновления о развитии малыша</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-robot text-emerald-600 text-sm"></i>
+                            </div>
+                            <span class="text-sm text-gray-700">AI помощник для ответов на вопросы</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-users text-blue-600 text-sm"></i>
+                            </div>
+                            <span class="text-sm text-gray-700">Сообщество поддерживающих мам</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-chart-line text-purple-600 text-sm"></i>
+                            </div>
+                            <span class="text-sm text-gray-700">Трекинг симптомов и настроения</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="start-app" class="w-full bg-gradient-to-r from-emerald-500 to-blue-600 text-white py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
+                    Начать использовать приложение
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="subscription-section" class="min-h-screen flex flex-col justify-center items-center p-6 bg-gradient-to-br from-purple-100 to-pink-100 relative hidden">
+        <div class="w-full space-y-8">
+            <div class="text-center space-y-4">
+                <div class="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto">
+                    <i class="fas fa-crown text-white text-2xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800">Выбери свой план</h1>
+                <p class="text-gray-600">Получи максимум от BabyJoy</p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-white rounded-3xl p-6 border-2 border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Базовый план</h3>
+                        <span class="text-2xl font-bold text-gray-800">Бесплатно</span>
+                    </div>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-emerald-600"></i>
+                            <span class="text-sm text-gray-700">Еженедельные обновления о малыше</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-emerald-600"></i>
+                            <span class="text-sm text-gray-700">Базовый трекинг симптомов</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-emerald-600"></i>
+                            <span class="text-sm text-gray-700">Доступ к сообществу</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-times text-gray-400"></i>
+                            <span class="text-sm text-gray-400">AI помощник (ограничено)</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-gray-100 text-gray-800 py-3 rounded-2xl font-medium">
+                        Продолжить бесплатно
+                    </button>
+                </div>
+
+                <div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl p-6 text-white relative overflow-hidden">
+                    <div class="absolute top-4 right-4 bg-white/20 px-3 py-1 rounded-full">
+                        <span class="text-xs font-medium">Популярно</span>
+                    </div>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Premium план</h3>
+                        <div class="text-right">
+                            <span class="text-2xl font-bold">$9.99</span>
+                            <div class="text-sm opacity-80">/месяц</div>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-white"></i>
+                            <span class="text-sm">Все функции базового плана</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-white"></i>
+                            <span class="text-sm">Безлимитный AI помощник</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-white"></i>
+                            <span class="text-sm">Детальная аналитика здоровья</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-white"></i>
+                            <span class="text-sm">Персональные рекомендации</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-white"></i>
+                            <span class="text-sm">Эксклюзивный контент</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-white text-purple-600 py-3 rounded-2xl font-semibold">
+                        Попробовать 7 дней бесплатно
+                    </button>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <p class="text-xs text-gray-500">
+                    Отмена в любое время • Без скрытых платежей
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="permissions-section" class="min-h-screen flex flex-col justify-center items-center p-6 bg-white relative hidden">
+        <div class="w-full space-y-8">
+            <div class="text-center space-y-4">
+                <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto">
+                    <i class="fas fa-shield-alt text-white text-2xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800">Разрешения</h1>
+                <p class="text-gray-600">Помоги нам сделать приложение еще лучше</p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl p-6 border border-blue-200">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-bell text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-800 mb-2">Уведомления</h3>
+                            <p class="text-sm text-gray-600 mb-4">Получай напоминания о приеме витаминов, записи симптомов и важных событиях беременности.</p>
+                            <button class="notification-permission bg-blue-500 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-blue-600 transition-colors">
+                                Разрешить уведомления
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-2xl p-6 border border-emerald-200">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-microphone text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-800 mb-2">Микрофон</h3>
+                            <p class="text-sm text-gray-600 mb-4">Используй голосовые сообщения для общения с AI помощником - это быстрее и удобнее.</p>
+                            <button class="microphone-permission bg-emerald-500 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-emerald-600 transition-colors">
+                                Разрешить микрофон
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-purple-50 to-purple-100 rounded-2xl p-6 border border-purple-200">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-camera text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-800 mb-2">Камера</h3>
+                            <p class="text-sm text-gray-600 mb-4">Добавляй фото в дневник беременности и делись моментами с сообществом.</p>
+                            <button class="camera-permission bg-purple-500 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-purple-600 transition-colors">
+                                Разрешить камеру
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <button id="continue-with-permissions" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 rounded-2xl font-semibold text-lg">
+                    Продолжить
+                </button>
+                
+                <button id="skip-permissions" class="w-full text-gray-500 py-2 text-sm">
+                    Пропустить (можно настроить позже)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="tutorial-section" class="min-h-screen flex flex-col justify-center items-center p-6 bg-gradient-to-br from-pregnancy-beige to-pregnancy-pink relative hidden">
+        <div class="w-full space-y-8">
+            <div class="text-center space-y-4">
+                <div class="w-20 h-20 bg-gradient-to-r from-pink-500 to-orange-500 rounded-full flex items-center justify-center mx-auto">
+                    <i class="fas fa-graduation-cap text-white text-2xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800">Быстрый обзор</h1>
+                <p class="text-gray-600">Узнай, как пользоваться основными функциями</p>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-6">
+                    <div class="flex items-start space-x-4 mb-4">
+                        <div class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-home text-pink-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Главный экран</h3>
+                            <p class="text-sm text-gray-600">Здесь ты увидишь информацию о развитии малыша, советы дня и чек-лист задач.</p>
+                        </div>
+                    </div>
+                    <div class="bg-pink-50 rounded-2xl p-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-pink-200 rounded-full flex items-center justify-center">
+                                <i class="fas fa-baby text-pink-600 text-sm"></i>
+                            </div>
+                            <span class="text-sm font-medium text-gray-700">Ты на 23-й неделе</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-6">
+                    <div class="flex items-start space-x-4 mb-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-robot text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">AI помощник</h3>
+                            <p class="text-sm text-gray-600">Нажми на плавающую кнопку внизу справа, чтобы задать вопрос умному помощнику.</p>
+                        </div>
+                    </div>
+                    <div class="bg-purple-50 rounded-2xl p-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">Можно ли мне пить кофе?</span>
+                            <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-robot text-white text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-6">
+                    <div class="flex items-start space-x-4 mb-4">
+                        <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-chart-line text-emerald-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Трекинг</h3>
+                            <p class="text-sm text-gray-600">Отмечай настроение, симптомы и движения малыша каждый день.</p>
+                        </div>
+                    </div>
+                    <div class="bg-emerald-50 rounded-2xl p-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Как настроение?</span>
+                            <div class="flex space-x-2">
+                                <div class="text-lg">😊</div>
+                                <div class="text-lg">😌</div>
+                                <div class="text-lg">😐</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="finish-tutorial" class="w-full bg-gradient-to-r from-pink-500 to-orange-600 text-white py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
+                Понятно, начать пользоваться!
+            </button>
+        </div>
+    </div>
+
+    <div id="final-loading-section" class="min-h-screen flex flex-col justify-center items-center p-6 bg-gradient-to-br from-pregnancy-mint to-pregnancy-sky relative hidden">
+        <div class="text-center space-y-8">
+            <div class="bounce-in">
+                <img class="w-60 h-60 mx-auto rounded-3xl shadow-2xl baby-glow" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/227c1724ab-483bb96c93af42f3d2b0.png" alt="cute baby illustration loading animation soft pastel colors minimalist pregnancy app">
+            </div>
+            
+            <div class="fade-in space-y-4">
+                <h1 class="text-2xl font-bold text-gray-800">
+                    Готовим все для тебя...
+                </h1>
+                <p class="text-gray-600 text-lg leading-relaxed px-4">
+                    Персонализируем контент и настраиваем рекомендации под твой срок беременности.
+                </p>
+            </div>
+
+            <div class="w-full space-y-4">
+                <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-gray-800">Загружаем информацию о 23-й неделе</span>
+                        <span class="text-sm text-emerald-600 font-medium">100%</span>
+                    </div>
+                    <div class="bg-gray-200 rounded-full h-2">
+                        <div class="bg-gradient-to-r from-emerald-400 to-blue-500 h-2 rounded-full" style="width: 100%;"></div>
+                    </div>
+                </div>
+
+                <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-gray-800">Настраиваем AI помощника</span>
+                        <span class="text-sm text-blue-600 font-medium">85%</span>
+                    </div>
+                    <div class="bg-gray-200 rounded-full h-2">
+                        <div class="bg-gradient-to-r from-blue-400 to-purple-500 h-2 rounded-full" style="width: 85%;"></div>
+                    </div>
+                </div>
+
+                <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-gray-800">Подбираем сообщества</span>
+                        <span class="text-sm text-pink-600 font-medium">70%</span>
+                    </div>
+                    <div class="bg-gray-200 rounded-full h-2">
+                        <div class="bg-gradient-to-r from-pink-400 to-orange-500 h-2 rounded-full" style="width: 70%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="floating-animation">
+                <div class="w-16 h-16 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full flex items-center justify-center mx-auto">
+                    <div class="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let currentScreen = 1;
+    const totalScreens = 4;
+    
+    const screens = [
+        document.getElementById('onboarding-screen-1'),
+        document.getElementById('onboarding-screen-2'),
+        document.getElementById('onboarding-screen-3'),
+        document.getElementById('onboarding-screen-4')
+    ];
+    
+    const progressBar = document.getElementById('progress-fill');
+    
+    function updateProgressBar(step) {
+        const progress = (step / totalScreens) * 100;
+        progressBar.style.width = progress + '%';
+        
+        const stepText = document.querySelector('#progress-bar-section span:first-child');
+        const titleText = document.querySelector('#progress-bar-section span:last-child');
+        
+        stepText.textContent = `Шаг ${step} из ${totalScreens}`;
+        
+        const titles = ['Добро пожаловать', 'AI помощник', 'Отслеживание', 'Сообщество'];
+        titleText.textContent = titles[step - 1];
+    }
+    
+    function showScreen(screenIndex) {
+        screens.forEach((screen, index) => {
+            if (index === screenIndex - 1) {
+                screen.classList.remove('hidden');
+                screen.classList.add('fade-in');
+            } else {
+                screen.classList.add('hidden');
+                screen.classList.remove('fade-in');
+            }
+        });
+        updateProgressBar(screenIndex);
+    }
+    
+    // Next buttons
+    document.getElementById('next-button-1').addEventListener('click', function() {
+        currentScreen = 2;
+        showScreen(currentScreen);
+    });
+    
+    document.getElementById('next-button-2').addEventListener('click', function() {
+        currentScreen = 3;
+        showScreen(currentScreen);
+    });
+    
+    document.getElementById('next-button-3').addEventListener('click', function() {
+        currentScreen = 4;
+        showScreen(currentScreen);
+    });
+    
+    document.getElementById('start-button').addEventListener('click', function() {
+        document.getElementById('onboarding-screen-4').classList.add('hidden');
+        document.getElementById('registration-section').classList.remove('hidden');
+        document.getElementById('progress-bar-section').classList.add('hidden');
+        document.getElementById('onboarding-header').classList.add('hidden');
+    });
+    
+    // Skip button
+    document.getElementById('skip-button').addEventListener('click', function() {
+        document.querySelectorAll('.onboarding-screen').forEach(screen => screen.classList.add('hidden'));
+        document.getElementById('registration-section').classList.remove('hidden');
+        document.getElementById('progress-bar-section').classList.add('hidden');
+        document.getElementById('onboarding-header').classList.add('hidden');
+    });
+    
+    // Registration form interactions
+    const pregnancyOptions = document.querySelectorAll('.pregnancy-option');
+    pregnancyOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            pregnancyOptions.forEach(opt => {
+                opt.classList.remove('border-pink-500', 'bg-pink-50');
+                opt.classList.add('border-gray-300');
+            });
+            this.classList.remove('border-gray-300');
+            this.classList.add('border-pink-500', 'bg-pink-50');
+        });
+    });
+    
+    const interestOptions = document.querySelectorAll('.interest-option');
+    interestOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            this.classList.toggle('border-emerald-500');
+            this.classList.toggle('bg-emerald-50');
+            this.classList.toggle('border-gray-300');
+        });
+    });
+    
+    document.getElementById('complete-registration').addEventListener('click', function() {
+        document.getElementById('registration-section').classList.add('hidden');
+        document.getElementById('welcome-success-section').classList.remove('hidden');
+    });
+    
+    document.getElementById('start-app').addEventListener('click', function() {
+        document.getElementById('welcome-success-section').classList.add('hidden');
+        document.getElementById('subscription-section').classList.remove('hidden');
+    });
+    
+    // Subscription section buttons
+    document.querySelector('.bg-gray-100').addEventListener('click', function() {
+        document.getElementById('subscription-section').classList.add('hidden');
+        document.getElementById('permissions-section').classList.remove('hidden');
+    });
+    
+    document.querySelector('.bg-white.text-purple-600').addEventListener('click', function() {
+        document.getElementById('subscription-section').classList.add('hidden');
+        document.getElementById('permissions-section').classList.remove('hidden');
+    });
+    
+    // Permission buttons
+    document.querySelector('.notification-permission').addEventListener('click', function() {
+        if ('Notification' in window) {
+            Notification.requestPermission().then(function(permission) {
+                if (permission === 'granted') {
+                    this.textContent = 'Разрешено ✓';
+                    this.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+                    this.classList.add('bg-green-500');
+                }
+            }.bind(this));
+        }
+    });
+    
+    document.querySelector('.microphone-permission').addEventListener('click', function() {
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(() => {
+            this.textContent = 'Разрешено ✓';
+            this.classList.remove('bg-emerald-500', 'hover:bg-emerald-600');
+            this.classList.add('bg-green-500');
+        }).catch(() => {
+            this.textContent = 'Отклонено';
+            this.classList.remove('bg-emerald-500', 'hover:bg-emerald-600');
+            this.classList.add('bg-red-500');
+        });
+    });
+    
+    document.querySelector('.camera-permission').addEventListener('click', function() {
+        navigator.mediaDevices.getUserMedia({ video: true }).then(() => {
+            this.textContent = 'Разрешено ✓';
+            this.classList.remove('bg-purple-500', 'hover:bg-purple-600');
+            this.classList.add('bg-green-500');
+        }).catch(() => {
+            this.textContent = 'Отклонено';
+            this.classList.remove('bg-purple-500', 'hover:bg-purple-600');
+            this.classList.add('bg-red-500');
+        });
+    });
+    
+    document.getElementById('continue-with-permissions').addEventListener('click', function() {
+        document.getElementById('permissions-section').classList.add('hidden');
+        document.getElementById('tutorial-section').classList.remove('hidden');
+    });
+    
+    document.getElementById('skip-permissions').addEventListener('click', function() {
+        document.getElementById('permissions-section').classList.add('hidden');
+        document.getElementById('tutorial-section').classList.remove('hidden');
+    });
+    
+    document.getElementById('finish-tutorial').addEventListener('click', function() {
+        document.getElementById('tutorial-section').classList.add('hidden');
+        document.getElementById('final-loading-section').classList.remove('hidden');
+        
+        // Simulate loading process
+        setTimeout(() => {
+            // Redirect to main app
+            window.location.href = '#main-app';
+        }, 3000);
+    });
+    
+    // Touch and swipe interactions
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    document.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+    
+    document.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+    
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartX - touchEndX;
+        
+        if (Math.abs(diff) > swipeThreshold && currentScreen <= totalScreens) {
+            if (diff > 0 && currentScreen < totalScreens) {
+                // Swipe left - next screen
+                currentScreen++;
+                showScreen(currentScreen);
+            } else if (diff < 0 && currentScreen > 1) {
+                // Swipe right - previous screen
+                currentScreen--;
+                showScreen(currentScreen);
+            }
+        }
+    }
+    
+    // Button animations
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+        });
+    });
+    
+    // Initialize first screen
+    updateProgressBar(1);
+});
+</script>
+
+
+</body></html>

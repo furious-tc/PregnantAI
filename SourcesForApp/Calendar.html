@@ -1,0 +1,929 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #fef7f0 0%, #fdf2f8 100%); }
+        .baby-glow { box-shadow: 0 0 30px rgba(251, 207, 232, 0.3); }
+        .floating-animation { animation: float 3s ease-in-out infinite; }
+        .week-card { transition: all 0.3s ease; transform: scale(0.95); opacity: 0.7; }
+        .week-card.active { transform: scale(1); opacity: 1; }
+        .swipe-container { scroll-snap-type: x mandatory; }
+        .swipe-item { scroll-snap-align: center; }
+        .tab-indicator { transition: all 0.3s ease; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .slide-in { animation: slideIn 0.5s ease-out; }
+    </style>
+    <script>tailwind.config = {
+  "theme": {
+    "extend": {
+      "colors": {
+        "pregnancy-pink": "#fdf2f8",
+        "pregnancy-beige": "#fef7f0",
+        "pregnancy-mint": "#f0fdfa",
+        "pregnancy-sky": "#f0f9ff",
+        "soft-pink": "#fbcfe8",
+        "soft-beige": "#fed7aa",
+        "soft-mint": "#a7f3d0",
+        "soft-sky": "#bae6fd"
+      },
+      "fontFamily": {
+        "sans": [
+          "Inter",
+          "sans-serif"
+        ]
+      }
+    }
+  }
+};</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"><style>
+  .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  </style></head>
+<body class="bg-gradient-to-br from-pregnancy-beige to-pregnancy-pink min-h-screen">
+
+<div id="mobile-container" class="max-w-sm mx-auto bg-white shadow-2xl relative overflow-hidden">
+
+    <div id="header" class="bg-white/80 backdrop-blur-lg px-6 py-4 sticky top-0 z-50 border-b border-pink-100">
+        <div class="flex items-center justify-between">
+            <button class="w-10 h-10 bg-pregnancy-mint rounded-full flex items-center justify-center">
+                <i class="fas fa-arrow-left text-emerald-600 text-sm"></i>
+            </button>
+            <div class="text-center">
+                <h1 class="text-lg font-semibold text-gray-800">Календарь</h1>
+                <p class="text-xs text-gray-500">23 неделя беременности</p>
+            </div>
+            <button class="w-10 h-10 bg-pregnancy-pink rounded-full flex items-center justify-center">
+                <i class="fas fa-calendar-plus text-pink-600 text-sm"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="week-navigation-section" class="px-4 py-4 bg-white">
+        <div class="flex items-center justify-between mb-4">
+            <button id="prev-week" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                <i class="fas fa-chevron-left text-gray-600"></i>
+            </button>
+            <div class="text-center">
+                <h2 class="text-xl font-bold text-gray-800">23 неделя</h2>
+                <p class="text-sm text-gray-600">13 - 19 мая 2024</p>
+            </div>
+            <button id="next-week" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                <i class="fas fa-chevron-right text-gray-600"></i>
+            </button>
+        </div>
+
+        <div class="overflow-x-auto swipe-container">
+            <div class="flex space-x-4 pb-2" style="width: max-content;">
+                <div class="week-card swipe-item bg-gradient-to-br from-pregnancy-beige to-white rounded-2xl p-4 border border-orange-200 min-w-[280px]">
+                    <div class="text-center mb-3">
+                        <div class="text-sm font-medium text-gray-600 mb-1">22 неделя</div>
+                        <div class="text-xs text-gray-500">6 - 12 мая</div>
+                    </div>
+                    <div class="w-20 h-20 mx-auto mb-3">
+                        <img class="w-full h-full rounded-xl object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/55463ff422-a46231455a20a21289c9.png" alt="cute baby illustration 22 weeks pregnancy development soft pastel orange colors minimalist style">
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sm font-medium text-gray-800">Как кукуруза</div>
+                        <div class="text-xs text-gray-600">27 см • 430 г</div>
+                    </div>
+                </div>
+
+                <div class="week-card swipe-item active bg-gradient-to-br from-pregnancy-pink to-white rounded-2xl p-4 border-2 border-pink-300 min-w-[280px] baby-glow">
+                    <div class="text-center mb-3">
+                        <div class="text-sm font-semibold text-pink-700 mb-1">23 неделя</div>
+                        <div class="text-xs text-pink-600">13 - 19 мая</div>
+                    </div>
+                    <div class="w-24 h-24 mx-auto mb-3 floating-animation">
+                        <img class="w-full h-full rounded-xl object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/322cac6359-3ef004617f9eb2950558.png" alt="cute baby illustration 23 weeks pregnancy development soft pastel pink colors minimalist style happy baby">
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sm font-semibold text-gray-800">Как папайя</div>
+                        <div class="text-xs text-gray-600">28 см • 500 г</div>
+                    </div>
+                </div>
+
+                <div class="week-card swipe-item bg-gradient-to-br from-pregnancy-mint to-white rounded-2xl p-4 border border-emerald-200 min-w-[280px]">
+                    <div class="text-center mb-3">
+                        <div class="text-sm font-medium text-gray-600 mb-1">24 неделя</div>
+                        <div class="text-xs text-gray-500">20 - 26 мая</div>
+                    </div>
+                    <div class="w-20 h-20 mx-auto mb-3">
+                        <img class="w-full h-full rounded-xl object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/97685b0a5c-0f77a24f6b51028fc29c.png" alt="cute baby illustration 24 weeks pregnancy development soft pastel mint colors minimalist style">
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sm font-medium text-gray-800">Как кукуруза</div>
+                        <div class="text-xs text-gray-600">30 см • 600 г</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-center mt-4 space-x-2">
+            <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
+            <div class="w-8 h-2 bg-pink-500 rounded-full"></div>
+            <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
+        </div>
+    </div>
+
+    <div id="tab-navigation-section" class="px-6 py-4 bg-white border-b border-gray-100">
+        <div class="flex bg-gray-100 rounded-2xl p-1 relative">
+            <div id="tab-indicator" class="absolute top-1 left-1 w-1/3 h-10 bg-white rounded-xl shadow-sm tab-indicator"></div>
+            <button id="development-tab" class="flex-1 py-2 px-4 text-sm font-medium text-pink-600 relative z-10 rounded-xl transition-all">
+                Развитие
+            </button>
+            <button id="mom-tab" class="flex-1 py-2 px-4 text-sm font-medium text-gray-600 relative z-10 rounded-xl transition-all">
+                Мама
+            </button>
+            <button id="recommendations-tab" class="flex-1 py-2 px-4 text-sm font-medium text-gray-600 relative z-10 rounded-xl transition-all">
+                Советы
+            </button>
+        </div>
+    </div>
+
+    <div id="development-content" class="tab-content px-6 py-6">
+        <div class="text-center mb-6">
+            <div class="w-32 h-32 mx-auto mb-4 floating-animation">
+                <img class="w-full h-full rounded-3xl object-cover baby-glow" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/de96d5cef9-594767c294bf741849c8.png" alt="detailed cute baby illustration 23 weeks pregnancy development soft pastel colors minimalist style happy baby with details">
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Развитие на 23 неделе</h3>
+            <p class="text-sm text-gray-600">Малыш активно растет и развивается</p>
+        </div>
+
+        <div class="space-y-4">
+            <div class="bg-gradient-to-r from-pregnancy-pink to-white rounded-2xl p-4 border border-pink-200 slide-in">
+                <div class="flex items-start space-x-3">
+                    <div class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-brain text-pink-600"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800 mb-2">Мозг и нервная система</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">Быстрое развитие мозга. Формируются извилины и борозды. Малыш начинает различать звуки и реагировать на свет.</p>
+                        <div class="mt-3 flex items-center space-x-4">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-3 h-3 bg-pink-400 rounded-full"></div>
+                                <span class="text-xs text-gray-600">Слух развивается</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-3 h-3 bg-pink-400 rounded-full"></div>
+                                <span class="text-xs text-gray-600">Реакция на свет</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-pregnancy-mint to-white rounded-2xl p-4 border border-emerald-200 slide-in">
+                <div class="flex items-start space-x-3">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-lungs text-emerald-600"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800 mb-2">Дыхательная система</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">Легкие продолжают созревать. Формируются альвеолы. Малыш делает дыхательные движения, тренируя диафрагму.</p>
+                        <div class="mt-3 bg-emerald-50 rounded-lg p-3">
+                            <div class="text-xs text-emerald-700 font-medium">Важно знать:</div>
+                            <div class="text-xs text-gray-600 mt-1">Дыхательные движения помогают развитию легких</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-pregnancy-sky to-white rounded-2xl p-4 border border-blue-200 slide-in">
+                <div class="flex items-start space-x-3">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-hand-paper text-blue-600"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800 mb-2">Движения и рефлексы</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">Хватательный рефлекс укрепляется. Малыш может сжимать кулачки, касаться лица, играть с пуповиной.</p>
+                        <div class="mt-3 grid grid-cols-2 gap-2">
+                            <div class="bg-blue-50 rounded-lg p-2 text-center">
+                                <div class="text-lg">👐</div>
+                                <div class="text-xs text-gray-600">Хватает</div>
+                            </div>
+                            <div class="bg-blue-50 rounded-lg p-2 text-center">
+                                <div class="text-lg">🤱</div>
+                                <div class="text-xs text-gray-600">Сосет палец</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-pregnancy-beige to-white rounded-2xl p-4 border border-orange-200 slide-in">
+                <div class="flex items-start space-x-3">
+                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-weight text-orange-600"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800 mb-2">Рост и вес</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">Интенсивный рост. Формируется подкожная жировая ткань. Кожа становится менее прозрачной.</p>
+                        <div class="mt-3 grid grid-cols-3 gap-3">
+                            <div class="text-center">
+                                <div class="text-xl font-bold text-orange-600">28</div>
+                                <div class="text-xs text-gray-600">см длина</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-xl font-bold text-orange-600">500</div>
+                                <div class="text-xs text-gray-600">г вес</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-xl font-bold text-orange-600">+15%</div>
+                                <div class="text-xs text-gray-600">рост/неделя</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="development-milestones-section" class="mt-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-4 border border-purple-200">
+            <h4 class="font-semibold text-gray-800 mb-4 flex items-center space-x-2">
+                <i class="fas fa-star text-purple-600"></i>
+                <span>Ключевые достижения недели</span>
+            </h4>
+            <div class="space-y-3">
+                <div class="flex items-center space-x-3 bg-white/70 rounded-lg p-3">
+                    <div class="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check text-purple-600 text-xs"></i>
+                    </div>
+                    <span class="text-sm text-gray-800">Слух полностью сформирован</span>
+                </div>
+                <div class="flex items-center space-x-3 bg-white/70 rounded-lg p-3">
+                    <div class="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check text-purple-600 text-xs"></i>
+                    </div>
+                    <span class="text-sm text-gray-800">Активные движения каждый день</span>
+                </div>
+                <div class="flex items-center space-x-3 bg-white/70 rounded-lg p-3">
+                    <div class="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check text-purple-600 text-xs"></i>
+                    </div>
+                    <span class="text-sm text-gray-800">Формирование режима сна/бодрствования</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mom-content" class="tab-content hidden px-6 py-6">
+        <div class="text-center mb-6">
+            <div class="w-24 h-24 mx-auto mb-4">
+                <img class="w-full h-full rounded-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/574722a7ee-4c854c44329414afeccc.png" alt="beautiful pregnant woman 23 weeks soft pastel colors minimalist illustration happy serene">
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Изменения в организме</h3>
+            <p class="text-sm text-gray-600">Что происходит с мамой на 23 неделе</p>
+        </div>
+
+        <div class="space-y-4">
+            <div class="bg-gradient-to-r from-pregnancy-pink to-white rounded-2xl p-4 border border-pink-200">
+                <div class="flex items-start space-x-3">
+                    <div class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-expand-arrows-alt text-pink-600"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800 mb-2">Размер живота</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">Матка поднимается выше пупка. Живот заметно округляется. Возможны растяжки на коже.</p>
+                        <div class="mt-3 bg-pink-50 rounded-lg p-3">
+                            <div class="text-xs text-pink-700 font-medium">Совет:</div>
+                            <div class="text-xs text-gray-600 mt-1">Используй увлажняющий крем для профилактики растяжек</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-pregnancy-mint to-white rounded-2xl p-4 border border-emerald-200">
+                <div class="flex items-start space-x-3">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-heartbeat text-emerald-600"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800 mb-2">Сердечно-сосудистая система</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">Увеличивается объем крови. Пульс учащается. Возможны головокружения при резкой смене положения.</p>
+                        <div class="mt-3 grid grid-cols-2 gap-3">
+                            <div class="bg-emerald-50 rounded-lg p-2 text-center">
+                                <div class="text-lg font-bold text-emerald-600">+40%</div>
+                                <div class="text-xs text-gray-600">объем крови</div>
+                            </div>
+                            <div class="bg-emerald-50 rounded-lg p-2 text-center">
+                                <div class="text-lg font-bold text-emerald-600">80-90</div>
+                                <div class="text-xs text-gray-600">уд/мин пульс</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-pregnancy-sky to-white rounded-2xl p-4 border border-blue-200">
+                <div class="flex items-start space-x-3">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-bed text-blue-600"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800 mb-2">Сон и отдых</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">Могут появиться проблемы со сном из-за увеличения живота. Частые позывы к мочеиспусканию ночью.</p>
+                        <div class="mt-3 space-y-2">
+                            <div class="flex items-center space-x-2 text-xs text-gray-600">
+                                <i class="fas fa-moon text-blue-400"></i>
+                                <span>Спи на левом боку</span>
+                            </div>
+                            <div class="flex items-center space-x-2 text-xs text-gray-600">
+                                <i class="fas fa-pillow text-blue-400"></i>
+                                <span>Используй подушку для беременных</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-pregnancy-beige to-white rounded-2xl p-4 border border-orange-200">
+                <div class="flex items-start space-x-3">
+                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-weight text-orange-600"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800 mb-2">Прибавка веса</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">Нормальная прибавка: 5-7 кг от начала беременности. Еженедельно около 300-500 г.</p>
+                        <div class="mt-3 bg-orange-50 rounded-lg p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-gray-600">Рекомендуемая прибавка:</span>
+                                <span class="text-sm font-bold text-orange-600">5-7 кг</span>
+                            </div>
+                            <div class="mt-2 bg-white rounded-full h-2">
+                                <div class="bg-gradient-to-r from-orange-400 to-pink-400 h-2 rounded-full" style="width: 45%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="common-symptoms-section" class="mt-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-4 border border-purple-200">
+            <h4 class="font-semibold text-gray-800 mb-4 flex items-center space-x-2">
+                <i class="fas fa-exclamation-circle text-purple-600"></i>
+                <span>Частые симптомы на 23 неделе</span>
+            </h4>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-white/70 rounded-lg p-3 text-center">
+                    <i class="fas fa-fire text-red-400 text-lg mb-2"></i>
+                    <div class="text-xs font-medium text-gray-800">Изжога</div>
+                </div>
+                <div class="bg-white/70 rounded-lg p-3 text-center">
+                    <i class="fas fa-tired text-blue-400 text-lg mb-2"></i>
+                    <div class="text-xs font-medium text-gray-800">Усталость</div>
+                </div>
+                <div class="bg-white/70 rounded-lg p-3 text-center">
+                    <i class="fas fa-shoe-prints text-purple-400 text-lg mb-2"></i>
+                    <div class="text-xs font-medium text-gray-800">Отеки ног</div>
+                </div>
+                <div class="bg-white/70 rounded-lg p-3 text-center">
+                    <i class="fas fa-dizzy text-yellow-400 text-lg mb-2"></i>
+                    <div class="text-xs font-medium text-gray-800">Головокружение</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="body-changes-timeline" class="mt-6">
+            <h4 class="font-semibold text-gray-800 mb-4">Изменения по дням недели</h4>
+            <div class="space-y-3">
+                <div class="flex items-start space-x-4">
+                    <div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span class="text-xs font-bold text-pink-600">1</span>
+                    </div>
+                    <div class="flex-1 bg-pink-50 rounded-lg p-3">
+                        <div class="text-sm font-medium text-gray-800">День 161</div>
+                        <div class="text-xs text-gray-600 mt-1">Матка на 2,5 см выше пупка</div>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span class="text-xs font-bold text-emerald-600">4</span>
+                    </div>
+                    <div class="flex-1 bg-emerald-50 rounded-lg p-3">
+                        <div class="text-sm font-medium text-gray-800">День 164</div>
+                        <div class="text-xs text-gray-600 mt-1">Усиление движений малыша</div>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span class="text-xs font-bold text-blue-600">7</span>
+                    </div>
+                    <div class="flex-1 bg-blue-50 rounded-lg p-3">
+                        <div class="text-sm font-medium text-gray-800">День 167</div>
+                        <div class="text-xs text-gray-600 mt-1">Возможное появление линии на животе</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="recommendations-content" class="tab-content hidden px-6 py-6">
+        <div class="text-center mb-6">
+            <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-soft-mint to-soft-sky rounded-full flex items-center justify-center">
+                <i class="fas fa-lightbulb text-white text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Рекомендации на неделю</h3>
+            <p class="text-sm text-gray-600">Полезные советы для здоровья мамы и малыша</p>
+        </div>
+
+        <div id="nutrition-recommendations" class="mb-6">
+            <h4 class="font-semibold text-gray-800 mb-4 flex items-center space-x-2">
+                <i class="fas fa-apple-alt text-green-600"></i>
+                <span>Питание</span>
+            </h4>
+            <div class="space-y-3">
+                <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-4 border border-green-200">
+                    <h5 class="font-medium text-gray-800 mb-2">Продукты с железом</h5>
+                    <p class="text-sm text-gray-600 mb-3">Для профилактики анемии включи в рацион:</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="bg-white/70 rounded-lg p-2 text-center">
+                            <div class="text-lg mb-1">🥩</div>
+                            <div class="text-xs text-gray-700">Говядина</div>
+                        </div>
+                        <div class="bg-white/70 rounded-lg p-2 text-center">
+                            <div class="text-lg mb-1">🥬</div>
+                            <div class="text-xs text-gray-700">Шпинат</div>
+                        </div>
+                        <div class="bg-white/70 rounded-lg p-2 text-center">
+                            <div class="text-lg mb-1">🫘</div>
+                            <div class="text-xs text-gray-700">Чечевица</div>
+                        </div>
+                        <div class="bg-white/70 rounded-lg p-2 text-center">
+                            <div class="text-lg mb-1">🥚</div>
+                            <div class="text-xs text-gray-700">Яйца</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-4 border border-blue-200">
+                    <h5 class="font-medium text-gray-800 mb-2">Кальций для костей</h5>
+                    <p class="text-sm text-gray-600 mb-3">Малыш активно формирует скелет:</p>
+                    <div class="flex items-center space-x-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-blue-600">1000</div>
+                            <div class="text-xs text-gray-600">мг/день</div>
+                        </div>
+                        <div class="flex-1 text-xs text-gray-600">
+                            Молоко, творог, йогурт, сыр, кунжут, миндаль
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-2xl p-4 border border-orange-200">
+                    <h5 class="font-medium text-gray-800 mb-2">Режим питания</h5>
+                    <div class="space-y-2">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-clock text-orange-600 text-xs"></i>
+                            </div>
+                            <span class="text-sm text-gray-700">Частые приемы пищи (5-6 раз)</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-utensils text-orange-600 text-xs"></i>
+                            </div>
+                            <span class="text-sm text-gray-700">Небольшие порции</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-tint text-orange-600 text-xs"></i>
+                            </div>
+                            <span class="text-sm text-gray-700">2-2,5 литра воды в день</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="exercise-recommendations" class="mb-6">
+            <h4 class="font-semibold text-gray-800 mb-4 flex items-center space-x-2">
+                <i class="fas fa-dumbbell text-purple-600"></i>
+                <span>Физическая активность</span>
+            </h4>
+            <div class="space-y-3">
+                <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-4 border border-purple-200">
+                    <h5 class="font-medium text-gray-800 mb-2">Пренатальная йога</h5>
+                    <p class="text-sm text-gray-600 mb-3">Укрепляет мышцы спины и готовит к родам</p>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="bg-white/70 rounded-lg p-2 text-center">
+                            <div class="text-lg mb-1">🧘‍♀️</div>
+                            <div class="text-xs text-gray-700">15 мин/день</div>
+                        </div>
+                        <div class="bg-white/70 rounded-lg p-2 text-center">
+                            <div class="text-lg mb-1">🌅</div>
+                            <div class="text-xs text-gray-700">Утром</div>
+                        </div>
+                        <div class="bg-white/70 rounded-lg p-2 text-center">
+                            <div class="text-lg mb-1">🏠</div>
+                            <div class="text-xs text-gray-700">Дома</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-green-50 to-teal-50 rounded-2xl p-4 border border-green-200">
+                    <h5 class="font-medium text-gray-800 mb-2">Плавание</h5>
+                    <p class="text-sm text-gray-600 mb-3">Снижает нагрузку на суставы, улучшает кровообращение</p>
+                    <div class="flex items-center justify-between">
+                        <div class="text-center">
+                            <div class="text-lg font-bold text-teal-600">2-3</div>
+                            <div class="text-xs text-gray-600">раза/неделя</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-lg font-bold text-teal-600">30</div>
+                            <div class="text-xs text-gray-600">минут</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-lg font-bold text-teal-600">🏊‍♀️</div>
+                            <div class="text-xs text-gray-600">брасс</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-4 border border-blue-200">
+                    <h5 class="font-medium text-gray-800 mb-2">Дыхательная гимнастика</h5>
+                    <div class="space-y-3">
+                        <div class="bg-white/70 rounded-lg p-3">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <span class="text-xs font-bold text-blue-600">1</span>
+                                </div>
+                                <span class="text-sm font-medium text-gray-800">Диафрагмальное дыхание</span>
+                            </div>
+                            <p class="text-xs text-gray-600 ml-11">Вдох животом на 4 счета, задержка на 2, выдох на 6</p>
+                        </div>
+                        <div class="bg-white/70 rounded-lg p-3">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <span class="text-xs font-bold text-blue-600">2</span>
+                                </div>
+                                <span class="text-sm font-medium text-gray-800">Дыхание "собачкой"</span>
+                            </div>
+                            <p class="text-xs text-gray-600 ml-11">Поможет во время схваток</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="wellness-recommendations" class="mb-6">
+            <h4 class="font-semibold text-gray-800 mb-4 flex items-center space-x-2">
+                <i class="fas fa-spa text-pink-600"></i>
+                <span>Благополучие</span>
+            </h4>
+            <div class="space-y-3">
+                <div class="bg-gradient-to-r from-pink-50 to-rose-50 rounded-2xl p-4 border border-pink-200">
+                    <h5 class="font-medium text-gray-800 mb-2">Уход за кожей</h5>
+                    <div class="space-y-2">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-droplet text-pink-400"></i>
+                            <span class="text-sm text-gray-700">Увлажняющий крем 2 раза в день</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-sun text-pink-400"></i>
+                            <span class="text-sm text-gray-700">SPF защита при выходе на улицу</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-oil-can text-pink-400"></i>
+                            <span class="text-sm text-gray-700">Масло от растяжек на живот и бедра</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-4 border border-indigo-200">
+                    <h5 class="font-medium text-gray-800 mb-2">Качество сна</h5>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-white/70 rounded-lg p-3 text-center">
+                            <i class="fas fa-moon text-indigo-400 text-lg mb-2"></i>
+                            <div class="text-xs font-medium text-gray-800">Сон на левом боку</div>
+                        </div>
+                        <div class="bg-white/70 rounded-lg p-3 text-center">
+                            <i class="fas fa-bed text-indigo-400 text-lg mb-2"></i>
+                            <div class="text-xs font-medium text-gray-800">Подушка между ног</div>
+                        </div>
+                        <div class="bg-white/70 rounded-lg p-3 text-center">
+                            <i class="fas fa-temperature-low text-indigo-400 text-lg mb-2"></i>
+                            <div class="text-xs font-medium text-gray-800">Прохладная комната</div>
+                        </div>
+                        <div class="bg-white/70 rounded-lg p-3 text-center">
+                            <i class="fas fa-phone-slash text-indigo-400 text-lg mb-2"></i>
+                            <div class="text-xs font-medium text-gray-800">Без гаджетов</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-4 border border-yellow-200">
+                    <h5 class="font-medium text-gray-800 mb-2">Эмоциональное здоровье</h5>
+                    <div class="space-y-3">
+                        <div class="bg-white/70 rounded-lg p-3">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-heart text-yellow-500"></i>
+                                <span class="text-sm text-gray-700">Общение с малышом</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1 ml-6">Разговаривай, пой колыбельные, включай классическую музыку</p>
+                        </div>
+                        <div class="bg-white/70 rounded-lg p-3">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-users text-yellow-500"></i>
+                                <span class="text-sm text-gray-700">Поддержка близких</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1 ml-6">Не стесняйся просить помощи и делиться переживаниями</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="medical-recommendations" class="mb-6">
+            <h4 class="font-semibold text-gray-800 mb-4 flex items-center space-x-2">
+                <i class="fas fa-stethoscope text-red-600"></i>
+                <span>Медицинские рекомендации</span>
+            </h4>
+            <div class="bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl p-4 border border-red-200">
+                <h5 class="font-medium text-gray-800 mb-3">Когда обратиться к врачу</h5>
+                <div class="space-y-2">
+                    <div class="flex items-start space-x-3 bg-white/70 rounded-lg p-2">
+                        <i class="fas fa-exclamation-triangle text-red-500 mt-1"></i>
+                        <div>
+                            <div class="text-sm font-medium text-gray-800">Кровотечения</div>
+                            <div class="text-xs text-gray-600">Любые выделения с кровью</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3 bg-white/70 rounded-lg p-2">
+                        <i class="fas fa-head-side-cough text-red-500 mt-1"></i>
+                        <div>
+                            <div class="text-sm font-medium text-gray-800">Сильные головные боли</div>
+                            <div class="text-xs text-gray-600">Особенно с нарушением зрения</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3 bg-white/70 rounded-lg p-2">
+                        <i class="fas fa-thermometer-full text-red-500 mt-1"></i>
+                        <div>
+                            <div class="text-sm font-medium text-gray-800">Температура выше 38°C</div>
+                            <div class="text-xs text-gray-600">Может навредить малышу</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3 bg-white/70 rounded-lg p-2">
+                        <i class="fas fa-baby text-red-500 mt-1"></i>
+                        <div>
+                            <div class="text-sm font-medium text-gray-800">Отсутствие движений</div>
+                            <div class="text-xs text-gray-600">Более 12 часов без шевелений</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="weekly-checklist" class="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl p-4 border border-emerald-200">
+            <h4 class="font-semibold text-gray-800 mb-4 flex items-center space-x-2">
+                <i class="fas fa-clipboard-check text-emerald-600"></i>
+                <span>Чек-лист на 23 неделю</span>
+            </h4>
+            <div class="space-y-3">
+                <label class="flex items-center space-x-3 bg-white/70 rounded-lg p-3 cursor-pointer">
+                    <input type="checkbox" class="w-5 h-5 text-emerald-600 rounded">
+                    <span class="text-sm text-gray-800">Записаться на УЗИ второго скрининга</span>
+                </label>
+                <label class="flex items-center space-x-3 bg-white/70 rounded-lg p-3 cursor-pointer">
+                    <input type="checkbox" class="w-5 h-5 text-emerald-600 rounded">
+                    <span class="text-sm text-gray-800">Начать курсы подготовки к родам</span>
+                </label>
+                <label class="flex items-center space-x-3 bg-white/70 rounded-lg p-3 cursor-pointer">
+                    <input type="checkbox" class="w-5 h-5 text-emerald-600 rounded">
+                    <span class="text-sm text-gray-800">Купить бандаж для поддержки живота</span>
+                </label>
+                <label class="flex items-center space-x-3 bg-white/70 rounded-lg p-3 cursor-pointer">
+                    <input type="checkbox" class="w-5 h-5 text-emerald-600 rounded">
+                    <span class="text-sm text-gray-800">Обновить гардероб для беременных</span>
+                </label>
+                <label class="flex items-center space-x-3 bg-white/70 rounded-lg p-3 cursor-pointer">
+                    <input type="checkbox" class="w-5 h-5 text-emerald-600 rounded">
+                    <span class="text-sm text-gray-800">Начать вести дневник движений малыша</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div id="floating-ai-button" class="fixed bottom-20 right-6 z-50">
+        <button class="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full shadow-lg flex items-center justify-center floating-animation hover:shadow-xl transition-all">
+            <i class="fas fa-robot text-white text-xl"></i>
+        </button>
+        <div class="absolute -top-12 right-0 bg-gray-800 text-white px-3 py-1 rounded-lg text-xs opacity-0 hover:opacity-100 transition-opacity">
+            AI помощник
+        </div>
+    </div>
+
+    <div id="bottom-navigation" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2">
+        <div class="max-w-sm mx-auto flex items-center justify-between">
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-home text-lg"></i>
+                <span class="text-xs">Главная</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-pink-600">
+                <i class="fas fa-calendar text-lg"></i>
+                <span class="text-xs font-medium">Календарь</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-book text-lg"></i>
+                <span class="text-xs">Дневник</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-trophy text-lg"></i>
+                <span class="text-xs">Достижения</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-user text-lg"></i>
+                <span class="text-xs">Профиль</span>
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const developmentTab = document.getElementById('development-tab');
+    const momTab = document.getElementById('mom-tab');
+    const recommendationsTab = document.getElementById('recommendations-tab');
+    const tabIndicator = document.getElementById('tab-indicator');
+    
+    const developmentContent = document.getElementById('development-content');
+    const momContent = document.getElementById('mom-content');
+    const recommendationsContent = document.getElementById('recommendations-content');
+    
+    const prevWeekBtn = document.getElementById('prev-week');
+    const nextWeekBtn = document.getElementById('next-week');
+    const weekCards = document.querySelectorAll('.week-card');
+    
+    let currentWeek = 23;
+    let activeTab = 'development';
+
+    function switchTab(tabName) {
+        // Hide all content
+        developmentContent.classList.add('hidden');
+        momContent.classList.add('hidden');
+        recommendationsContent.classList.add('hidden');
+        
+        // Remove active states
+        developmentTab.classList.remove('text-pink-600');
+        momTab.classList.remove('text-pink-600');
+        recommendationsTab.classList.remove('text-pink-600');
+        developmentTab.classList.add('text-gray-600');
+        momTab.classList.add('text-gray-600');
+        recommendationsTab.classList.add('text-gray-600');
+        
+        // Show selected content and activate tab
+        if (tabName === 'development') {
+            developmentContent.classList.remove('hidden');
+            developmentTab.classList.remove('text-gray-600');
+            developmentTab.classList.add('text-pink-600');
+            tabIndicator.style.transform = 'translateX(0%)';
+        } else if (tabName === 'mom') {
+            momContent.classList.remove('hidden');
+            momTab.classList.remove('text-gray-600');
+            momTab.classList.add('text-pink-600');
+            tabIndicator.style.transform = 'translateX(100%)';
+        } else if (tabName === 'recommendations') {
+            recommendationsContent.classList.remove('hidden');
+            recommendationsTab.classList.remove('text-gray-600');
+            recommendationsTab.classList.add('text-pink-600');
+            tabIndicator.style.transform = 'translateX(200%)';
+        }
+        
+        activeTab = tabName;
+    }
+
+    // Tab event listeners
+    developmentTab.addEventListener('click', () => switchTab('development'));
+    momTab.addEventListener('click', () => switchTab('mom'));
+    recommendationsTab.addEventListener('click', () => switchTab('recommendations'));
+
+    // Week navigation
+    prevWeekBtn.addEventListener('click', function() {
+        if (currentWeek > 1) {
+            currentWeek--;
+            updateWeekDisplay();
+        }
+    });
+
+    nextWeekBtn.addEventListener('click', function() {
+        if (currentWeek < 42) {
+            currentWeek++;
+            updateWeekDisplay();
+        }
+    });
+
+    function updateWeekDisplay() {
+        // Update week info
+        document.querySelector('#week-navigation-section h2').textContent = `${currentWeek} неделя`;
+        
+        // Update week cards
+        weekCards.forEach((card, index) => {
+            card.classList.remove('active');
+            if (index === 1) { // Middle card is always active
+                card.classList.add('active');
+            }
+        });
+        
+        // Add slide animation
+        weekCards.forEach(card => {
+            card.style.transform = 'translateX(20px)';
+            card.style.opacity = '0';
+            setTimeout(() => {
+                card.style.transform = 'translateX(0)';
+                card.style.opacity = '1';
+            }, 100);
+        });
+    }
+
+    // Swipe functionality for week cards
+    let startX = 0;
+    let currentX = 0;
+    let cardContainer = document.querySelector('.swipe-container');
+
+    cardContainer.addEventListener('touchstart', function(e) {
+        startX = e.touches[0].clientX;
+    });
+
+    cardContainer.addEventListener('touchmove', function(e) {
+        currentX = e.touches[0].clientX;
+    });
+
+    cardContainer.addEventListener('touchend', function(e) {
+        let diffX = startX - currentX;
+        
+        if (Math.abs(diffX) > 50) { // Minimum swipe distance
+            if (diffX > 0 && currentWeek < 42) {
+                // Swipe left - next week
+                currentWeek++;
+                updateWeekDisplay();
+            } else if (diffX < 0 && currentWeek > 1) {
+                // Swipe right - previous week
+                currentWeek--;
+                updateWeekDisplay();
+            }
+        }
+    });
+
+    // Animate elements on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('slide-in');
+            }
+        });
+    }, observerOptions);
+
+    // Observe all cards and sections
+    document.querySelectorAll('.bg-gradient-to-r').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Floating button animation
+    const aiButton = document.querySelector('#floating-ai-button button');
+    aiButton.addEventListener('click', function() {
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.style.transform = 'scale(1)';
+        }, 150);
+    });
+
+    // Initialize with development tab
+    switchTab('development');
+});
+</script>
+
+
+</body></html>

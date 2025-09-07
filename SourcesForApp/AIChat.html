@@ -1,0 +1,498 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #fef7f0 0%, #fdf2f8 100%); }
+        .chat-bubble-user { 
+            background: linear-gradient(135deg, #fbcfe8 0%, #fdf2f8 100%);
+            border-radius: 18px 18px 6px 18px;
+        }
+        .chat-bubble-ai { 
+            background: linear-gradient(135deg, #f0fdfa 0%, #f0f9ff 100%);
+            border-radius: 18px 18px 18px 6px;
+        }
+        .typing-animation { animation: typing 1.5s ease-in-out infinite; }
+        @keyframes typing {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+        .voice-pulse { animation: pulse-voice 1.5s ease-in-out infinite; }
+        @keyframes pulse-voice {
+            0%, 100% { transform: scale(1); background: #ec4899; }
+            50% { transform: scale(1.1); background: #be185d; }
+        }
+        .floating-animation { animation: float 3s ease-in-out infinite; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+        .quick-btn-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .message-fade-in { animation: fadeInUp 0.3s ease-out; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <script>tailwind.config = {
+  "theme": {
+    "extend": {
+      "colors": {
+        "pregnancy-pink": "#fdf2f8",
+        "pregnancy-beige": "#fef7f0",
+        "pregnancy-mint": "#f0fdfa",
+        "pregnancy-sky": "#f0f9ff",
+        "soft-pink": "#fbcfe8",
+        "soft-beige": "#fed7aa",
+        "soft-mint": "#a7f3d0",
+        "soft-sky": "#bae6fd"
+      },
+      "fontFamily": {
+        "sans": [
+          "Inter",
+          "sans-serif"
+        ]
+      }
+    }
+  }
+};</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"><style>
+  .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  </style></head>
+<body class="bg-gradient-to-br from-pregnancy-beige to-pregnancy-pink min-h-screen">
+
+<div id="mobile-container" class="max-w-sm mx-auto bg-white shadow-2xl relative overflow-hidden h-screen flex flex-col">
+
+    <div id="chat-header" class="bg-white/95 backdrop-blur-lg px-4 py-3 sticky top-0 z-50 border-b border-pink-100/50">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <button class="w-9 h-9 bg-gradient-to-r from-emerald-100 to-mint-100 rounded-full flex items-center justify-center hover:scale-105 transition-transform">
+                    <i class="fas fa-arrow-left text-emerald-600 text-sm"></i>
+                </button>
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <div class="w-11 h-11 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex items-center justify-center floating-animation shadow-lg">
+                            <i class="fas fa-sparkles text-white text-lg"></i>
+                        </div>
+                        <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-2 border-white flex items-center justify-center">
+                            <div class="w-2 h-2 bg-white rounded-full"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-gray-800">Maya AI</h1>
+                        <p class="text-xs text-emerald-600 flex items-center font-medium">
+                            </p><div class="w-2 h-2 bg-emerald-400 rounded-full mr-2 animate-pulse"></div>
+                            Всегда рядом
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center space-x-1">
+                <button class="w-9 h-9 bg-gradient-to-r from-blue-100 to-sky-100 rounded-full flex items-center justify-center hover:scale-105 transition-transform">
+                    <i class="fas fa-video text-blue-600 text-sm"></i>
+                </button>
+                <button class="w-9 h-9 bg-gradient-to-r from-pink-100 to-rose-100 rounded-full flex items-center justify-center hover:scale-105 transition-transform">
+                    <i class="fas fa-ellipsis-v text-pink-600 text-sm"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="welcome-section" class="px-4 py-5 bg-gradient-to-br from-pregnancy-beige via-pregnancy-pink to-pregnancy-mint">
+        <div class="text-center">
+            <div class="relative mb-4">
+                <div class="w-16 h-16 bg-gradient-to-br from-pink-400 via-purple-400 to-blue-400 rounded-2xl flex items-center justify-center mx-auto floating-animation shadow-xl">
+                    <i class="fas fa-heart text-white text-xl"></i>
+                </div>
+                <div class="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+                    <i class="fas fa-star text-white text-xs"></i>
+                </div>
+            </div>
+            <h2 class="text-xl font-bold text-gray-800 mb-2">Привет, солнышко! ✨</h2>
+            <p class="text-sm text-gray-700 leading-relaxed px-2">Я Maya - твой умный помощник в материнстве. Готова поддержать тебя на каждом шаге этого волшебного путешествия!</p>
+        </div>
+    </div>
+
+    <div id="quick-questions-section" class="px-4 py-4 bg-white/90 backdrop-blur-sm">
+        <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center">
+            <i class="fas fa-lightning-bolt text-yellow-500 mr-2"></i>
+            Быстрые ответы
+        </h3>
+        <div class="space-y-2">
+            <button class="quick-question-btn w-full bg-gradient-to-r from-pink-50 to-rose-50 border-2 border-pink-200/50 rounded-2xl p-4 text-left transition-all duration-300 hover:scale-[1.02] hover:shadow-lg group">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-pink-400 to-rose-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fas fa-question-circle text-white text-sm"></i>
+                        </div>
+                        <div>
+                            <span class="text-sm font-semibold text-gray-800">Можно ли мне...?</span>
+                            <p class="text-xs text-gray-500">Безопасность и ограничения</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-pink-400 group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </button>
+            
+            <button class="quick-question-btn w-full bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-200/50 rounded-2xl p-4 text-left transition-all duration-300 hover:scale-[1.02] hover:shadow-lg group">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fas fa-check-double text-white text-sm"></i>
+                        </div>
+                        <div>
+                            <span class="text-sm font-semibold text-gray-800">Нормально ли это?</span>
+                            <p class="text-xs text-gray-500">Симптомы и ощущения</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-emerald-400 group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </button>
+
+            <button class="quick-question-btn w-full bg-gradient-to-r from-blue-50 to-sky-50 border-2 border-blue-200/50 rounded-2xl p-4 text-left transition-all duration-300 hover:scale-[1.02] hover:shadow-lg group">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-sky-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fas fa-magic text-white text-sm"></i>
+                        </div>
+                        <div>
+                            <span class="text-sm font-semibold text-gray-800">Что мне делать?</span>
+                            <p class="text-xs text-gray-500">Советы и рекомендации</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-blue-400 group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <div id="chat-messages" class="flex-1 px-4 py-4 overflow-y-auto space-y-4 bg-gradient-to-b from-white to-gray-50/50">
+        
+        <div class="message-fade-in flex items-start space-x-3">
+            <div class="w-9 h-9 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+                <i class="fas fa-sparkles text-white text-xs"></i>
+            </div>
+            <div class="chat-bubble-ai p-4 max-w-[280px] shadow-lg">
+                <p class="text-sm text-gray-800 leading-relaxed mb-2">Привет, дорогая! 💕 Я Maya, и я здесь, чтобы поддержать тебя на каждом этапе беременности.</p>
+                <div class="bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl p-3 mb-3 border border-pink-200/30">
+                    <p class="text-xs text-gray-700 font-medium">✨ Что я умею:</p>
+                    <ul class="text-xs text-gray-600 mt-1 space-y-1">
+                        <li>• Отвечать на вопросы о здоровье</li>
+                        <li>• Давать персональные советы</li>
+                        <li>• Поддерживать эмоционально</li>
+                    </ul>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-gray-500">Сейчас</span>
+                    <div class="flex space-x-2">
+                        <button class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center hover:bg-emerald-200 transition-colors">
+                            <i class="fas fa-thumbs-up text-emerald-600 text-xs"></i>
+                        </button>
+                        <button class="w-6 h-6 bg-pink-100 rounded-full flex items-center justify-center hover:bg-pink-200 transition-colors">
+                            <i class="fas fa-heart text-pink-600 text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="typing-indicator" class="flex items-start space-x-3" style="display: none;">
+            <div class="w-9 h-9 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+                <i class="fas fa-sparkles text-white text-xs"></i>
+            </div>
+            <div class="chat-bubble-ai p-4 max-w-xs shadow-lg">
+                <div class="flex space-x-1">
+                    <div class="w-2 h-2 bg-gray-400 rounded-full typing-animation"></div>
+                    <div class="w-2 h-2 bg-gray-400 rounded-full typing-animation" style="animation-delay: 0.2s;"></div>
+                    <div class="w-2 h-2 bg-gray-400 rounded-full typing-animation" style="animation-delay: 0.4s;"></div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">Maya печатает...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="suggested-topics-section" class="px-4 py-3 bg-gradient-to-r from-pregnancy-mint/20 to-pregnancy-sky/20 border-t border-gray-100">
+        <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center">
+            <i class="fas fa-fire text-orange-500 mr-2"></i>
+            Популярные темы
+        </h3>
+        <div class="flex space-x-2 overflow-x-auto pb-2">
+            <button class="topic-btn bg-white/80 backdrop-blur-sm border-2 border-pink-200/50 rounded-full px-4 py-2 text-sm font-semibold text-gray-700 whitespace-nowrap hover:bg-pink-50 hover:scale-105 transition-all shadow-sm">
+                🍎 Питание
+            </button>
+            <button class="topic-btn bg-white/80 backdrop-blur-sm border-2 border-emerald-200/50 rounded-full px-4 py-2 text-sm font-semibold text-gray-700 whitespace-nowrap hover:bg-emerald-50 hover:scale-105 transition-all shadow-sm">
+                🧘‍♀️ Йога
+            </button>
+            <button class="topic-btn bg-white/80 backdrop-blur-sm border-2 border-blue-200/50 rounded-full px-4 py-2 text-sm font-semibold text-gray-700 whitespace-nowrap hover:bg-blue-50 hover:scale-105 transition-all shadow-sm">
+                😴 Сон
+            </button>
+            <button class="topic-btn bg-white/80 backdrop-blur-sm border-2 border-orange-200/50 rounded-full px-4 py-2 text-sm font-semibold text-gray-700 whitespace-nowrap hover:bg-orange-50 hover:scale-105 transition-all shadow-sm">
+                👶 Малыш
+            </button>
+            <button class="topic-btn bg-white/80 backdrop-blur-sm border-2 border-purple-200/50 rounded-full px-4 py-2 text-sm font-semibold text-gray-700 whitespace-nowrap hover:bg-purple-50 hover:scale-105 transition-all shadow-sm">
+                💊 Витамины
+            </button>
+        </div>
+    </div>
+
+    <div id="chat-input-section" class="px-4 py-4 bg-white border-t border-gray-200/50">
+        <div class="flex items-center space-x-3">
+            <button id="attachment-btn" class="w-11 h-11 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                <i class="fas fa-plus text-white text-sm"></i>
+            </button>
+            
+            <div class="flex-1 bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl px-4 py-3 border-2 border-gray-200/50 focus-within:border-pink-300 transition-colors">
+                <input type="text" id="message-input" placeholder="Поделись своими мыслями..." class="w-full bg-transparent text-sm text-gray-800 placeholder-gray-500 focus:outline-none font-medium">
+            </div>
+            
+            <button id="voice-btn" class="w-11 h-11 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                <i class="fas fa-microphone text-white text-sm"></i>
+            </button>
+            
+            <button id="send-btn" class="w-11 h-11 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg opacity-50">
+                <i class="fas fa-paper-plane text-white text-sm"></i>
+            </button>
+        </div>
+        
+        <div id="attachment-menu" class="hidden mt-3 bg-white/95 backdrop-blur-lg rounded-2xl border border-gray-200 p-4 shadow-xl">
+            <h4 class="text-sm font-bold text-gray-800 mb-3">Что хочешь отправить?</h4>
+            <div class="grid grid-cols-4 gap-3">
+                <button class="flex flex-col items-center space-y-2 p-3 rounded-xl hover:bg-blue-50 transition-colors group">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-sky-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-md">
+                        <i class="fas fa-camera text-white text-sm"></i>
+                    </div>
+                    <span class="text-xs text-gray-700 font-medium">Фото</span>
+                </button>
+                <button class="flex flex-col items-center space-y-2 p-3 rounded-xl hover:bg-emerald-50 transition-colors group">
+                    <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-md">
+                        <i class="fas fa-file-medical text-white text-sm"></i>
+                    </div>
+                    <span class="text-xs text-gray-700 font-medium">Анализы</span>
+                </button>
+                <button class="flex flex-col items-center space-y-2 p-3 rounded-xl hover:bg-pink-50 transition-colors group">
+                    <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-md">
+                        <i class="fas fa-heartbeat text-white text-sm"></i>
+                    </div>
+                    <span class="text-xs text-gray-700 font-medium">Симптомы</span>
+                </button>
+                <button class="flex flex-col items-center space-y-2 p-3 rounded-xl hover:bg-orange-50 transition-colors group">
+                    <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-md">
+                        <i class="fas fa-calendar-heart text-white text-sm"></i>
+                    </div>
+                    <span class="text-xs text-gray-700 font-medium">Дата</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="voice-recording-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center">
+        <div class="bg-white rounded-3xl p-8 mx-4 text-center max-w-sm w-full shadow-2xl">
+            <div class="w-28 h-28 voice-pulse rounded-full mx-auto mb-6 flex items-center justify-center shadow-2xl">
+                <i class="fas fa-microphone text-white text-3xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">Слушаю тебя... 👂</h3>
+            <p class="text-sm text-gray-600 mb-6">Говори спокойно, я всё пойму</p>
+            <div class="flex space-x-3">
+                <button id="cancel-recording" class="flex-1 bg-gray-200 text-gray-800 py-4 rounded-2xl font-bold hover:bg-gray-300 transition-colors">
+                    Отмена
+                </button>
+                <button id="stop-recording" class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white py-4 rounded-2xl font-bold hover:shadow-xl transition-all">
+                    Готово ✨
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const messageInput = document.getElementById('message-input');
+    const sendBtn = document.getElementById('send-btn');
+    const voiceBtn = document.getElementById('voice-btn');
+    const attachmentBtn = document.getElementById('attachment-btn');
+    const attachmentMenu = document.getElementById('attachment-menu');
+    const voiceModal = document.getElementById('voice-recording-modal');
+    const cancelRecording = document.getElementById('cancel-recording');
+    const stopRecording = document.getElementById('stop-recording');
+    const chatMessages = document.getElementById('chat-messages');
+    const quickQuestionBtns = document.querySelectorAll('.quick-question-btn');
+    const topicBtns = document.querySelectorAll('.topic-btn');
+    const exerciseBtns = document.querySelectorAll('.exercise-btn');
+    const typingIndicator = document.getElementById('typing-indicator');
+
+    // Message input handling
+    messageInput.addEventListener('input', function() {
+        if (this.value.trim().length > 0) {
+            sendBtn.classList.remove('opacity-50');
+            sendBtn.classList.add('opacity-100');
+        } else {
+            sendBtn.classList.add('opacity-50');
+            sendBtn.classList.remove('opacity-100');
+        }
+    });
+
+    // Send message
+    function sendMessage(text) {
+        if (!text.trim()) return;
+
+        // Add user message
+        const userMessage = document.createElement('div');
+        userMessage.className = 'message-fade-in flex items-start space-x-3 justify-end';
+        userMessage.innerHTML = `
+            <div class="chat-bubble-user p-4 max-w-xs shadow-sm">
+                <p class="text-sm text-gray-800 leading-relaxed">${text}</p>
+                <div class="flex items-center justify-between mt-3">
+                    <div class="flex items-center space-x-1">
+                        <i class="fas fa-check text-pink-500 text-xs"></i>
+                        <i class="fas fa-check text-pink-500 text-xs -ml-1"></i>
+                    </div>
+                    <span class="text-xs text-gray-500">${new Date().toLocaleTimeString('ru', {hour: '2-digit', minute: '2-digit'})}</span>
+                </div>
+            </div>
+            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" alt="User" class="w-8 h-8 rounded-full flex-shrink-0">
+        `;
+        
+        chatMessages.insertBefore(userMessage, typingIndicator);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Show typing indicator
+        typingIndicator.style.display = 'flex';
+        
+        // Simulate AI response
+        setTimeout(() => {
+            typingIndicator.style.display = 'none';
+            addAIResponse(generateAIResponse(text));
+        }, 2000);
+        
+        messageInput.value = '';
+        sendBtn.classList.add('opacity-50');
+    }
+
+    function addAIResponse(response) {
+        const aiMessage = document.createElement('div');
+        aiMessage.className = 'message-fade-in flex items-start space-x-3';
+        aiMessage.innerHTML = `
+            <div class="w-8 h-8 bg-gradient-to-r from-soft-mint to-soft-sky rounded-full flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-robot text-emerald-600 text-xs"></i>
+            </div>
+            <div class="chat-bubble-ai p-4 max-w-xs shadow-sm">
+                <p class="text-sm text-gray-800 leading-relaxed">${response}</p>
+                <div class="flex items-center justify-between mt-3">
+                    <span class="text-xs text-gray-500">${new Date().toLocaleTimeString('ru', {hour: '2-digit', minute: '2-digit'})}</span>
+                    <div class="flex space-x-2">
+                        <button class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center hover:bg-emerald-200 transition-colors">
+                            <i class="fas fa-thumbs-up text-emerald-600 text-xs"></i>
+                        </button>
+                        <button class="w-6 h-6 bg-pink-100 rounded-full flex items-center justify-center hover:bg-pink-200 transition-colors">
+                            <i class="fas fa-heart text-pink-600 text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        chatMessages.insertBefore(aiMessage, typingIndicator);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function generateAIResponse(userText) {
+        const responses = [
+            "Отличный вопрос! На 23 неделе это абсолютно нормальны. Рекомендую больше отдыхать и следить за питанием. 💕",
+            "Я понимаю твои переживания. В этот период многие мамочки сталкиваются с подобным. Попробуй расслабляющие упражнения. 🤗",
+            "Это замечательно, что ты следишь за своим здоровьем! Продолжай в том же духе и не забывай про витамины. ✨",
+            "Каждая беременность уникальна, но твои ощущения звучат вполне типично для этого срока. Если что-то беспокоит, лучше проконсультироваться с врачом. 👩‍⚕️"
+        ];
+        return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    // Event listeners
+    sendBtn.addEventListener('click', () => sendMessage(messageInput.value));
+    messageInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage(messageInput.value);
+    });
+
+    // Voice recording
+    voiceBtn.addEventListener('click', () => {
+        voiceModal.classList.remove('hidden');
+    });
+
+    cancelRecording.addEventListener('click', () => {
+        voiceModal.classList.add('hidden');
+    });
+
+    stopRecording.addEventListener('click', () => {
+        voiceModal.classList.add('hidden');
+        sendMessage("Привет! Я записала голосовое сообщение о своих ощущениях на 23 неделе.");
+    });
+
+    // Attachment menu
+    attachmentBtn.addEventListener('click', () => {
+        attachmentMenu.classList.toggle('hidden');
+    });
+
+    // Quick question buttons
+    quickQuestionBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const questionText = this.querySelector('span').textContent;
+            if (questionText === 'Можно ли мне...?') {
+                sendMessage("Можно ли мне заниматься спортом на 23 неделе?");
+            } else if (questionText === 'Нормально ли это?') {
+                sendMessage("Нормально ли, что я чувствую сильные толчки малыша?");
+            } else if (questionText === 'Что мне делать?') {
+                sendMessage("Что мне делать при отёках на ногах?");
+            }
+        });
+    });
+
+    // Topic buttons
+    topicBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const topic = this.textContent.trim();
+            sendMessage(`Расскажи подробнее про ${topic.toLowerCase()} на 23 неделе беременности`);
+        });
+    });
+
+    // Exercise buttons
+    exerciseBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const exercise = this.querySelector('span').textContent;
+            sendMessage(`Какие упражнения по ${exercise.toLowerCase()} подойдут для 23 недели?`);
+        });
+    });
+
+    // Auto-scroll to bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Hide typing indicator initially
+    setTimeout(() => {
+        typingIndicator.style.display = 'none';
+    }, 3000);
+});
+</script>
+
+
+</body></html>

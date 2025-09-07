@@ -1,0 +1,77 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "next": "Next",
+    "back": "Back",
+    "done": "Done"
+  },
+  "navigation": {
+    "home": "Home",
+    "calendar": "Calendar",
+    "journal": "Journal",
+    "achievements": "Achievements",
+    "profile": "Profile"
+  },
+  "dashboard": {
+    "appName": "BabyJoy",
+    "tagline": "Your companion",
+    "weekTitle": "You're at {{week}} weeks",
+    "trimester": "{{trimester}} trimester • {{day}} days",
+    "babySize": "Baby's size",
+    "length": "length",
+    "weight": "weight",
+    "fruitComparison": "Like a {{fruit}}",
+    "developing": "Baby is actively developing",
+    "tipsTitle": "Daily tips",
+    "allTips": "All tips",
+    "moodTitle": "How are you feeling?",
+    "moodExcellent": "Excellent",
+    "moodGood": "Good",
+    "moodNormal": "Normal",
+    "moodSad": "Sad"
+  },
+  "tips": {
+    "nutrition": {
+      "title": "Nutrition",
+      "ironTip": "Add iron-rich foods to your diet: beef, spinach, lentils. This will help prevent anemia."
+    },
+    "exercise": {
+      "title": "Exercise",
+      "yogaTip": "Try prenatal yoga. 15 minutes a day will help strengthen your back and prepare for childbirth."
+    },
+    "sleep": {
+      "title": "Sleep",
+      "positionTip": "Sleep on your left side with a pillow between your legs. This will improve blood circulation to the baby."
+    },
+    "mental": {
+      "title": "Mental Health",
+      "relaxTip": "Practice meditation and breathing exercises to reduce stress."
+    }
+  },
+  "onboarding": {
+    "welcome": "Welcome to BabyJoy",
+    "subtitle": "Your personal companion on the journey to motherhood",
+    "startJourney": "Start Journey",
+    "aiHelper": "Smart AI Assistant",
+    "tracking": "Track Development",
+    "community": "Find Your Support"
+  },
+  "ai": {
+    "greeting": "Hello, sunshine! ✨",
+    "intro": "I'm Maya - your smart assistant in motherhood. Ready to support you every step of this magical journey!",
+    "quickQuestions": "Quick answers",
+    "canI": "Can I...?",
+    "isItNormal": "Is this normal?",
+    "whatToDo": "What should I do?",
+    "popularTopics": "Popular topics",
+    "typing": "Maya is typing...",
+    "placeholder": "Share your thoughts..."
+  }
+}

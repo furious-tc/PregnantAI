@@ -1,0 +1,77 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "retry": "Reintentar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "done": "Hecho"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "calendar": "Calendario",
+    "journal": "Diario",
+    "achievements": "Logros",
+    "profile": "Perfil"
+  },
+  "dashboard": {
+    "appName": "BabyJoy",
+    "tagline": "Tu compañero",
+    "weekTitle": "Estás en la semana {{week}}",
+    "trimester": "{{trimester}} trimestre • {{day}} días",
+    "babySize": "Tamaño del bebé",
+    "length": "longitud",
+    "weight": "peso",
+    "fruitComparison": "Como una {{fruit}}",
+    "developing": "El bebé se está desarrollando activamente",
+    "tipsTitle": "Consejos del día",
+    "allTips": "Todos los consejos",
+    "moodTitle": "¿Cómo te sientes?",
+    "moodExcellent": "Excelente",
+    "moodGood": "Bien",
+    "moodNormal": "Normal",
+    "moodSad": "Triste"
+  },
+  "tips": {
+    "nutrition": {
+      "title": "Nutrición",
+      "ironTip": "Añade alimentos ricos en hierro a tu dieta: carne de res, espinacas, lentejas. Esto ayudará a prevenir la anemia."
+    },
+    "exercise": {
+      "title": "Ejercicio",
+      "yogaTip": "Prueba el yoga prenatal. 15 minutos al día ayudarán a fortalecer tu espalda y prepararte para el parto."
+    },
+    "sleep": {
+      "title": "Sueño",
+      "positionTip": "Duerme de lado izquierdo con una almohada entre las piernas. Esto mejorará la circulación sanguínea al bebé."
+    },
+    "mental": {
+      "title": "Salud mental",
+      "relaxTip": "Practica la meditación y ejercicios de respiración para reducir el estrés."
+    }
+  },
+  "onboarding": {
+    "welcome": "Bienvenida a BabyJoy",
+    "subtitle": "Tu compañero personal en el camino hacia la maternidad",
+    "startJourney": "Comenzar el viaje",
+    "aiHelper": "Asistente IA inteligente",
+    "tracking": "Seguir el desarrollo",
+    "community": "Encuentra tu apoyo"
+  },
+  "ai": {
+    "greeting": "¡Hola, rayo de sol! ✨",
+    "intro": "Soy Maya - tu asistente inteligente en la maternidad. ¡Lista para apoyarte en cada paso de este viaje mágico!",
+    "quickQuestions": "Respuestas rápidas",
+    "canI": "¿Puedo...?",
+    "isItNormal": "¿Es esto normal?",
+    "whatToDo": "¿Qué debo hacer?",
+    "popularTopics": "Temas populares",
+    "typing": "Maya está escribiendo...",
+    "placeholder": "Comparte tus pensamientos..."
+  }
+}

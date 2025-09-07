@@ -1,0 +1,985 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #fef7f0 0%, #fdf2f8 100%); }
+        .profile-glow { box-shadow: 0 0 30px rgba(251, 207, 232, 0.3); }
+        .floating-animation { animation: float 3s ease-in-out infinite; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .upload-overlay {
+            background: linear-gradient(45deg, rgba(251, 207, 232, 0.9), rgba(167, 243, 208, 0.9));
+        }
+    </style>
+    <script>tailwind.config = {
+  "theme": {
+    "extend": {
+      "colors": {
+        "pregnancy-pink": "#fdf2f8",
+        "pregnancy-beige": "#fef7f0",
+        "pregnancy-mint": "#f0fdfa",
+        "pregnancy-sky": "#f0f9ff",
+        "soft-pink": "#fbcfe8",
+        "soft-beige": "#fed7aa",
+        "soft-mint": "#a7f3d0",
+        "soft-sky": "#bae6fd"
+      },
+      "fontFamily": {
+        "sans": [
+          "Inter",
+          "sans-serif"
+        ]
+      }
+    }
+  }
+};</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"><style>
+  .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  </style></head>
+<body class="bg-gradient-to-br from-pregnancy-beige to-pregnancy-pink min-h-screen">
+
+<div id="mobile-container" class="max-w-sm mx-auto bg-white shadow-2xl relative overflow-hidden">
+
+    <div id="header" class="bg-white/80 backdrop-blur-lg px-6 py-4 sticky top-0 z-50 border-b border-pink-100">
+        <div class="flex items-center justify-between">
+            <button class="w-10 h-10 bg-pregnancy-mint rounded-full flex items-center justify-center">
+                <i class="fas fa-arrow-left text-emerald-600 text-sm"></i>
+            </button>
+            <div class="text-center">
+                <h1 class="text-lg font-semibold text-gray-800">Профиль</h1>
+                <p class="text-xs text-gray-500">Настройки аккаунта</p>
+            </div>
+            <button class="w-10 h-10 bg-pregnancy-sky rounded-full flex items-center justify-center">
+                <i class="fas fa-cog text-blue-600 text-sm"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="profile-hero-section" class="px-6 py-8 gradient-bg relative">
+        <div class="text-center">
+            <div class="relative mb-6 inline-block">
+                <div class="profile-glow">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" alt="Profile" class="w-32 h-32 rounded-full border-4 border-white shadow-lg mx-auto">
+                </div>
+                <button id="photo-upload-btn" class="absolute bottom-2 right-2 w-10 h-10 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                    <i class="fas fa-camera text-white text-sm"></i>
+                </button>
+                <div id="upload-overlay" class="absolute inset-0 upload-overlay rounded-full opacity-0 flex items-center justify-center transition-all duration-300">
+                    <div class="text-white text-center">
+                        <i class="fas fa-cloud-upload-alt text-2xl mb-2"></i>
+                        <div class="text-xs font-medium">Загрузить фото</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <h2 class="text-2xl font-bold text-gray-800 mb-1">Анна Петрова</h2>
+                <p class="text-gray-600 text-sm mb-2">23 недели беременности</p>
+                <div class="flex items-center justify-center space-x-4 text-xs text-gray-500">
+                    <span class="flex items-center space-x-1">
+                        <i class="fas fa-calendar"></i>
+                        <span>Дата родов: 15 сентября</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                <div class="bg-white/70 backdrop-blur-sm rounded-xl p-3 text-center">
+                    <div class="text-2xl font-bold text-pink-600 mb-1">161</div>
+                    <div class="text-xs text-gray-600">Дней в пути</div>
+                </div>
+                <div class="bg-white/70 backdrop-blur-sm rounded-xl p-3 text-center">
+                    <div class="text-2xl font-bold text-emerald-600 mb-1">89%</div>
+                    <div class="text-xs text-gray-600">Выполнено</div>
+                </div>
+                <div class="bg-white/70 backdrop-blur-sm rounded-xl p-3 text-center">
+                    <div class="text-2xl font-bold text-blue-600 mb-1">12</div>
+                    <div class="text-xs text-gray-600">Визитов</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="personal-info-section" class="px-6 py-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Личная информация</h3>
+        <div class="space-y-4">
+            <div class="bg-pregnancy-pink rounded-2xl p-4 border border-pink-200">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-soft-pink rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-pink-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Имя и фамилия</h4>
+                            <p class="text-sm text-gray-600">Анна Петрова</p>
+                        </div>
+                    </div>
+                    <button class="text-pink-600 text-sm font-medium">Изменить</button>
+                </div>
+            </div>
+
+            <div class="bg-pregnancy-mint rounded-2xl p-4 border border-emerald-200">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-soft-mint rounded-full flex items-center justify-center">
+                            <i class="fas fa-envelope text-emerald-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Email</h4>
+                            <p class="text-sm text-gray-600">anna.petrova@email.com</p>
+                        </div>
+                    </div>
+                    <button class="text-emerald-600 text-sm font-medium">Изменить</button>
+                </div>
+            </div>
+
+            <div class="bg-pregnancy-sky rounded-2xl p-4 border border-blue-200">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-soft-sky rounded-full flex items-center justify-center">
+                            <i class="fas fa-phone text-blue-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Телефон</h4>
+                            <p class="text-sm text-gray-600">+7 (999) 123-45-67</p>
+                        </div>
+                    </div>
+                    <button class="text-blue-600 text-sm font-medium">Изменить</button>
+                </div>
+            </div>
+
+            <div class="bg-pregnancy-beige rounded-2xl p-4 border border-orange-200">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-soft-beige rounded-full flex items-center justify-center">
+                            <i class="fas fa-birthday-cake text-orange-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Дата рождения</h4>
+                            <p class="text-sm text-gray-600">15 марта 1992</p>
+                        </div>
+                    </div>
+                    <button class="text-orange-600 text-sm font-medium">Изменить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pregnancy-info-section" class="px-6 py-6 bg-gradient-to-r from-pregnancy-pink to-pregnancy-mint">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Информация о беременности</h3>
+        <div class="space-y-4">
+            <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-calendar-check text-pink-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Дата последней менструации</h4>
+                            <p class="text-sm text-gray-600">15 октября 2023</p>
+                        </div>
+                    </div>
+                    <button class="text-pink-600 text-sm font-medium">Изменить</button>
+                </div>
+            </div>
+
+            <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-baby text-emerald-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Предполагаемая дата родов</h4>
+                            <p class="text-sm text-gray-600">15 сентября 2024</p>
+                        </div>
+                    </div>
+                    <button class="text-emerald-600 text-sm font-medium">Изменить</button>
+                </div>
+            </div>
+
+            <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-child text-blue-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Количество детей</h4>
+                            <p class="text-sm text-gray-600">Первая беременность</p>
+                        </div>
+                    </div>
+                    <button class="text-blue-600 text-sm font-medium">Изменить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="language-settings-section" class="px-6 py-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Язык и регион</h3>
+        <div class="space-y-4">
+            <div class="bg-white border border-gray-200 rounded-2xl p-4">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-language text-purple-600 text-sm"></i>
+                        </div>
+                        <h4 class="font-medium text-gray-800">Язык приложения</h4>
+                    </div>
+                    <span class="text-sm text-gray-500">Русский</span>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 cursor-pointer">
+                        <input type="radio" name="language" value="ru" checked="" class="text-pink-600">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-2xl">🇷🇺</span>
+                            <span class="font-medium text-gray-800">Русский</span>
+                        </div>
+                    </label>
+                    
+                    <label class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 cursor-pointer">
+                        <input type="radio" name="language" value="en" class="text-pink-600">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-2xl">🇺🇸</span>
+                            <span class="font-medium text-gray-800">English</span>
+                        </div>
+                    </label>
+                    
+                    <label class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 cursor-pointer">
+                        <input type="radio" name="language" value="es" class="text-pink-600">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-2xl">🇪🇸</span>
+                            <span class="font-medium text-gray-800">Español</span>
+                        </div>
+                    </label>
+                    
+                    <label class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 cursor-pointer">
+                        <input type="radio" name="language" value="fr" class="text-pink-600">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-2xl">🇫🇷</span>
+                            <span class="font-medium text-gray-800">Français</span>
+                        </div>
+                    </label>
+                    
+                    <label class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 cursor-pointer">
+                        <input type="radio" name="language" value="de" class="text-pink-600">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-2xl">🇩🇪</span>
+                            <span class="font-medium text-gray-800">Deutsch</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="bg-pregnancy-sky rounded-2xl p-4 border border-blue-200">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-soft-sky rounded-full flex items-center justify-center">
+                            <i class="fas fa-globe text-blue-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Часовой пояс</h4>
+                            <p class="text-sm text-gray-600">Москва (GMT+3)</p>
+                        </div>
+                    </div>
+                    <button class="text-blue-600 text-sm font-medium">Изменить</button>
+                </div>
+            </div>
+
+            <div class="bg-pregnancy-mint rounded-2xl p-4 border border-emerald-200">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-soft-mint rounded-full flex items-center justify-center">
+                            <i class="fas fa-ruler text-emerald-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Единицы измерения</h4>
+                            <p class="text-sm text-gray-600">Метрическая система</p>
+                        </div>
+                    </div>
+                    <button class="text-emerald-600 text-sm font-medium">Изменить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="subscription-section" class="px-6 py-6 bg-gradient-to-r from-pregnancy-beige to-pregnancy-sky">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Подписка</h3>
+        
+        <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4 mb-4 border-2 border-orange-300">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center">
+                        <i class="fas fa-crown text-white"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-800">Premium</h4>
+                        <p class="text-sm text-gray-600">Активна до 15.09.2024</p>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-r from-orange-400 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+                    Активна
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <div class="bg-white rounded-xl p-3 text-center">
+                    <i class="fas fa-robot text-pink-600 text-lg mb-2"></i>
+                    <p class="text-xs font-medium text-gray-800">AI-консультант</p>
+                </div>
+                <div class="bg-white rounded-xl p-3 text-center">
+                    <i class="fas fa-chart-line text-emerald-600 text-lg mb-2"></i>
+                    <p class="text-xs font-medium text-gray-800">Детальная аналитика</p>
+                </div>
+                <div class="bg-white rounded-xl p-3 text-center">
+                    <i class="fas fa-users text-blue-600 text-lg mb-2"></i>
+                    <p class="text-xs font-medium text-gray-800">Приватные группы</p>
+                </div>
+                <div class="bg-white rounded-xl p-3 text-center">
+                    <i class="fas fa-cloud text-purple-600 text-lg mb-2"></i>
+                    <p class="text-xs font-medium text-gray-800">Безлимитное хранение</p>
+                </div>
+            </div>
+            
+            <button class="w-full bg-gradient-to-r from-orange-400 to-pink-500 text-white py-3 rounded-xl font-medium">
+                Управлять подпиской
+            </button>
+        </div>
+
+        <div class="bg-white rounded-2xl p-4 border border-gray-200">
+            <div class="text-center mb-4">
+                <h4 class="font-semibold text-gray-800 mb-2">Free версия</h4>
+                <p class="text-sm text-gray-600">Базовая функциональность</p>
+            </div>
+            
+            <div class="space-y-3 mb-4">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-check text-green-500"></i>
+                    <span class="text-sm text-gray-600">Основные трекеры</span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-check text-green-500"></i>
+                    <span class="text-sm text-gray-600">Календарь беременности</span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-check text-green-500"></i>
+                    <span class="text-sm text-gray-600">Общие советы</span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-times text-red-400"></i>
+                    <span class="text-sm text-gray-400">AI-консультант (3 вопроса в день)</span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-times text-red-400"></i>
+                    <span class="text-sm text-gray-400">Приватные группы</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="subscription-plans-section" class="px-6 py-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Планы подписки</h3>
+        
+        <div class="space-y-4">
+            <div class="bg-gradient-to-r from-soft-pink to-soft-beige rounded-2xl p-4 border-2 border-pink-300 relative">
+                <div class="absolute -top-2 left-4 bg-pink-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+                    Популярный
+                </div>
+                <div class="pt-2">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="text-lg font-bold text-gray-800">Премиум месяц</h4>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-pink-600">₽699</div>
+                            <div class="text-xs text-gray-500">в месяц</div>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-600 mb-4">
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-check text-green-500 text-xs"></i>
+                            <span>Неограниченный AI-консультант</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-check text-green-500 text-xs"></i>
+                            <span>Персональные рекомендации</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-check text-green-500 text-xs"></i>
+                            <span>Приватные группы</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-check text-green-500 text-xs"></i>
+                            <span>Экспорт данных</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-3 rounded-xl font-medium">
+                        Выбрать план
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-soft-mint to-soft-sky rounded-2xl p-4 border border-emerald-200">
+                <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-lg font-bold text-gray-800">Премиум год</h4>
+                    <div class="text-right">
+                        <div class="text-2xl font-bold text-emerald-600">₽4990</div>
+                        <div class="text-xs text-gray-500">в год</div>
+                        <div class="text-xs text-green-600 font-medium">Экономия 40%</div>
+                    </div>
+                </div>
+                <ul class="space-y-2 text-sm text-gray-600 mb-4">
+                    <li class="flex items-center space-x-2">
+                        <i class="fas fa-check text-green-500 text-xs"></i>
+                        <span>Все возможности месячного плана</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <i class="fas fa-check text-green-500 text-xs"></i>
+                        <span>Приоритетная поддержка</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <i class="fas fa-check text-green-500 text-xs"></i>
+                        <span>Эксклюзивный контент</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <i class="fas fa-gift text-purple-500 text-xs"></i>
+                        <span>Подарочные материалы</span>
+                    </li>
+                </ul>
+                <button class="w-full bg-gradient-to-r from-emerald-500 to-blue-600 text-white py-3 rounded-xl font-medium">
+                    Выбрать план
+                </button>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 border border-gray-200">
+                <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-lg font-bold text-gray-800">Бесплатный</h4>
+                    <div class="text-right">
+                        <div class="text-2xl font-bold text-gray-600">₽0</div>
+                        <div class="text-xs text-gray-500">навсегда</div>
+                    </div>
+                </div>
+                <ul class="space-y-2 text-sm text-gray-600 mb-4">
+                    <li class="flex items-center space-x-2">
+                        <i class="fas fa-check text-green-500 text-xs"></i>
+                        <span>Базовые трекеры</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <i class="fas fa-check text-green-500 text-xs"></i>
+                        <span>Календарь беременности</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <i class="fas fa-times text-red-400 text-xs"></i>
+                        <span>AI-консультант (лимит)</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <i class="fas fa-times text-red-400 text-xs"></i>
+                        <span>Приватные группы</span>
+                    </li>
+                </ul>
+                <button class="w-full bg-gray-200 text-gray-600 py-3 rounded-xl font-medium">
+                    Текущий план
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification-settings-section" class="px-6 py-6 bg-pregnancy-pink">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Уведомления</h3>
+        
+        <div class="space-y-4">
+            <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-bell text-pink-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Ежедневные советы</h4>
+                            <p class="text-sm text-gray-600">Получать полезные советы каждый день</p>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked="" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-calendar-check text-emerald-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Напоминания о визитах</h4>
+                            <p class="text-sm text-gray-600">За 1 день до приема у врача</p>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked="" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-pills text-blue-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Прием витаминов</h4>
+                            <p class="text-sm text-gray-600">Ежедневно в 9:00</p>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked="" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-users text-purple-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Сообщества</h4>
+                            <p class="text-sm text-gray-600">Новые сообщения в группах</p>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="privacy-security-section" class="px-6 py-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Конфиденциальность и безопасность</h3>
+        
+        <div class="space-y-4">
+            <div class="bg-pregnancy-mint rounded-2xl p-4 border border-emerald-200">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-soft-mint rounded-full flex items-center justify-center">
+                            <i class="fas fa-shield-alt text-emerald-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Двухфакторная аутентификация</h4>
+                            <p class="text-sm text-gray-600">Дополнительная защита аккаунта</p>
+                        </div>
+                    </div>
+                    <button class="text-emerald-600 text-sm font-medium">Настроить</button>
+                </div>
+            </div>
+
+            <div class="bg-pregnancy-sky rounded-2xl p-4 border border-blue-200">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-soft-sky rounded-full flex items-center justify-center">
+                            <i class="fas fa-eye text-blue-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Приватность профиля</h4>
+                            <p class="text-sm text-gray-600">Кто может видеть ваши данные</p>
+                        </div>
+                    </div>
+                    <button class="text-blue-600 text-sm font-medium">Настроить</button>
+                </div>
+            </div>
+
+            <div class="bg-pregnancy-beige rounded-2xl p-4 border border-orange-200">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-soft-beige rounded-full flex items-center justify-center">
+                            <i class="fas fa-download text-orange-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Экспорт данных</h4>
+                            <p class="text-sm text-gray-600">Скачать все ваши данные</p>
+                        </div>
+                    </div>
+                    <button class="text-orange-600 text-sm font-medium">Скачать</button>
+                </div>
+            </div>
+
+            <div class="bg-red-50 rounded-2xl p-4 border border-red-200">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-trash text-red-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Удалить аккаунт</h4>
+                            <p class="text-sm text-gray-600">Безвозвратно удалить все данные</p>
+                        </div>
+                    </div>
+                    <button class="text-red-600 text-sm font-medium">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="support-section" class="px-6 py-6 bg-gradient-to-r from-pregnancy-sky to-pregnancy-mint">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Поддержка</h3>
+        
+        <div class="space-y-4">
+            <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-question-circle text-blue-600 text-sm"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-medium text-gray-800">Часто задаваемые вопросы</h4>
+                        <p class="text-sm text-gray-600">Найдите ответы на популярные вопросы</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+            </div>
+
+            <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-comments text-emerald-600 text-sm"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-medium text-gray-800">Чат с поддержкой</h4>
+                        <p class="text-sm text-gray-600">Свяжитесь с нашей командой</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+            </div>
+
+            <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-book text-purple-600 text-sm"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-medium text-gray-800">Руководство пользователя</h4>
+                        <p class="text-sm text-gray-600">Подробная инструкция по использованию</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+            </div>
+
+            <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-star text-pink-600 text-sm"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-medium text-gray-800">Оценить приложение</h4>
+                        <p class="text-sm text-gray-600">Поделитесь мнением в App Store</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-info-section" class="px-6 py-6 pb-24">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">О приложении</h3>
+        
+        <div class="space-y-4">
+            <div class="bg-white rounded-2xl p-4 border border-gray-200">
+                <div class="text-center mb-4">
+                    <div class="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-600 rounded-2xl mx-auto mb-3 flex items-center justify-center">
+                        <i class="fas fa-heart text-white text-2xl"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-lg">BabyJoy</h4>
+                    <p class="text-sm text-gray-600">Версия 2.1.0</p>
+                </div>
+                
+                <div class="space-y-3 text-sm text-gray-600">
+                    <div class="flex items-center justify-between">
+                        <span>Последнее обновление</span>
+                        <span>15 мая 2024</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span>Размер приложения</span>
+                        <span>45.2 МБ</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span>Разработчик</span>
+                        <span>BabyJoy Team</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button class="bg-pregnancy-pink rounded-xl p-4 text-center border border-pink-200">
+                    <i class="fas fa-file-alt text-pink-600 text-lg mb-2"></i>
+                    <p class="text-sm font-medium text-gray-800">Условия использования</p>
+                </button>
+                <button class="bg-pregnancy-mint rounded-xl p-4 text-center border border-emerald-200">
+                    <i class="fas fa-shield-alt text-emerald-600 text-lg mb-2"></i>
+                    <p class="text-sm font-medium text-gray-800">Политика конфиденциальности</p>
+                </button>
+            </div>
+
+            <div class="text-center text-sm text-gray-500 pt-4">
+                <p>© 2024 BabyJoy. Все права защищены.</p>
+                <p class="mt-1">Сделано с ❤️ для будущих мам</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="floating-ai-button" class="fixed bottom-20 right-6 z-50">
+        <button class="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full shadow-lg flex items-center justify-center floating-animation hover:shadow-xl transition-all">
+            <i class="fas fa-robot text-white text-xl"></i>
+        </button>
+        <div class="absolute -top-12 right-0 bg-gray-800 text-white px-3 py-1 rounded-lg text-xs opacity-0 hover:opacity-100 transition-opacity">
+            AI помощник
+        </div>
+    </div>
+
+    <div id="bottom-navigation" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2">
+        <div class="max-w-sm mx-auto flex items-center justify-between">
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-home text-lg"></i>
+                <span class="text-xs">Главная</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-calendar text-lg"></i>
+                <span class="text-xs">Календарь</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-book text-lg"></i>
+                <span class="text-xs">Дневник</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-trophy text-lg"></i>
+                <span class="text-xs">Достижения</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-pink-600">
+                <i class="fas fa-user text-lg"></i>
+                <span class="text-xs font-medium">Профиль</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="photo-upload-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 opacity-0 invisible transition-all duration-300">
+        <div class="flex items-end justify-center min-h-screen p-4">
+            <div class="bg-white rounded-t-3xl w-full max-w-sm transform translate-y-full transition-transform duration-300">
+                <div class="p-6">
+                    <div class="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-6"></div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 text-center">Изменить фото профиля</h3>
+                    
+                    <div class="space-y-3">
+                        <button class="w-full flex items-center space-x-3 p-4 bg-pregnancy-pink rounded-xl hover:bg-pink-100 transition-all">
+                            <div class="w-10 h-10 bg-pink-200 rounded-full flex items-center justify-center">
+                                <i class="fas fa-camera text-pink-600"></i>
+                            </div>
+                            <span class="font-medium text-gray-800">Сделать фото</span>
+                        </button>
+                        
+                        <button class="w-full flex items-center space-x-3 p-4 bg-pregnancy-mint rounded-xl hover:bg-emerald-50 transition-all">
+                            <div class="w-10 h-10 bg-emerald-200 rounded-full flex items-center justify-center">
+                                <i class="fas fa-image text-emerald-600"></i>
+                            </div>
+                            <span class="font-medium text-gray-800">Выбрать из галереи</span>
+                        </button>
+                        
+                        <button class="w-full flex items-center space-x-3 p-4 bg-red-50 rounded-xl hover:bg-red-100 transition-all">
+                            <div class="w-10 h-10 bg-red-200 rounded-full flex items-center justify-center">
+                                <i class="fas fa-trash text-red-600"></i>
+                            </div>
+                            <span class="font-medium text-gray-800">Удалить фото</span>
+                        </button>
+                        
+                        <button id="cancel-upload" class="w-full p-4 bg-gray-100 rounded-xl hover:bg-gray-200 transition-all">
+                            <span class="font-medium text-gray-600">Отмена</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const photoUploadBtn = document.getElementById('photo-upload-btn');
+    const uploadModal = document.getElementById('photo-upload-modal');
+    const cancelUpload = document.getElementById('cancel-upload');
+    const uploadOverlay = document.getElementById('upload-overlay');
+    const profileImage = document.querySelector('#profile-hero-section img');
+
+    photoUploadBtn.addEventListener('click', function() {
+        uploadModal.classList.remove('opacity-0', 'invisible');
+        uploadModal.querySelector('.bg-white').classList.remove('translate-y-full');
+    });
+
+    cancelUpload.addEventListener('click', function() {
+        closeModal();
+    });
+
+    uploadModal.addEventListener('click', function(e) {
+        if (e.target === uploadModal) {
+            closeModal();
+        }
+    });
+
+    function closeModal() {
+        uploadModal.classList.add('opacity-0', 'invisible');
+        uploadModal.querySelector('.bg-white').classList.add('translate-y-full');
+    }
+
+    profileImage.addEventListener('mouseenter', function() {
+        uploadOverlay.classList.remove('opacity-0');
+    });
+
+    profileImage.addEventListener('mouseleave', function() {
+        uploadOverlay.classList.add('opacity-0');
+    });
+
+    const languageRadios = document.querySelectorAll('input[name="language"]');
+    languageRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.checked) {
+                const selectedLanguage = this.parentElement.querySelector('span:last-child').textContent;
+                console.log('Language changed to:', selectedLanguage);
+            }
+        });
+    });
+
+    const toggleSwitches = document.querySelectorAll('input[type="checkbox"]');
+    toggleSwitches.forEach(toggle => {
+        toggle.addEventListener('change', function() {
+            const settingName = this.closest('.rounded-2xl').querySelector('h4').textContent;
+            console.log(`${settingName} ${this.checked ? 'enabled' : 'disabled'}`);
+        });
+    });
+
+    const subscriptionButtons = document.querySelectorAll('button');
+    subscriptionButtons.forEach(button => {
+        if (button.textContent.includes('Выбрать план')) {
+            button.addEventListener('click', function() {
+                const planName = this.closest('.rounded-2xl').querySelector('h4').textContent;
+                console.log('Selected subscription plan:', planName);
+                
+                this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Обработка...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    this.innerHTML = 'План активирован!';
+                    this.classList.remove('bg-gradient-to-r');
+                    this.classList.add('bg-green-500');
+                    
+                    setTimeout(() => {
+                        this.innerHTML = 'Выбрать план';
+                        this.disabled = false;
+                        this.classList.add('bg-gradient-to-r');
+                        this.classList.remove('bg-green-500');
+                    }, 2000);
+                }, 2000);
+            });
+        }
+    });
+
+    const editButtons = document.querySelectorAll('button');
+    editButtons.forEach(button => {
+        if (button.textContent === 'Изменить') {
+            button.addEventListener('click', function() {
+                const fieldName = this.closest('.rounded-2xl').querySelector('h4').textContent;
+                console.log('Edit clicked for:', fieldName);
+                
+                this.textContent = 'Сохранить';
+                this.classList.add('bg-pink-100');
+                
+                setTimeout(() => {
+                    this.textContent = 'Изменить';
+                    this.classList.remove('bg-pink-100');
+                }, 2000);
+            });
+        }
+    });
+
+    let touchStartY = 0;
+    let touchEndY = 0;
+
+    document.addEventListener('touchstart', function(e) {
+        touchStartY = e.changedTouches[0].screenY;
+    });
+
+    document.addEventListener('touchend', function(e) {
+        touchEndY = e.changedTouches[0].screenY;
+        handleSwipe();
+    });
+
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartY - touchEndY;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                console.log('Swipe up');
+            } else {
+                console.log('Swipe down');
+            }
+        }
+    }
+
+    const floatingButton = document.querySelector('#floating-ai-button button');
+    floatingButton.addEventListener('click', function() {
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.style.transform = 'scale(1)';
+        }, 150);
+    });
+
+    const navButtons = document.querySelectorAll('.nav-item');
+    navButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            navButtons.forEach(btn => {
+                btn.classList.remove('text-pink-600');
+                btn.classList.add('text-gray-400');
+                btn.querySelector('span').classList.remove('font-medium');
+            });
+            
+            if (this.querySelector('span').textContent === 'Профиль') {
+                this.classList.add('text-pink-600');
+                this.classList.remove('text-gray-400');
+                this.querySelector('span').classList.add('font-medium');
+            }
+        });
+    });
+});
+</script>
+
+
+</body></html>

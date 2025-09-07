@@ -1,0 +1,77 @@
+{
+  "common": {
+    "loading": "Laden...",
+    "error": "Fehler",
+    "retry": "Wiederholen",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "close": "Schließen",
+    "next": "Weiter",
+    "back": "Zurück",
+    "done": "Fertig"
+  },
+  "navigation": {
+    "home": "Startseite",
+    "calendar": "Kalender",
+    "journal": "Tagebuch",
+    "achievements": "Erfolge",
+    "profile": "Profil"
+  },
+  "dashboard": {
+    "appName": "BabyJoy",
+    "tagline": "Dein Begleiter",
+    "weekTitle": "Du bist in der {{week}}. Woche",
+    "trimester": "{{trimester}} Trimester • {{day}} Tage",
+    "babySize": "Babygröße",
+    "length": "Länge",
+    "weight": "Gewicht",
+    "fruitComparison": "Wie eine {{fruit}}",
+    "developing": "Baby entwickelt sich aktiv",
+    "tipsTitle": "Tägliche Tipps",
+    "allTips": "Alle Tipps",
+    "moodTitle": "Wie fühlst du dich?",
+    "moodExcellent": "Ausgezeichnet",
+    "moodGood": "Gut",
+    "moodNormal": "Normal",
+    "moodSad": "Traurig"
+  },
+  "tips": {
+    "nutrition": {
+      "title": "Ernährung",
+      "ironTip": "Füge eisenreiche Lebensmittel zu deiner Ernährung hinzu: Rindfleisch, Spinat, Linsen. Das hilft, Anämie zu verhindern."
+    },
+    "exercise": {
+      "title": "Übung",
+      "yogaTip": "Probiere pränatales Yoga. 15 Minuten am Tag helfen dabei, deinen Rücken zu stärken und dich auf die Geburt vorzubereiten."
+    },
+    "sleep": {
+      "title": "Schlaf",
+      "positionTip": "Schlafe auf der linken Seite mit einem Kissen zwischen den Beinen. Das verbessert die Durchblutung zum Baby."
+    },
+    "mental": {
+      "title": "Geistige Gesundheit",
+      "relaxTip": "Praktiziere Meditation und Atemübungen, um Stress zu reduzieren."
+    }
+  },
+  "onboarding": {
+    "welcome": "Willkommen bei BabyJoy",
+    "subtitle": "Dein persönlicher Begleiter auf dem Weg zur Mutterschaft",
+    "startJourney": "Reise beginnen",
+    "aiHelper": "Intelligenter KI-Assistent",
+    "tracking": "Entwicklung verfolgen",
+    "community": "Finde deine Unterstützung"
+  },
+  "ai": {
+    "greeting": "Hallo, Sonnenschein! ✨",
+    "intro": "Ich bin Maya - deine intelligente Assistentin für die Mutterschaft. Bereit, dich bei jedem Schritt dieser magischen Reise zu unterstützen!",
+    "quickQuestions": "Schnelle Antworten",
+    "canI": "Kann ich...?",
+    "isItNormal": "Ist das normal?",
+    "whatToDo": "Was soll ich tun?",
+    "popularTopics": "Beliebte Themen",
+    "typing": "Maya tippt...",
+    "placeholder": "Teile deine Gedanken..."
+  }
+}

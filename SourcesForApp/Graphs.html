@@ -1,0 +1,1055 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+    
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #fef7f0 0%, #fdf2f8 100%); }
+        .baby-glow { box-shadow: 0 0 30px rgba(251, 207, 232, 0.3); }
+        .floating-animation { animation: float 3s ease-in-out infinite; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .chart-container { min-height: 200px; }
+        .progress-ring { transform: rotate(-90deg); }
+        .stats-card { backdrop-filter: blur(10px); }
+    </style>
+    <script>tailwind.config = {
+  "theme": {
+    "extend": {
+      "colors": {
+        "pregnancy-pink": "#fdf2f8",
+        "pregnancy-beige": "#fef7f0",
+        "pregnancy-mint": "#f0fdfa",
+        "pregnancy-sky": "#f0f9ff",
+        "soft-pink": "#fbcfe8",
+        "soft-beige": "#fed7aa",
+        "soft-mint": "#a7f3d0",
+        "soft-sky": "#bae6fd"
+      },
+      "fontFamily": {
+        "sans": [
+          "Inter",
+          "sans-serif"
+        ]
+      }
+    }
+  }
+};</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"><style>
+  .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  </style></head>
+<body class="bg-gradient-to-br from-pregnancy-beige to-pregnancy-pink min-h-screen">
+
+<div id="mobile-container" class="max-w-sm mx-auto bg-white shadow-2xl relative overflow-hidden">
+
+    <div id="header" class="bg-white/80 backdrop-blur-lg px-6 py-4 sticky top-0 z-50 border-b border-pink-100">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <button class="w-10 h-10 bg-gradient-to-r from-soft-pink to-soft-beige rounded-full flex items-center justify-center">
+                    <i class="fas fa-arrow-left text-pink-600 text-sm"></i>
+                </button>
+                <div>
+                    <h1 class="text-lg font-semibold text-gray-800">Статистика и прогресс</h1>
+                    <p class="text-xs text-gray-500">23 неделя беременности</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button class="w-10 h-10 bg-pregnancy-mint rounded-full flex items-center justify-center">
+                    <i class="fas fa-download text-emerald-600 text-sm"></i>
+                </button>
+                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" alt="Profile" class="w-10 h-10 rounded-full border-2 border-soft-pink">
+            </div>
+        </div>
+    </div>
+
+    <div id="overview-stats-section" class="px-6 py-6 gradient-bg">
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4 text-center">
+                <div class="w-12 h-12 bg-gradient-to-r from-pink-400 to-pink-600 rounded-full mx-auto mb-3 flex items-center justify-center">
+                    <i class="fas fa-calendar-day text-white"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-800">161</div>
+                <div class="text-xs text-gray-600">дней беременности</div>
+            </div>
+            <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4 text-center">
+                <div class="w-12 h-12 bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full mx-auto mb-3 flex items-center justify-center">
+                    <i class="fas fa-baby text-white"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-800">23</div>
+                <div class="text-xs text-gray-600">недели развития</div>
+            </div>
+        </div>
+
+        <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-semibold text-gray-800">Общий прогресс</h3>
+                <span class="text-sm text-pink-600 font-medium">57%</span>
+            </div>
+            <div class="relative">
+                <div class="bg-gray-200 rounded-full h-3">
+                    <div class="bg-gradient-to-r from-pink-400 via-purple-400 to-emerald-400 h-3 rounded-full" style="width: 57%"></div>
+                </div>
+                <div class="flex justify-between text-xs text-gray-600 mt-2">
+                    <span>Зачатие</span>
+                    <span>Сейчас</span>
+                    <span>Роды</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="weight-tracking-section" class="px-6 py-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Динамика веса</h3>
+            <button class="text-pink-600 text-sm font-medium">Добавить</button>
+        </div>
+        
+        <div class="bg-gradient-to-r from-pregnancy-pink to-white rounded-2xl p-4 border border-pink-100 mb-4">
+            <div id="weight-chart" class="chart-container"></div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+            <div class="bg-pink-50 rounded-xl p-3 text-center">
+                <div class="text-lg font-bold text-pink-600">68.5</div>
+                <div class="text-xs text-gray-600">Текущий вес</div>
+            </div>
+            <div class="bg-emerald-50 rounded-xl p-3 text-center">
+                <div class="text-lg font-bold text-emerald-600">+8.5</div>
+                <div class="text-xs text-gray-600">Набрано</div>
+            </div>
+            <div class="bg-blue-50 rounded-xl p-3 text-center">
+                <div class="text-lg font-bold text-blue-600">60</div>
+                <div class="text-xs text-gray-600">До беременности</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="baby-movements-chart-section" class="px-6 py-6 bg-gradient-to-r from-pregnancy-sky to-pregnancy-mint">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Активность малыша</h3>
+            <button class="text-blue-600 text-sm font-medium">7 дней</button>
+        </div>
+        
+        <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4 mb-4">
+            <div id="movements-chart" class="chart-container"></div>
+        </div>
+
+        <div class="grid grid-cols-4 gap-2">
+            <div class="bg-blue-100 rounded-lg p-3 text-center">
+                <div class="text-lg font-bold text-blue-600">8</div>
+                <div class="text-xs text-gray-600">Сегодня</div>
+            </div>
+            <div class="bg-emerald-100 rounded-lg p-3 text-center">
+                <div class="text-lg font-bold text-emerald-600">10.2</div>
+                <div class="text-xs text-gray-600">Среднее</div>
+            </div>
+            <div class="bg-pink-100 rounded-lg p-3 text-center">
+                <div class="text-lg font-bold text-pink-600">15</div>
+                <div class="text-xs text-gray-600">Максимум</div>
+            </div>
+            <div class="bg-orange-100 rounded-lg p-3 text-center">
+                <div class="text-lg font-bold text-orange-600">72</div>
+                <div class="text-xs text-gray-600">За неделю</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="health-metrics-charts-section" class="px-6 py-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Показатели здоровья</h3>
+        
+        <div class="space-y-4">
+            <div class="bg-gradient-to-r from-pink-50 to-pink-100 rounded-2xl p-4 border border-pink-200">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-heartbeat text-pink-600"></i>
+                        <span class="font-medium text-gray-800">Артериальное давление</span>
+                    </div>
+                    <button class="text-pink-600 text-sm">История</button>
+                </div>
+                <div id="blood-pressure-gauge" class="chart-container h-32"></div>
+                <div class="flex justify-between text-sm text-gray-600 mt-2">
+                    <span>Последнее: 120/80</span>
+                    <span class="text-green-600">Норма</span>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl p-4 border border-blue-200">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-thermometer-half text-blue-600"></i>
+                        <span class="font-medium text-gray-800">Базальная температура</span>
+                    </div>
+                    <button class="text-blue-600 text-sm">Добавить</button>
+                </div>
+                <div id="temperature-chart" class="chart-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="symptoms-tracking-section" class="px-6 py-6 bg-pregnancy-beige">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Отслеживание симптомов</h3>
+            <button class="text-orange-600 text-sm font-medium">Месяц</button>
+        </div>
+        
+        <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4 mb-4">
+            <div id="symptoms-heatmap" class="chart-container"></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+            <div class="bg-red-50 rounded-xl p-3">
+                <div class="flex items-center space-x-2 mb-2">
+                    <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                    <span class="text-sm font-medium text-gray-800">Тошнота</span>
+                </div>
+                <div class="text-xs text-gray-600">5 дней в этом месяце</div>
+            </div>
+            <div class="bg-orange-50 rounded-xl p-3">
+                <div class="flex items-center space-x-2 mb-2">
+                    <div class="w-3 h-3 bg-orange-400 rounded-full"></div>
+                    <span class="text-sm font-medium text-gray-800">Усталость</span>
+                </div>
+                <div class="text-xs text-gray-600">12 дней в этом месяце</div>
+            </div>
+            <div class="bg-yellow-50 rounded-xl p-3">
+                <div class="flex items-center space-x-2 mb-2">
+                    <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                    <span class="text-sm font-medium text-gray-800">Изжога</span>
+                </div>
+                <div class="text-xs text-gray-600">8 дней в этом месяце</div>
+            </div>
+            <div class="bg-purple-50 rounded-xl p-3">
+                <div class="flex items-center space-x-2 mb-2">
+                    <div class="w-3 h-3 bg-purple-400 rounded-full"></div>
+                    <span class="text-sm font-medium text-gray-800">Головная боль</span>
+                </div>
+                <div class="text-xs text-gray-600">3 дня в этом месяце</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mood-analytics-section" class="px-6 py-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Анализ настроения</h3>
+            <button class="text-purple-600 text-sm font-medium">Детали</button>
+        </div>
+        
+        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-4 border border-purple-100 mb-4">
+            <div id="mood-pie-chart" class="chart-container"></div>
+        </div>
+
+        <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+            <h4 class="font-medium text-gray-800 mb-3">Тренды настроения</h4>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="text-xl">😊</div>
+                        <span class="text-sm text-gray-800">Отлично</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-20 bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-400 h-2 rounded-full" style="width: 65%"></div>
+                        </div>
+                        <span class="text-xs text-gray-600">65%</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="text-xl">😌</div>
+                        <span class="text-sm text-gray-800">Хорошо</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-20 bg-gray-200 rounded-full h-2">
+                            <div class="bg-blue-400 h-2 rounded-full" style="width: 25%"></div>
+                        </div>
+                        <span class="text-xs text-gray-600">25%</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="text-xl">😐</div>
+                        <span class="text-sm text-gray-800">Нормально</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-20 bg-gray-200 rounded-full h-2">
+                            <div class="bg-yellow-400 h-2 rounded-full" style="width: 8%"></div>
+                        </div>
+                        <span class="text-xs text-gray-600">8%</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="text-xl">😔</div>
+                        <span class="text-sm text-gray-800">Грустно</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-20 bg-gray-200 rounded-full h-2">
+                            <div class="bg-red-400 h-2 rounded-full" style="width: 2%"></div>
+                        </div>
+                        <span class="text-xs text-gray-600">2%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="sleep-tracking-section" class="px-6 py-6 bg-gradient-to-r from-pregnancy-sky to-pregnancy-mint">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Качество сна</h3>
+            <button class="text-blue-600 text-sm font-medium">Настройки</button>
+        </div>
+        
+        <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4 mb-4">
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-blue-600">7ч 32м</div>
+                    <div class="text-xs text-gray-600">Средняя продолжительность</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-emerald-600">85%</div>
+                    <div class="text-xs text-gray-600">Качество сна</div>
+                </div>
+            </div>
+            <div id="sleep-chart" class="chart-container"></div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+            <div class="bg-blue-100 rounded-lg p-3 text-center">
+                <div class="text-lg font-bold text-blue-600">23:15</div>
+                <div class="text-xs text-gray-600">Засыпание</div>
+            </div>
+            <div class="bg-emerald-100 rounded-lg p-3 text-center">
+                <div class="text-lg font-bold text-emerald-600">2</div>
+                <div class="text-xs text-gray-600">Пробуждения</div>
+            </div>
+            <div class="bg-purple-100 rounded-lg p-3 text-center">
+                <div class="text-lg font-bold text-purple-600">6:47</div>
+                <div class="text-xs text-gray-600">Подъём</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="water-intake-section" class="px-6 py-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Потребление воды</h3>
+            <button class="text-blue-600 text-sm font-medium">Цель: 2.5л</button>
+        </div>
+        
+        <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl p-4 border border-blue-200 mb-4">
+            <div class="flex items-center justify-center mb-4">
+                <div class="relative w-32 h-32">
+                    <svg class="w-32 h-32 progress-ring" viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" stroke-width="8"></circle>
+                        <circle cx="60" cy="60" r="50" fill="none" stroke="#3b82f6" stroke-width="8" stroke-dasharray="314" stroke-dashoffset="94" stroke-linecap="round"></circle>
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <div class="text-2xl font-bold text-blue-600">1.8л</div>
+                        <div class="text-xs text-gray-600">из 2.5л</div>
+                    </div>
+                </div>
+            </div>
+            <div id="water-intake-chart" class="chart-container h-24"></div>
+        </div>
+
+        <div class="grid grid-cols-4 gap-2">
+            <button class="bg-blue-100 rounded-lg p-2 text-center hover:bg-blue-200 transition-colors">
+                <i class="fas fa-glass-water text-blue-600 text-lg mb-1"></i>
+                <div class="text-xs text-gray-600">250мл</div>
+            </button>
+            <button class="bg-blue-100 rounded-lg p-2 text-center hover:bg-blue-200 transition-colors">
+                <i class="fas fa-coffee text-blue-600 text-lg mb-1"></i>
+                <div class="text-xs text-gray-600">200мл</div>
+            </button>
+            <button class="bg-blue-100 rounded-lg p-2 text-center hover:bg-blue-200 transition-colors">
+                <i class="fas fa-wine-bottle text-blue-600 text-lg mb-1"></i>
+                <div class="text-xs text-gray-600">500мл</div>
+            </button>
+            <button class="bg-blue-100 rounded-lg p-2 text-center hover:bg-blue-200 transition-colors">
+                <i class="fas fa-plus text-blue-600 text-lg mb-1"></i>
+                <div class="text-xs text-gray-600">Другое</div>
+            </button>
+        </div>
+    </div>
+
+    <div id="exercise-progress-section" class="px-6 py-6 bg-pregnancy-beige">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Физическая активность</h3>
+            <button class="text-orange-600 text-sm font-medium">Программы</button>
+        </div>
+        
+        <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4 mb-4">
+            <div class="grid grid-cols-3 gap-4 mb-4">
+                <div class="text-center">
+                    <div class="text-xl font-bold text-orange-600">4</div>
+                    <div class="text-xs text-gray-600">дня в неделю</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-xl font-bold text-emerald-600">28</div>
+                    <div class="text-xs text-gray-600">мин/день</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-xl font-bold text-purple-600">156</div>
+                    <div class="text-xs text-gray-600">мин/неделя</div>
+                </div>
+            </div>
+            <div id="exercise-chart" class="chart-container"></div>
+        </div>
+
+        <div class="space-y-3">
+            <div class="bg-orange-50 rounded-xl p-3">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-walking text-orange-600"></i>
+                        <span class="text-sm font-medium text-gray-800">Прогулки</span>
+                    </div>
+                    <span class="text-sm text-orange-600 font-medium">45 мин</span>
+                </div>
+                <div class="w-full bg-orange-200 rounded-full h-2">
+                    <div class="bg-orange-500 h-2 rounded-full" style="width: 75%"></div>
+                </div>
+            </div>
+            <div class="bg-emerald-50 rounded-xl p-3">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-leaf text-emerald-600"></i>
+                        <span class="text-sm font-medium text-gray-800">Йога</span>
+                    </div>
+                    <span class="text-sm text-emerald-600 font-medium">20 мин</span>
+                </div>
+                <div class="w-full bg-emerald-200 rounded-full h-2">
+                    <div class="bg-emerald-500 h-2 rounded-full" style="width: 40%"></div>
+                </div>
+            </div>
+            <div class="bg-blue-50 rounded-xl p-3">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-swimmer text-blue-600"></i>
+                        <span class="text-sm font-medium text-gray-800">Плавание</span>
+                    </div>
+                    <span class="text-sm text-blue-600 font-medium">30 мин</span>
+                </div>
+                <div class="w-full bg-blue-200 rounded-full h-2">
+                    <div class="bg-blue-500 h-2 rounded-full" style="width: 60%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="appointments-analytics-section" class="px-6 py-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Медицинские визиты</h3>
+            <button class="text-purple-600 text-sm font-medium">Календарь</button>
+        </div>
+        
+        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-4 border border-purple-100 mb-4">
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-purple-600">12</div>
+                    <div class="text-xs text-gray-600">Всего визитов</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-pink-600">3</div>
+                    <div class="text-xs text-gray-600">Предстоящих</div>
+                </div>
+            </div>
+            <div id="appointments-timeline" class="chart-container"></div>
+        </div>
+
+        <div class="space-y-3">
+            <div class="bg-white rounded-2xl p-4 border border-gray-200">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user-md text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Гинеколог</h4>
+                            <p class="text-sm text-gray-600">Последний визит: 2 мая</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm font-medium text-green-600">✓ Пройден</div>
+                        <div class="text-xs text-gray-500">Норма</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 border border-blue-200">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-vial text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Анализы крови</h4>
+                            <p class="text-sm text-gray-600">Последние: 28 апр</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm font-medium text-green-600">✓ Готово</div>
+                        <div class="text-xs text-gray-500">Хорошие</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 border border-orange-200">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-microscope text-orange-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">УЗИ скрининг</h4>
+                            <p class="text-sm text-gray-600">Запланировано: 22 мая</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm font-medium text-orange-600">⏳ Ожидает</div>
+                        <div class="text-xs text-gray-500">10:00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="diary-insights-section" class="px-6 py-6 bg-gradient-to-r from-pregnancy-pink to-pregnancy-mint">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Инсайты из дневника</h3>
+            <button class="text-pink-600 text-sm font-medium">Весь дневник</button>
+        </div>
+        
+        <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4 mb-4">
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-pink-600">47</div>
+                    <div class="text-xs text-gray-600">Записей всего</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-emerald-600">5.2</div>
+                    <div class="text-xs text-gray-600">Записей/неделя</div>
+                </div>
+            </div>
+            <div id="diary-activity-chart" class="chart-container h-24"></div>
+        </div>
+
+        <div class="space-y-3">
+            <div class="bg-pink-50 rounded-xl p-3">
+                <div class="flex items-center space-x-3 mb-2">
+                    <i class="fas fa-heart text-pink-600"></i>
+                    <span class="text-sm font-medium text-gray-800">Самые частые темы</span>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-pink-200 text-pink-800 px-2 py-1 rounded-full text-xs">Движения малыша</span>
+                    <span class="bg-emerald-200 text-emerald-800 px-2 py-1 rounded-full text-xs">Сон</span>
+                    <span class="bg-blue-200 text-blue-800 px-2 py-1 rounded-full text-xs">Настроение</span>
+                </div>
+            </div>
+
+            <div class="bg-emerald-50 rounded-xl p-3">
+                <div class="flex items-center space-x-3 mb-2">
+                    <i class="fas fa-chart-line text-emerald-600"></i>
+                    <span class="text-sm font-medium text-gray-800">Активность записей</span>
+                </div>
+                <div class="text-xs text-gray-600">Больше всего записей делается по вечерам (18:00-21:00)</div>
+            </div>
+
+            <div class="bg-blue-50 rounded-xl p-3">
+                <div class="flex items-center space-x-3 mb-2">
+                    <i class="fas fa-lightbulb text-blue-600"></i>
+                    <span class="text-sm font-medium text-gray-800">Рекомендация</span>
+                </div>
+                <div class="text-xs text-gray-600">Попробуй записывать утренние ощущения - это поможет лучше отслеживать изменения</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="floating-ai-button" class="fixed bottom-20 right-6 z-50">
+        <button class="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full shadow-lg flex items-center justify-center floating-animation hover:shadow-xl transition-all">
+            <i class="fas fa-robot text-white text-xl"></i>
+        </button>
+        <div class="absolute -top-12 right-0 bg-gray-800 text-white px-3 py-1 rounded-lg text-xs opacity-0 hover:opacity-100 transition-opacity">
+            AI помощник
+        </div>
+    </div>
+
+    <div id="bottom-navigation" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2">
+        <div class="max-w-sm mx-auto flex items-center justify-between">
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-home text-lg"></i>
+                <span class="text-xs">Главная</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-calendar text-lg"></i>
+                <span class="text-xs">Календарь</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-book text-lg"></i>
+                <span class="text-xs">Дневник</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-pink-600">
+                <i class="fas fa-chart-bar text-lg"></i>
+                <span class="text-xs font-medium">Статистика</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-user text-lg"></i>
+                <span class="text-xs">Профиль</span>
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Weight tracking chart
+    Highcharts.chart('weight-chart', {
+        chart: {
+            type: 'spline',
+            backgroundColor: 'transparent',
+            height: 200
+        },
+        title: { text: null },
+        credits: { enabled: false },
+        legend: { enabled: false },
+        xAxis: {
+            categories: ['16 нед', '17 нед', '18 нед', '19 нед', '20 нед', '21 нед', '22 нед', '23 нед'],
+            labels: { style: { fontSize: '10px', color: '#6b7280' } },
+            lineWidth: 0,
+            tickWidth: 0
+        },
+        yAxis: {
+            title: { text: null },
+            labels: { style: { fontSize: '10px', color: '#6b7280' } },
+            gridLineWidth: 1,
+            gridLineColor: '#f3f4f6'
+        },
+        plotOptions: {
+            spline: {
+                marker: { radius: 4, fillColor: '#ec4899' },
+                lineWidth: 3,
+                color: '#ec4899'
+            }
+        },
+        series: [{
+            data: [60.2, 60.8, 61.5, 62.3, 63.1, 64.0, 65.2, 68.5]
+        }]
+    });
+
+    // Baby movements chart
+    Highcharts.chart('movements-chart', {
+        chart: {
+            type: 'column',
+            backgroundColor: 'transparent',
+            height: 200
+        },
+        title: { text: null },
+        credits: { enabled: false },
+        legend: { enabled: false },
+        xAxis: {
+            categories: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+            labels: { style: { fontSize: '10px', color: '#6b7280' } }
+        },
+        yAxis: {
+            title: { text: null },
+            labels: { style: { fontSize: '10px', color: '#6b7280' } }
+        },
+        plotOptions: {
+            column: {
+                borderRadius: 4,
+                color: {
+                    linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                    stops: [[0, '#3b82f6'], [1, '#10b981']]
+                }
+            }
+        },
+        series: [{
+            data: [12, 8, 15, 9, 11, 13, 8]
+        }]
+    });
+
+    // Blood pressure gauge
+    Highcharts.chart('blood-pressure-gauge', {
+        chart: {
+            type: 'solidgauge',
+            backgroundColor: 'transparent',
+            height: 120
+        },
+        title: { text: null },
+        credits: { enabled: false },
+        pane: {
+            center: ['50%', '75%'],
+            size: '100%',
+            startAngle: -90,
+            endAngle: 90,
+            background: {
+                backgroundColor: '#f3f4f6',
+                innerRadius: '60%',
+                outerRadius: '100%',
+                shape: 'arc'
+            }
+        },
+        yAxis: {
+            min: 0,
+            max: 200,
+            stops: [
+                [0.1, '#10b981'],
+                [0.5, '#f59e0b'],
+                [0.9, '#ef4444']
+            ],
+            lineWidth: 0,
+            tickWidth: 0,
+            minorTickInterval: null,
+            tickAmount: 2,
+            labels: { y: 16, style: { fontSize: '10px' } }
+        },
+        plotOptions: {
+            solidgauge: {
+                dataLabels: {
+                    y: 5,
+                    borderWidth: 0,
+                    useHTML: true
+                }
+            }
+        },
+        series: [{
+            data: [120],
+            dataLabels: {
+                format: '<div style="text-align:center"><span style="font-size:16px;font-weight:bold;color:#ec4899">{y}</span><br/><span style="font-size:10px;color:#6b7280">мм рт.ст.</span></div>'
+            }
+        }]
+    });
+
+    // Temperature chart
+    Highcharts.chart('temperature-chart', {
+        chart: {
+            type: 'line',
+            backgroundColor: 'transparent',
+            height: 150
+        },
+        title: { text: null },
+        credits: { enabled: false },
+        legend: { enabled: false },
+        xAxis: {
+            categories: ['1', '3', '5', '7', '9', '11', '13', '15'],
+            labels: { style: { fontSize: '10px', color: '#6b7280' } }
+        },
+        yAxis: {
+            title: { text: null },
+            min: 36.0,
+            max: 37.5,
+            labels: { style: { fontSize: '10px', color: '#6b7280' } }
+        },
+        plotOptions: {
+            line: {
+                marker: { radius: 3 },
+                lineWidth: 2,
+                color: '#3b82f6'
+            }
+        },
+        series: [{
+            data: [36.2, 36.4, 36.3, 36.5, 36.7, 36.4, 36.6, 36.5]
+        }]
+    });
+
+    // Symptoms heatmap
+    Highcharts.chart('symptoms-heatmap', {
+        chart: {
+            type: 'heatmap',
+            backgroundColor: 'transparent',
+            height: 150
+        },
+        title: { text: null },
+        credits: { enabled: false },
+        xAxis: {
+            categories: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+            labels: { style: { fontSize: '10px', color: '#6b7280' } }
+        },
+        yAxis: {
+            categories: ['Тошнота', 'Усталость', 'Изжога', 'Головная боль'],
+            labels: { style: { fontSize: '10px', color: '#6b7280' } },
+            title: { text: null }
+        },
+        colorAxis: {
+            min: 0,
+            max: 3,
+            stops: [
+                [0, '#f3f4f6'],
+                [0.5, '#fbbf24'],
+                [1, '#ef4444']
+            ]
+        },
+        series: [{
+            borderWidth: 1,
+            data: [
+                [0, 0, 0], [1, 0, 1], [2, 0, 2], [3, 0, 0], [4, 0, 1], [5, 0, 0], [6, 0, 0],
+                [0, 1, 2], [1, 1, 3], [2, 1, 2], [3, 1, 1], [4, 1, 2], [5, 1, 1], [6, 1, 2],
+                [0, 2, 1], [1, 2, 0], [2, 2, 2], [3, 2, 1], [4, 2, 0], [5, 2, 1], [6, 2, 2],
+                [0, 3, 0], [1, 3, 1], [2, 3, 0], [3, 3, 0], [4, 3, 1], [5, 3, 0], [6, 3, 0]
+            ],
+            dataLabels: { enabled: false }
+        }]
+    });
+
+    // Mood pie chart
+    Highcharts.chart('mood-pie-chart', {
+        chart: {
+            type: 'pie',
+            backgroundColor: 'transparent',
+            height: 200
+        },
+        title: { text: null },
+        credits: { enabled: false },
+        plotOptions: {
+            pie: {
+                innerSize: '50%',
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.percentage:.1f}%',
+                    style: { fontSize: '10px', color: '#6b7280' }
+                }
+            }
+        },
+        series: [{
+            data: [
+                { name: 'Отлично', y: 65, color: '#10b981' },
+                { name: 'Хорошо', y: 25, color: '#3b82f6' },
+                { name: 'Нормально', y: 8, color: '#f59e0b' },
+                { name: 'Грустно', y: 2, color: '#ef4444' }
+            ]
+        }]
+    });
+
+    // Sleep chart
+    Highcharts.chart('sleep-chart', {
+        chart: {
+            type: 'area',
+            backgroundColor: 'transparent',
+            height: 120
+        },
+        title: { text: null },
+        credits: { enabled: false },
+        legend: { enabled: false },
+        xAxis: {
+            categories: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+            labels: { style: { fontSize: '10px', color: '#6b7280' } }
+        },
+        yAxis: {
+            title: { text: null },
+            min: 6,
+            max: 9,
+            labels: { style: { fontSize: '10px', color: '#6b7280' } }
+        },
+        plotOptions: {
+            area: {
+                fillColor: {
+                    linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                    stops: [[0, 'rgba(59, 130, 246, 0.3)'], [1, 'rgba(59, 130, 246, 0.1)']]
+                },
+                lineColor: '#3b82f6',
+                lineWidth: 2,
+                marker: { radius: 3 }
+            }
+        },
+        series: [{
+            data: [7.5, 8.2, 7.8, 6.9, 7.3, 8.1, 7.6]
+        }]
+    });
+
+    // Water intake chart
+    Highcharts.chart('water-intake-chart', {
+        chart: {
+            type: 'column',
+            backgroundColor: 'transparent',
+            height: 100
+        },
+        title: { text: null },
+        credits: { enabled: false },
+        legend: { enabled: false },
+        xAxis: {
+            categories: ['6:00', '9:00', '12:00', '15:00', '18:00', '21:00'],
+            labels: { style: { fontSize: '9px', color: '#6b7280' } }
+        },
+        yAxis: {
+            title: { text: null },
+            max: 500,
+            labels: { enabled: false }
+        },
+        plotOptions: {
+            column: {
+                borderRadius: 2,
+                color: '#3b82f6',
+                pointWidth: 20
+            }
+        },
+        series: [{
+            data: [250, 200, 300, 250, 400, 200]
+        }]
+    });
+
+    // Exercise chart
+    Highcharts.chart('exercise-chart', {
+        chart: {
+            type: 'bar',
+            backgroundColor: 'transparent',
+            height: 150
+        },
+        title: { text: null },
+        credits: { enabled: false },
+        legend: { enabled: false },
+        xAxis: {
+            categories: ['Прогулки', 'Йога', 'Плавание', 'Упражнения'],
+            labels: { style: { fontSize: '10px', color: '#6b7280' } }
+        },
+        yAxis: {
+            title: { text: null },
+            labels: { style: { fontSize: '10px', color: '#6b7280' } }
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 4,
+                colorByPoint: true,
+                colors: ['#f97316', '#10b981', '#3b82f6', '#8b5cf6']
+            }
+        },
+        series: [{
+            data: [45, 20, 30, 15]
+        }]
+    });
+
+    // Appointments timeline
+    Highcharts.chart('appointments-timeline', {
+        chart: {
+            type: 'scatter',
+            backgroundColor: 'transparent',
+            height: 120
+        },
+        title: { text: null },
+        credits: { enabled: false },
+        legend: { enabled: false },
+        xAxis: {
+            type: 'datetime',
+            labels: { style: { fontSize: '9px', color: '#6b7280' } }
+        },
+        yAxis: {
+            categories: ['УЗИ', 'Анализы', 'Гинеколог'],
+            title: { text: null },
+            labels: { style: { fontSize: '10px', color: '#6b7280' } }
+        },
+        plotOptions: {
+            scatter: {
+                marker: {
+                    radius: 6,
+                    symbol: 'circle'
+                }
+            }
+        },
+        series: [{
+            data: [
+                [Date.UTC(2024, 3, 15), 2],
+                [Date.UTC(2024, 3, 28), 1],
+                [Date.UTC(2024, 4, 2), 2],
+                [Date.UTC(2024, 4, 15), 2],
+                [Date.UTC(2024, 4, 22), 0]
+            ],
+            color: '#8b5cf6'
+        }]
+    });
+
+    // Diary activity chart
+    Highcharts.chart('diary-activity-chart', {
+        chart: {
+            type: 'column',
+            backgroundColor: 'transparent',
+            height: 80
+        },
+        title: { text: null },
+        credits: { enabled: false },
+        legend: { enabled: false },
+        xAxis: {
+            categories: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+            labels: { style: { fontSize: '9px', color: '#6b7280' } }
+        },
+        yAxis: {
+            title: { text: null },
+            labels: { enabled: false }
+        },
+        plotOptions: {
+            column: {
+                borderRadius: 2,
+                color: {
+                    linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                    stops: [[0, '#ec4899'], [1, '#10b981']]
+                },
+                pointWidth: 15
+            }
+        },
+        series: [{
+            data: [2, 1, 3, 2, 1, 4, 2]
+        }]
+    });
+
+    // Interactive elements
+    const aiButton = document.querySelector('#floating-ai-button button');
+    aiButton.addEventListener('click', function() {
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.style.transform = 'scale(1)';
+        }, 150);
+    });
+
+    // Navigation highlighting
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            navItems.forEach(nav => {
+                nav.classList.remove('text-pink-600');
+                nav.classList.add('text-gray-400');
+                nav.querySelector('span').classList.remove('font-medium');
+            });
+            this.classList.remove('text-gray-400');
+            this.classList.add('text-pink-600');
+            this.querySelector('span').classList.add('font-medium');
+        });
+    });
+
+    // Smooth scrolling for better mobile experience
+    let isScrolling = false;
+    window.addEventListener('scroll', () => {
+        if (!isScrolling) {
+            window.requestAnimationFrame(() => {
+                isScrolling = false;
+            });
+            isScrolling = true;
+        }
+    });
+});
+</script>
+
+
+</body></html>

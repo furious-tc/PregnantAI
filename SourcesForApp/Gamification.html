@@ -1,0 +1,835 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #fef7f0 0%, #fdf2f8 100%); }
+        .badge-glow { box-shadow: 0 0 20px rgba(251, 207, 232, 0.4); }
+        .pulse-animation { animation: pulse 2s ease-in-out infinite; }
+        .bounce-animation { animation: bounce 1s ease-in-out; }
+        .float-animation { animation: float 3s ease-in-out infinite; }
+        .progress-fill { animation: progressFill 2s ease-out forwards; }
+        .badge-unlock { animation: badgeUnlock 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        .sparkle { animation: sparkle 1.5s ease-in-out infinite; }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        @keyframes progressFill {
+            0% { width: 0%; }
+            100% { width: var(--progress-width); }
+        }
+        
+        @keyframes badgeUnlock {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+            100% { transform: scale(1) rotate(360deg); opacity: 1; }
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+        
+        .achievement-card:hover { transform: translateY(-2px); }
+        .level-progress { background: linear-gradient(90deg, #f472b6, #a855f7, #06b6d4); }
+    </style>
+    <script>tailwind.config = {
+  "theme": {
+    "extend": {
+      "colors": {
+        "pregnancy-pink": "#fdf2f8",
+        "pregnancy-beige": "#fef7f0",
+        "pregnancy-mint": "#f0fdfa",
+        "pregnancy-sky": "#f0f9ff",
+        "soft-pink": "#fbcfe8",
+        "soft-beige": "#fed7aa",
+        "soft-mint": "#a7f3d0",
+        "soft-sky": "#bae6fd"
+      },
+      "fontFamily": {
+        "sans": [
+          "Inter",
+          "sans-serif"
+        ]
+      }
+    }
+  }
+};</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"><style>
+  .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  </style></head>
+<body class="bg-gradient-to-br from-pregnancy-beige to-pregnancy-pink min-h-screen">
+
+<div id="mobile-container" class="max-w-sm mx-auto bg-white shadow-2xl relative overflow-hidden">
+
+    <div id="header" class="bg-white/80 backdrop-blur-lg px-6 py-4 sticky top-0 z-50 border-b border-pink-100">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <button class="w-10 h-10 bg-gradient-to-r from-soft-pink to-soft-beige rounded-full flex items-center justify-center">
+                    <i class="fas fa-arrow-left text-pink-600 text-sm"></i>
+                </button>
+                <div>
+                    <h1 class="text-lg font-semibold text-gray-800">Достижения</h1>
+                    <p class="text-xs text-gray-500">Твой прогресс</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button class="w-10 h-10 bg-pregnancy-mint rounded-full flex items-center justify-center">
+                    <i class="fas fa-share-alt text-emerald-600 text-sm"></i>
+                </button>
+                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" alt="Profile" class="w-10 h-10 rounded-full border-2 border-soft-pink">
+            </div>
+        </div>
+    </div>
+
+    <div id="level-progress-section" class="px-6 py-8 gradient-bg">
+        <div class="text-center mb-6">
+            <div class="relative mb-4">
+                <div class="w-32 h-32 mx-auto bg-gradient-to-br from-pink-400 via-purple-500 to-blue-500 rounded-full flex items-center justify-center badge-glow pulse-animation">
+                    <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">15</div>
+                            <div class="text-xs text-gray-600 font-medium">Уровень</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center sparkle">
+                    <i class="fas fa-crown text-yellow-700 text-sm"></i>
+                </div>
+            </div>
+            
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Опытная мама</h2>
+            <p class="text-gray-600 text-sm mb-6">До следующего уровня осталось 850 XP</p>
+            
+            <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-gray-800">Прогресс уровня</span>
+                    <span class="text-sm font-bold text-purple-600">2,150 / 3,000 XP</span>
+                </div>
+                <div class="bg-gray-200 rounded-full h-3 relative overflow-hidden">
+                    <div class="level-progress h-3 rounded-full progress-fill" style="--progress-width: 72%"></div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
+                </div>
+                <div class="mt-2 text-xs text-gray-600 text-center">72% завершено</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="weekly-progress-section" class="px-6 py-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Прогресс недели</h3>
+            <div class="text-sm text-purple-600 font-medium">5/7 дней</div>
+        </div>
+        
+        <div class="bg-gradient-to-r from-pregnancy-pink to-pregnancy-mint rounded-2xl p-4 border border-pink-100">
+            <div class="grid grid-cols-7 gap-2 mb-4">
+                <div class="text-center">
+                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-1">
+                        <i class="fas fa-check text-white text-xs"></i>
+                    </div>
+                    <div class="text-xs text-gray-600">Пн</div>
+                </div>
+                <div class="text-center">
+                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-1">
+                        <i class="fas fa-check text-white text-xs"></i>
+                    </div>
+                    <div class="text-xs text-gray-600">Вт</div>
+                </div>
+                <div class="text-center">
+                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-1">
+                        <i class="fas fa-check text-white text-xs"></i>
+                    </div>
+                    <div class="text-xs text-gray-600">Ср</div>
+                </div>
+                <div class="text-center">
+                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-1">
+                        <i class="fas fa-check text-white text-xs"></i>
+                    </div>
+                    <div class="text-xs text-gray-600">Чт</div>
+                </div>
+                <div class="text-center">
+                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-1">
+                        <i class="fas fa-check text-white text-xs"></i>
+                    </div>
+                    <div class="text-xs text-gray-600">Пт</div>
+                </div>
+                <div class="text-center">
+                    <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center mx-auto mb-1">
+                        <div class="w-4 h-4 bg-white rounded-full"></div>
+                    </div>
+                    <div class="text-xs text-gray-600">Сб</div>
+                </div>
+                <div class="text-center">
+                    <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center mx-auto mb-1">
+                        <div class="w-4 h-4 bg-white rounded-full"></div>
+                    </div>
+                    <div class="text-xs text-gray-600">Вс</div>
+                </div>
+            </div>
+            
+            <div class="bg-white/70 rounded-xl p-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-medium text-gray-800">Недельная цель</span>
+                    <span class="text-sm font-bold text-green-600">71%</span>
+                </div>
+                <div class="mt-2 bg-gray-200 rounded-full h-2">
+                    <div class="bg-gradient-to-r from-green-400 to-emerald-500 h-2 rounded-full progress-fill" style="--progress-width: 71%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="recent-badges-section" class="px-6 py-6 bg-pregnancy-beige">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Новые достижения</h3>
+            <div class="text-sm text-orange-600 font-medium">+3 сегодня</div>
+        </div>
+        
+        <div class="space-y-4">
+            <div class="achievement-card bg-white rounded-2xl p-4 border border-orange-200 transition-all duration-300">
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center badge-glow bounce-animation">
+                            <i class="fas fa-fire text-white text-xl"></i>
+                        </div>
+                        <div class="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                            <span class="text-xs text-white font-bold">5</span>
+                        </div>
+                        <div class="absolute -bottom-1 -left-1 w-4 h-4 bg-yellow-300 rounded-full sparkle"></div>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-800 mb-1">Огненная серия</h4>
+                        <p class="text-sm text-gray-600 mb-2">5 дней подряд выполняешь все задания</p>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">+150 XP</span>
+                            <span class="text-xs text-gray-500">2 часа назад</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="achievement-card bg-white rounded-2xl p-4 border border-pink-200 transition-all duration-300">
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <div class="w-16 h-16 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex items-center justify-center badge-glow">
+                            <i class="fas fa-heart text-white text-xl"></i>
+                        </div>
+                        <div class="absolute -top-1 -right-1 w-4 h-4 bg-pink-300 rounded-full sparkle"></div>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-800 mb-1">Забота о себе</h4>
+                        <p class="text-sm text-gray-600 mb-2">Отметила настроение 30 дней подряд</p>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full">+200 XP</span>
+                            <span class="text-xs text-gray-500">4 часа назад</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="achievement-card bg-white rounded-2xl p-4 border border-emerald-200 transition-all duration-300">
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center badge-glow">
+                            <i class="fas fa-seedling text-white text-xl"></i>
+                        </div>
+                        <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-300 rounded-full sparkle"></div>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-800 mb-1">Здоровый образ</h4>
+                        <p class="text-sm text-gray-600 mb-2">Выпила 2л воды 7 дней подряд</p>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">+100 XP</span>
+                            <span class="text-xs text-gray-500">Сегодня</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="milestone-progress-section" class="px-6 py-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Важные вехи</h3>
+        
+        <div class="space-y-4">
+            <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-4 border border-purple-200">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-baby text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Второй триместр</h4>
+                            <p class="text-sm text-gray-600">Прогресс беременности</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold text-purple-600">57%</div>
+                        <div class="text-xs text-gray-500">23/40 недель</div>
+                    </div>
+                </div>
+                <div class="bg-white/70 rounded-full h-3 mb-2">
+                    <div class="bg-gradient-to-r from-purple-400 to-pink-500 h-3 rounded-full progress-fill" style="--progress-width: 57%"></div>
+                </div>
+                <p class="text-xs text-gray-600">До третьего триместра: 4 недели</p>
+            </div>
+
+            <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-4 border border-blue-200">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-book-open text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Обучение</h4>
+                            <p class="text-sm text-gray-600">Курсы для мам</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold text-blue-600">75%</div>
+                        <div class="text-xs text-gray-500">15/20 уроков</div>
+                    </div>
+                </div>
+                <div class="bg-white/70 rounded-full h-3 mb-2">
+                    <div class="bg-gradient-to-r from-blue-400 to-cyan-500 h-3 rounded-full progress-fill" style="--progress-width: 75%"></div>
+                </div>
+                <p class="text-xs text-gray-600">Осталось 5 уроков до сертификата</p>
+            </div>
+
+            <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-4 border border-green-200">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-shopping-bag text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Подготовка</h4>
+                            <p class="text-sm text-gray-600">Список покупок</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold text-green-600">45%</div>
+                        <div class="text-xs text-gray-500">18/40 пунктов</div>
+                    </div>
+                </div>
+                <div class="bg-white/70 rounded-full h-3 mb-2">
+                    <div class="bg-gradient-to-r from-green-400 to-emerald-500 h-3 rounded-full progress-fill" style="--progress-width: 45%"></div>
+                </div>
+                <p class="text-xs text-gray-600">Собрано 18 из 40 необходимых вещей</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="category-achievements-section" class="px-6 py-6 bg-pregnancy-mint">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Достижения по категориям</h3>
+        
+        <div class="grid grid-cols-2 gap-4">
+            <div class="bg-white rounded-2xl p-4 text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center mx-auto mb-3 badge-glow">
+                    <i class="fas fa-heart text-white text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 mb-1">Здоровье</h4>
+                <div class="text-2xl font-bold text-pink-600 mb-1">12</div>
+                <p class="text-xs text-gray-600">достижений</p>
+                <div class="mt-2 bg-pink-100 rounded-full h-1.5">
+                    <div class="bg-pink-500 h-1.5 rounded-full" style="width: 80%"></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-3 badge-glow">
+                    <i class="fas fa-brain text-white text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 mb-1">Обучение</h4>
+                <div class="text-2xl font-bold text-purple-600 mb-1">8</div>
+                <p class="text-xs text-gray-600">достижений</p>
+                <div class="mt-2 bg-purple-100 rounded-full h-1.5">
+                    <div class="bg-purple-500 h-1.5 rounded-full" style="width: 60%"></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-3 badge-glow">
+                    <i class="fas fa-leaf text-white text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 mb-1">Питание</h4>
+                <div class="text-2xl font-bold text-emerald-600 mb-1">15</div>
+                <p class="text-xs text-gray-600">достижений</p>
+                <div class="mt-2 bg-emerald-100 rounded-full h-1.5">
+                    <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 90%"></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center mx-auto mb-3 badge-glow">
+                    <i class="fas fa-dumbbell text-white text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 mb-1">Активность</h4>
+                <div class="text-2xl font-bold text-orange-600 mb-1">9</div>
+                <p class="text-xs text-gray-600">достижений</p>
+                <div class="mt-2 bg-orange-100 rounded-full h-1.5">
+                    <div class="bg-orange-500 h-1.5 rounded-full" style="width: 70%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="all-badges-section" class="px-6 py-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Все достижения</h3>
+            <div class="text-sm text-gray-500">44 из 60</div>
+        </div>
+        
+        <div class="grid grid-cols-4 gap-4">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-2 badge-glow">
+                    <i class="fas fa-star text-white text-lg"></i>
+                </div>
+                <p class="text-xs text-gray-700 font-medium">Первый день</p>
+            </div>
+
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-2 badge-glow">
+                    <i class="fas fa-calendar-check text-white text-lg"></i>
+                </div>
+                <p class="text-xs text-gray-700 font-medium">Неделя</p>
+            </div>
+
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-2 badge-glow">
+                    <i class="fas fa-water text-white text-lg"></i>
+                </div>
+                <p class="text-xs text-gray-700 font-medium">Гидратация</p>
+            </div>
+
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-2 badge-glow">
+                    <i class="fas fa-moon text-white text-lg"></i>
+                </div>
+                <p class="text-xs text-gray-700 font-medium">Хороший сон</p>
+            </div>
+
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-red-400 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-2 badge-glow">
+                    <i class="fas fa-fire text-white text-lg"></i>
+                </div>
+                <p class="text-xs text-gray-700 font-medium">Активность</p>
+            </div>
+
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-violet-500 rounded-full flex items-center justify-center mx-auto mb-2 badge-glow">
+                    <i class="fas fa-book text-white text-lg"></i>
+                </div>
+                <p class="text-xs text-gray-700 font-medium">Знания</p>
+            </div>
+
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-lime-500 rounded-full flex items-center justify-center mx-auto mb-2 badge-glow">
+                    <i class="fas fa-apple-alt text-white text-lg"></i>
+                </div>
+                <p class="text-xs text-gray-700 font-medium">Питание</p>
+            </div>
+
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-2 badge-glow">
+                    <i class="fas fa-users text-white text-lg"></i>
+                </div>
+                <p class="text-xs text-gray-700 font-medium">Сообщество</p>
+            </div>
+
+            <div class="text-center opacity-50">
+                <div class="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <i class="fas fa-lock text-gray-500 text-lg"></i>
+                </div>
+                <p class="text-xs text-gray-500">Месяц</p>
+            </div>
+
+            <div class="text-center opacity-50">
+                <div class="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <i class="fas fa-lock text-gray-500 text-lg"></i>
+                </div>
+                <p class="text-xs text-gray-500">Эксперт</p>
+            </div>
+
+            <div class="text-center opacity-50">
+                <div class="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <i class="fas fa-lock text-gray-500 text-lg"></i>
+                </div>
+                <p class="text-xs text-gray-500">Наставник</p>
+            </div>
+
+            <div class="text-center opacity-50">
+                <div class="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <i class="fas fa-lock text-gray-500 text-lg"></i>
+                </div>
+                <p class="text-xs text-gray-500">Чемпион</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="challenge-progress-section" class="px-6 py-6 bg-gradient-to-r from-pregnancy-sky to-pregnancy-pink">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Текущие вызовы</h3>
+        
+        <div class="space-y-4">
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-blue-200">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center float-animation">
+                            <i class="fas fa-trophy text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">30-дневный вызов</h4>
+                            <p class="text-sm text-gray-600">Ежедневные задания</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold text-blue-600">23/30</div>
+                        <div class="text-xs text-gray-500">дней</div>
+                    </div>
+                </div>
+                <div class="bg-white/70 rounded-full h-3 mb-2">
+                    <div class="bg-gradient-to-r from-blue-400 to-purple-500 h-3 rounded-full progress-fill" style="--progress-width: 77%"></div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <p class="text-xs text-gray-600">Осталось 7 дней</p>
+                    <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">Награда: 500 XP</span>
+                </div>
+            </div>
+
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-emerald-200">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center pulse-animation">
+                            <i class="fas fa-heartbeat text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Здоровый образ</h4>
+                            <p class="text-sm text-gray-600">Еженедельная цель</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold text-emerald-600">5/7</div>
+                        <div class="text-xs text-gray-500">дней</div>
+                    </div>
+                </div>
+                <div class="bg-white/70 rounded-full h-3 mb-2">
+                    <div class="bg-gradient-to-r from-emerald-400 to-teal-500 h-3 rounded-full progress-fill" style="--progress-width: 71%"></div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <p class="text-xs text-gray-600">Осталось 2 дня</p>
+                    <span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">Награда: 250 XP</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="leaderboard-section" class="px-6 py-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Рейтинг друзей</h3>
+            <button class="text-purple-600 text-sm font-medium">Пригласить</button>
+        </div>
+        
+        <div class="space-y-3">
+            <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-4 border border-yellow-200">
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="User" class="w-12 h-12 rounded-full border-2 border-yellow-400">
+                        <div class="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+                            <i class="fas fa-crown text-yellow-700 text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-semibold text-gray-800">Ты</h4>
+                            <div class="text-right">
+                                <div class="text-lg font-bold text-yellow-600">2,150</div>
+                                <div class="text-xs text-gray-500">XP</div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600">1 место на этой неделе</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 border border-gray-200">
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" alt="User" class="w-12 h-12 rounded-full border-2 border-gray-300">
+                        <div class="absolute -top-1 -right-1 w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center">
+                            <span class="text-white text-xs font-bold">2</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-semibold text-gray-800">Анна</h4>
+                            <div class="text-right">
+                                <div class="text-lg font-bold text-gray-600">1,890</div>
+                                <div class="text-xs text-gray-500">XP</div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600">26 неделя беременности</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 border border-gray-200">
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-7.jpg" alt="User" class="w-12 h-12 rounded-full border-2 border-gray-300">
+                        <div class="absolute -top-1 -right-1 w-6 h-6 bg-orange-400 rounded-full flex items-center justify-center">
+                            <span class="text-white text-xs font-bold">3</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-semibold text-gray-800">Мария</h4>
+                            <div class="text-right">
+                                <div class="text-lg font-bold text-gray-600">1,650</div>
+                                <div class="text-xs text-gray-500">XP</div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600">18 неделя беременности</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="rewards-section" class="px-6 py-6 bg-gradient-to-r from-pregnancy-beige to-pregnancy-mint">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Награды и подарки</h3>
+        
+        <div class="grid grid-cols-2 gap-4">
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-3 badge-glow">
+                    <i class="fas fa-gift text-white text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 mb-1">Скидка 20%</h4>
+                <p class="text-xs text-gray-600 mb-2">На товары для мам</p>
+                <button class="text-xs bg-pink-100 text-pink-700 px-3 py-1 rounded-full">Получить</button>
+            </div>
+
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-3 badge-glow">
+                    <i class="fas fa-medal text-white text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 mb-1">Сертификат</h4>
+                <p class="text-xs text-gray-600 mb-2">Курс "Подготовка к родам"</p>
+                <button class="text-xs bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full">Скоро</button>
+            </div>
+
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-3 badge-glow">
+                    <i class="fas fa-book text-white text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 mb-1">Гид по питанию</h4>
+                <p class="text-xs text-gray-600 mb-2">Персональные рекомендации</p>
+                <button class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Открыто</button>
+            </div>
+
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center mx-auto mb-3 badge-glow">
+                    <i class="fas fa-star text-white text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 mb-1">VIP статус</h4>
+                <p class="text-xs text-gray-600 mb-2">Доступ к премиум функциям</p>
+                <button class="text-xs bg-orange-100 text-orange-700 px-3 py-1 rounded-full">2500 XP</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="bottom-navigation" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2">
+        <div class="max-w-sm mx-auto flex items-center justify-between">
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-home text-lg"></i>
+                <span class="text-xs">Главная</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-calendar text-lg"></i>
+                <span class="text-xs">Календарь</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-book text-lg"></i>
+                <span class="text-xs">Дневник</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-pink-600">
+                <i class="fas fa-trophy text-lg"></i>
+                <span class="text-xs font-medium">Достижения</span>
+            </button>
+            <button class="nav-item flex flex-col items-center space-y-1 p-2 text-gray-400">
+                <i class="fas fa-user text-lg"></i>
+                <span class="text-xs">Профиль</span>
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const achievementCards = document.querySelectorAll('.achievement-card');
+    const badges = document.querySelectorAll('.badge-glow');
+    
+    // Animate achievement cards on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    achievementCards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.6s ease-out';
+        observer.observe(card);
+    });
+    
+    // Badge click animations
+    badges.forEach(badge => {
+        badge.addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+        });
+    });
+    
+    // Progress bar animations
+    const progressBars = document.querySelectorAll('.progress-fill');
+    progressBars.forEach(bar => {
+        const width = bar.style.getPropertyValue('--progress-width');
+        bar.style.width = '0%';
+        setTimeout(() => {
+            bar.style.width = width;
+        }, 500);
+    });
+    
+    // Sparkle effect for new badges
+    function createSparkle(element) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'absolute w-2 h-2 bg-yellow-300 rounded-full sparkle';
+        sparkle.style.top = Math.random() * 100 + '%';
+        sparkle.style.left = Math.random() * 100 + '%';
+        element.appendChild(sparkle);
+        
+        setTimeout(() => {
+            sparkle.remove();
+        }, 1500);
+    }
+    
+    // Add sparkles to recent badges
+    const recentBadges = document.querySelectorAll('#recent-badges-section .badge-glow');
+    recentBadges.forEach(badge => {
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                createSparkle(badge);
+            }
+        }, 2000);
+    });
+    
+    // Level progress animation
+    const levelProgress = document.querySelector('.level-progress');
+    if (levelProgress) {
+        setTimeout(() => {
+            levelProgress.style.width = '72%';
+        }, 1000);
+    }
+    
+    // Touch interactions
+    let touchStartY = 0;
+    let touchEndY = 0;
+    
+    document.addEventListener('touchstart', function(e) {
+        touchStartY = e.changedTouches[0].screenY;
+    });
+    
+    document.addEventListener('touchend', function(e) {
+        touchEndY = e.changedTouches[0].screenY;
+        handleSwipe();
+    });
+    
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartY - touchEndY;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                // Swipe up - could trigger refresh or load more
+                console.log('Swipe up detected');
+            } else {
+                // Swipe down - could trigger back navigation
+                console.log('Swipe down detected');
+            }
+        }
+    }
+    
+    // Celebration animation for completed achievements
+    function celebrateAchievement() {
+        const celebration = document.createElement('div');
+        celebration.className = 'fixed inset-0 pointer-events-none z-50';
+        celebration.innerHTML = `
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <div class="text-6xl animate-bounce">🎉</div>
+            </div>
+        `;
+        document.body.appendChild(celebration);
+        
+        setTimeout(() => {
+            celebration.remove();
+        }, 2000);
+    }
+    
+    // Trigger celebration for new achievements (demo)
+    setTimeout(() => {
+        if (Math.random() > 0.8) {
+            celebrateAchievement();
+        }
+    }, 3000);
+});
+</script>
+
+
+</body></html>
