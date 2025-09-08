@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, SafeAreaView, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');
 
@@ -8,16 +9,16 @@ interface WeekData {
   fruitName: string;
   length: string;
   weight: string;
-  emoji: string;
+  iconName: keyof typeof FontAwesome5.glyphMap;
   color: string;
 }
 
 const weekData: WeekData[] = [
-  { week: 21, fruitName: 'Банан', length: '26 см', weight: '360 г', emoji: '🍌', color: '#fed7aa' },
-  { week: 22, fruitName: 'Кукуруза', length: '27 см', weight: '430 г', emoji: '🌽', color: '#fef7f0' },
-  { week: 23, fruitName: 'Папайя', length: '28 см', weight: '500 г', emoji: '🥭', color: '#fdf2f8' },
-  { week: 24, fruitName: 'Кукуруза', length: '30 см', weight: '600 г', emoji: '🌽', color: '#f0fdfa' },
-  { week: 25, fruitName: 'Брюква', length: '34 см', weight: '660 г', emoji: '🥬', color: '#f0f9ff' },
+  { week: 21, fruitName: 'Банан', length: '26 см', weight: '360 г', iconName: 'apple-alt', color: '#fed7aa' },
+  { week: 22, fruitName: 'Кукуруза', length: '27 см', weight: '430 г', iconName: 'seedling', color: '#fef7f0' },
+  { week: 23, fruitName: 'Папайя', length: '28 см', weight: '500 г', iconName: 'lemon', color: '#fdf2f8' },
+  { week: 24, fruitName: 'Кукуруза', length: '30 см', weight: '600 г', iconName: 'seedling', color: '#f0fdfa' },
+  { week: 25, fruitName: 'Брюква', length: '34 см', weight: '660 г', iconName: 'leaf', color: '#f0f9ff' },
 ];
 
 type TabType = 'development' | 'mom' | 'tips';
@@ -48,7 +49,7 @@ export const CalendarScreen: React.FC = () => {
             <View style={styles.developmentCard}>
               <View style={styles.babyImageContainer}>
                 <View style={[styles.babyImage, { backgroundColor: weekInfo.color }]}>
-                  <Text style={styles.babyEmoji}>{weekInfo.emoji}</Text>
+                  <FontAwesome5 name={weekInfo.iconName} size={48} color="#1f2937" />
                 </View>
                 <View style={styles.weekBadge}>
                   <Text style={styles.weekBadgeText}>{currentWeek} неделя</Text>
@@ -79,7 +80,7 @@ export const CalendarScreen: React.FC = () => {
             <View style={styles.developmentDetails}>
               <View style={styles.detailCard}>
                 <View style={styles.detailIcon}>
-                  <Text style={styles.detailEmoji}>🧠</Text>
+                  <FontAwesome5 name="head-side-brain" size={24} color="#ec4899" />
                 </View>
                 <View style={styles.detailContent}>
                   <Text style={styles.detailTitle}>Мозг и нервная система</Text>
@@ -89,7 +90,7 @@ export const CalendarScreen: React.FC = () => {
 
               <View style={styles.detailCard}>
                 <View style={styles.detailIcon}>
-                  <Text style={styles.detailEmoji}>🫁</Text>
+                  <FontAwesome5 name="wind" size={24} color="#10b981" />
                 </View>
                 <View style={styles.detailContent}>
                   <Text style={styles.detailTitle}>Дыхательная система</Text>
@@ -99,7 +100,7 @@ export const CalendarScreen: React.FC = () => {
 
               <View style={styles.detailCard}>
                 <View style={styles.detailIcon}>
-                  <Text style={styles.detailEmoji}>👐</Text>
+                  <FontAwesome5 name="hand-rock" size={24} color="#3b82f6" />
                 </View>
                 <View style={styles.detailContent}>
                   <Text style={styles.detailTitle}>Движения и рефлексы</Text>
@@ -120,7 +121,7 @@ export const CalendarScreen: React.FC = () => {
               <View style={styles.momDetails}>
                 <View style={styles.momDetailCard}>
                   <View style={styles.momIcon}>
-                    <Text style={styles.momEmoji}>🤱</Text>
+                    <FontAwesome5 name="baby" size={24} color="#ec4899" />
                   </View>
                   <View style={styles.momContent}>
                     <Text style={styles.momDetailTitle}>Размер живота</Text>
@@ -130,7 +131,7 @@ export const CalendarScreen: React.FC = () => {
 
                 <View style={styles.momDetailCard}>
                   <View style={styles.momIcon}>
-                    <Text style={styles.momEmoji}>💓</Text>
+                    <FontAwesome5 name="heart" size={24} color="#ef4444" />
                   </View>
                   <View style={styles.momContent}>
                     <Text style={styles.momDetailTitle}>Сердечно-сосудистая система</Text>
@@ -140,7 +141,7 @@ export const CalendarScreen: React.FC = () => {
 
                 <View style={styles.momDetailCard}>
                   <View style={styles.momIcon}>
-                    <Text style={styles.momEmoji}>😴</Text>
+                    <FontAwesome5 name="bed" size={24} color="#3b82f6" />
                   </View>
                   <View style={styles.momContent}>
                     <Text style={styles.momDetailTitle}>Сон и отдых</Text>
@@ -152,19 +153,19 @@ export const CalendarScreen: React.FC = () => {
                   <Text style={styles.symptomsTitle}>Частые симптомы:</Text>
                   <View style={styles.symptomsList}>
                     <View style={styles.symptomItem}>
-                      <Text style={styles.symptomEmoji}>🔥</Text>
+                      <FontAwesome5 name="fire" size={16} color="#f59e0b" />
                       <Text style={styles.symptomText}>Изжога</Text>
                     </View>
                     <View style={styles.symptomItem}>
-                      <Text style={styles.symptomEmoji}>😴</Text>
+                      <FontAwesome5 name="bed" size={16} color="#6b7280" />
                       <Text style={styles.symptomText}>Усталость</Text>
                     </View>
                     <View style={styles.symptomItem}>
-                      <Text style={styles.symptomEmoji}>🦵</Text>
+                      <FontAwesome5 name="walking" size={16} color="#3b82f6" />
                       <Text style={styles.symptomText}>Отеки ног</Text>
                     </View>
                     <View style={styles.symptomItem}>
-                      <Text style={styles.symptomEmoji}>💫</Text>
+                      <FontAwesome5 name="spinner" size={16} color="#a855f7" />
                       <Text style={styles.symptomText}>Головокружение</Text>
                     </View>
                   </View>
@@ -181,7 +182,10 @@ export const CalendarScreen: React.FC = () => {
               <Text style={styles.tipsTitle}>Рекомендации на {currentWeek} неделю</Text>
               
               <View style={styles.tipSection}>
-                <Text style={styles.tipSectionTitle}>🍎 Питание</Text>
+                <View style={styles.tipSectionHeader}>
+                  <FontAwesome5 name="apple-alt" size={18} color="#10b981" />
+                  <Text style={styles.tipSectionTitle}> Питание</Text>
+                </View>
                 <View style={styles.tipItem}>
                   <Text style={styles.tipItemTitle}>Продукты с железом</Text>
                   <Text style={styles.tipItemText}>Говядина, шпинат, чечевица, яйца - для профилактики анемии</Text>
@@ -193,7 +197,10 @@ export const CalendarScreen: React.FC = () => {
               </View>
 
               <View style={styles.tipSection}>
-                <Text style={styles.tipSectionTitle}>🏃‍♀️ Физическая активность</Text>
+                <View style={styles.tipSectionHeader}>
+                  <FontAwesome5 name="running" size={18} color="#3b82f6" />
+                  <Text style={styles.tipSectionTitle}> Физическая активность</Text>
+                </View>
                 <View style={styles.tipItem}>
                   <Text style={styles.tipItemTitle}>Пренатальная йога</Text>
                   <Text style={styles.tipItemText}>15 минут в день укрепят спину и подготовят к родам</Text>
@@ -205,7 +212,10 @@ export const CalendarScreen: React.FC = () => {
               </View>
 
               <View style={styles.tipSection}>
-                <Text style={styles.tipSectionTitle}>💆‍♀️ Благополучие</Text>
+                <View style={styles.tipSectionHeader}>
+                  <FontAwesome5 name="leaf" size={18} color="#a855f7" />
+                  <Text style={styles.tipSectionTitle}> Благополучие</Text>
+                </View>
                 <View style={styles.tipItem}>
                   <Text style={styles.tipItemTitle}>Уход за кожей</Text>
                   <Text style={styles.tipItemText}>Увлажняющий крем 2 раза в день, масло от растяжек</Text>
@@ -217,7 +227,10 @@ export const CalendarScreen: React.FC = () => {
               </View>
 
               <View style={styles.warningCard}>
-                <Text style={styles.warningTitle}>⚠️ Когда обратиться к врачу</Text>
+                <View style={styles.warningHeader}>
+                  <FontAwesome5 name="exclamation-triangle" size={16} color="#ef4444" />
+                  <Text style={styles.warningTitle}> Когда обратиться к врачу</Text>
+                </View>
                 <Text style={styles.warningText}>• Кровотечения любого характера</Text>
                 <Text style={styles.warningText}>• Сильные головные боли с нарушением зрения</Text>
                 <Text style={styles.warningText}>• Температура выше 38°C</Text>
@@ -243,7 +256,7 @@ export const CalendarScreen: React.FC = () => {
           onPress={() => navigateWeek('prev')}
           disabled={currentWeek <= 1}
         >
-          <Text style={[styles.navButtonText, currentWeek <= 1 && styles.navButtonDisabled]}>←</Text>
+          <FontAwesome5 name="chevron-left" size={18} color={currentWeek <= 1 ? "#d1d5db" : "#374151"} />
         </TouchableOpacity>
         
         <View style={styles.headerCenter}>
@@ -256,7 +269,7 @@ export const CalendarScreen: React.FC = () => {
           onPress={() => navigateWeek('next')}
           disabled={currentWeek >= 42}
         >
-          <Text style={[styles.navButtonText, currentWeek >= 42 && styles.navButtonDisabled]}>→</Text>
+          <FontAwesome5 name="chevron-right" size={18} color={currentWeek >= 42 ? "#d1d5db" : "#374151"} />
         </TouchableOpacity>
       </View>
 
@@ -279,7 +292,7 @@ export const CalendarScreen: React.FC = () => {
             onPress={() => setCurrentWeek(week.week)}
           >
             <Text style={styles.weekCardNumber}>{week.week} неделя</Text>
-            <Text style={styles.weekCardEmoji}>{week.emoji}</Text>
+            <FontAwesome5 name={week.iconName} size={32} color="#1f2937" />
             <Text style={styles.weekCardFruit}>Как {week.fruitName.toLowerCase()}</Text>
             <Text style={styles.weekCardStats}>{week.length} • {week.weight}</Text>
           </TouchableOpacity>
@@ -446,7 +459,6 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   babyImageContainer: {
-    position: 'relative',
     marginBottom: 20,
   },
   babyImage: {
@@ -655,11 +667,15 @@ const styles = StyleSheet.create({
   tipSection: {
     marginBottom: 24,
   },
+  tipSectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
   tipSectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#1f2937',
-    marginBottom: 16,
   },
   tipItem: {
     backgroundColor: '#f9fafb',
@@ -685,11 +701,15 @@ const styles = StyleSheet.create({
     borderLeftWidth: 4,
     borderLeftColor: '#ef4444',
   },
+  warningHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
   warningTitle: {
     fontSize: 14,
     fontWeight: 'bold',
     color: '#dc2626',
-    marginBottom: 8,
   },
   warningText: {
     fontSize: 12,
