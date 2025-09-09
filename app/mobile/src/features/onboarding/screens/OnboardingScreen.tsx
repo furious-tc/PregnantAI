@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  ImageSourcePropType,
   Animated,
   TextInput,
   Alert,
@@ -41,7 +42,7 @@ const OnboardingCard = ({
   progressAnim,
   children
 }: {
-  image: string,
+  image: ImageSourcePropType | string,
   step: number,
   totalSteps: number,
   title: string,
@@ -52,7 +53,7 @@ const OnboardingCard = ({
   <View style={styles.visualCard}>
     <View style={styles.visualCardImageWrapper}>
       <Image
-        source={{ uri: image }}
+        source={typeof image === 'string' ? { uri: image } : image}
         style={styles.visualCardImage}
         resizeMode="cover"
       />
@@ -100,6 +101,15 @@ export const OnboardingScreen: React.FC = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(8); // Сентябрь (0-based)
   const [currentYear, setCurrentYear] = useState(2025);
+  const [errors, setErrors] = useState<{ 
+    name?: boolean;
+    trimester?: boolean;
+    week?: boolean;
+    day?: boolean;
+    dueDate?: boolean;
+    isFirstPregnancy?: boolean;
+    interests?: boolean;
+  }>({});
 
   // Функции для работы с календарем
   const monthNames = [
@@ -211,24 +221,69 @@ export const OnboardingScreen: React.FC = () => {
 
   const toggleInterest = (interest: string) => {
     const interests = onboardingData.interests;
+    let updated: string[];
     if (interests.includes(interest)) {
-      setOnboardingData({
-        ...onboardingData,
-        interests: interests.filter(i => i !== interest)
-      });
+      updated = interests.filter(i => i !== interest);
     } else {
-      setOnboardingData({
-        ...onboardingData,
-        interests: [...interests, interest]
-      });
+      updated = [...interests, interest];
+    }
+    setOnboardingData({
+      ...onboardingData,
+      interests: updated
+    });
+    if (updated.length > 0) {
+      setErrors(prev => ({ ...prev, interests: false }));
     }
   };
 
   const completeRegistration = () => {
-    if (!onboardingData.name?.trim()) {
-      Alert.alert('Ошибка', 'Пожалуйста, введите ваше имя');
+    const missing: string[] = [];
+    const invalid: string[] = [];
+
+    const trimmedName = onboardingData.name?.trim();
+    if (!trimmedName) missing.push('Имя');
+
+    if (onboardingData.trimester == null) missing.push('Триместр');
+
+    const week = onboardingData.week;
+    if (week == null) {
+      missing.push('Неделя');
+    } else if (week < 1 || week > 42) {
+      invalid.push('Неделя (1–42)');
+    }
+
+    const day = onboardingData.day;
+    if (day == null) {
+      missing.push('День');
+    } else if (day < 0 || day > 6) {
+      invalid.push('День (0–6)');
+    }
+
+    if (!onboardingData.dueDate) missing.push('Дата родов');
+
+    if (onboardingData.isFirstPregnancy == null) missing.push('Первая беременность');
+
+    if (!onboardingData.interests || onboardingData.interests.length === 0) missing.push('Интересы');
+
+    // Установим подсветку ошибок
+    setErrors({
+      name: !trimmedName || false,
+      trimester: onboardingData.trimester == null || false,
+      week: week == null || week < 1 || week > 42 || false,
+      day: day == null || day < 0 || day > 6 || false,
+      dueDate: !onboardingData.dueDate || false,
+      isFirstPregnancy: onboardingData.isFirstPregnancy == null || false,
+      interests: !onboardingData.interests || onboardingData.interests.length === 0 || false,
+    });
+
+    if (missing.length || invalid.length) {
+      const parts: string[] = [];
+      if (missing.length) parts.push(`Не заполнены: ${missing.join(', ')}`);
+      if (invalid.length) parts.push(`Некорректные значения: ${invalid.join(', ')}`);
+      Alert.alert('Заполни данные', parts.join('\n'));
       return;
     }
+
     setShowRegistration(false);
     setShowSubscription(true);
   };
@@ -650,11 +705,16 @@ export const OnboardingScreen: React.FC = () => {
               <View style={styles.inputGroup}>
                 <Text style={styles.inputLabel}>Как тебя зовут?</Text>
                 <TextInput
-                  style={styles.textInput}
+                  style={[styles.textInput, errors.name && styles.errorInput]}
                   placeholder="Введи свое имя"
                   placeholderTextColor="#9ca3af"
                   value={onboardingData.name || ''}
-                  onChangeText={(name) => setOnboardingData({ ...onboardingData, name })}
+                  onChangeText={(name) => {
+                    setOnboardingData({ ...onboardingData, name });
+                    if (name && name.trim().length > 0) {
+                      setErrors(prev => ({ ...prev, name: false }));
+                    }
+                  }}
                 />
               </View>
 
@@ -663,7 +723,7 @@ export const OnboardingScreen: React.FC = () => {
                 <View style={styles.pregnancyWeekContainer}>
                   <View style={styles.trimesterContainer}>
                     <TouchableOpacity 
-                      style={styles.trimesterDropdown}
+                      style={[styles.trimesterDropdown, errors.trimester && styles.errorInput]}
                       onPress={() => setShowTrimesterDropdown(!showTrimesterDropdown)}
                     >
                       <Text style={styles.trimesterText}>
@@ -674,20 +734,34 @@ export const OnboardingScreen: React.FC = () => {
                     
                   </View>
                   <TextInput
-                    style={styles.weekInputSeparate}
+                    style={[styles.weekInputSeparate, errors.week && styles.errorInput]}
                     placeholder="Неделя"
                     placeholderTextColor="#9ca3af"
                     keyboardType="numeric"
                     value={onboardingData.week?.toString() || ''}
-                    onChangeText={(text) => setOnboardingData({ ...onboardingData, week: parseInt(text) || undefined })}
+                    onChangeText={(text) => {
+                      const num = parseInt(text);
+                      const value = isNaN(num) ? undefined : num;
+                      setOnboardingData({ ...onboardingData, week: value });
+                      if (value != null && value >= 1 && value <= 42) {
+                        setErrors(prev => ({ ...prev, week: false }));
+                      }
+                    }}
                   />
                   <TextInput
-                    style={styles.weekInputSeparate}
+                    style={[styles.weekInputSeparate, errors.day && styles.errorInput]}
                     placeholder="День"
                     placeholderTextColor="#9ca3af"
                     keyboardType="numeric"
                     value={onboardingData.day?.toString() || ''}
-                    onChangeText={(text) => setOnboardingData({ ...onboardingData, day: parseInt(text) || undefined })}
+                    onChangeText={(text) => {
+                      const num = parseInt(text);
+                      const value = isNaN(num) ? undefined : num;
+                      setOnboardingData({ ...onboardingData, day: value });
+                      if (value != null && value >= 0 && value <= 6) {
+                        setErrors(prev => ({ ...prev, day: false }));
+                      }
+                    }}
                   />
                 </View>
                 
@@ -696,7 +770,7 @@ export const OnboardingScreen: React.FC = () => {
               <View style={styles.inputGroup}>
                 <Text style={styles.inputLabel}>Дата родов (приблизительно)</Text>
                 <TouchableOpacity 
-                  style={styles.datePickerButton}
+                  style={[styles.datePickerButton, errors.dueDate && styles.errorInput]}
                   onPress={() => setShowDatePicker(true)}
                 >
                   <Text style={styles.datePickerText}>
@@ -712,9 +786,13 @@ export const OnboardingScreen: React.FC = () => {
                   <TouchableOpacity
                     style={[
                       styles.pregnancyOption,
-                      onboardingData.isFirstPregnancy === true && styles.selectedPregnancyOption
+                      onboardingData.isFirstPregnancy === true && styles.selectedPregnancyOption,
+                      onboardingData.isFirstPregnancy == null && errors.isFirstPregnancy && styles.errorOption,
                     ]}
-                    onPress={() => setOnboardingData({ ...onboardingData, isFirstPregnancy: true })}
+                    onPress={() => {
+                      setOnboardingData({ ...onboardingData, isFirstPregnancy: true });
+                      setErrors(prev => ({ ...prev, isFirstPregnancy: false }));
+                    }}
                   >
                     <FontAwesome5 name="baby" size={16} color="#ec4899" solid style={styles.pregnancyOptionIcon} />
                     <Text style={styles.pregnancyOptionText}>Да, первая</Text>
@@ -723,9 +801,13 @@ export const OnboardingScreen: React.FC = () => {
                   <TouchableOpacity
                     style={[
                       styles.pregnancyOption,
-                      onboardingData.isFirstPregnancy === false && styles.selectedPregnancyOption
+                      onboardingData.isFirstPregnancy === false && styles.selectedPregnancyOption,
+                      onboardingData.isFirstPregnancy == null && errors.isFirstPregnancy && styles.errorOption,
                     ]}
-                    onPress={() => setOnboardingData({ ...onboardingData, isFirstPregnancy: false })}
+                    onPress={() => {
+                      setOnboardingData({ ...onboardingData, isFirstPregnancy: false });
+                      setErrors(prev => ({ ...prev, isFirstPregnancy: false }));
+                    }}
                   >
                     <FontAwesome5 name="child" size={16} color="#ec4899" solid style={styles.pregnancyOptionIcon} />
                     <Text style={styles.pregnancyOptionText}>Нет, уже есть дети</Text>
@@ -746,7 +828,8 @@ export const OnboardingScreen: React.FC = () => {
                       key={interest.id}
                       style={[
                         styles.interestOption,
-                        onboardingData.interests.includes(interest.id) && styles.selectedInterestOption
+                        onboardingData.interests.includes(interest.id) && styles.selectedInterestOption,
+                        errors.interests && !onboardingData.interests.includes(interest.id) && styles.errorOption
                       ]}
                       onPress={() => toggleInterest(interest.id)}
                     >
@@ -812,6 +895,7 @@ export const OnboardingScreen: React.FC = () => {
               <TouchableOpacity 
                 onPress={() => {
                   setOnboardingData({ ...onboardingData, trimester: 1 });
+                  setErrors(prev => ({ ...prev, trimester: false }));
                   setShowTrimesterDropdown(false);
                 }}
                 style={{ 
@@ -832,6 +916,7 @@ export const OnboardingScreen: React.FC = () => {
               <TouchableOpacity 
                 onPress={() => {
                   setOnboardingData({ ...onboardingData, trimester: 2 });
+                  setErrors(prev => ({ ...prev, trimester: false }));
                   setShowTrimesterDropdown(false);
                 }}
                 style={{ 
@@ -852,6 +937,7 @@ export const OnboardingScreen: React.FC = () => {
               <TouchableOpacity 
                 onPress={() => {
                   setOnboardingData({ ...onboardingData, trimester: 3 });
+                  setErrors(prev => ({ ...prev, trimester: false }));
                   setShowTrimesterDropdown(false);
                 }}
                 style={{ 
@@ -978,6 +1064,7 @@ export const OnboardingScreen: React.FC = () => {
                           onPress={() => {
                             const formattedDate = `${day.toString().padStart(2, '0')}.${(currentMonth + 1).toString().padStart(2, '0')}.${currentYear}`;
                             setOnboardingData({ ...onboardingData, dueDate: formattedDate });
+                            setErrors(prev => ({ ...prev, dueDate: false }));
                             setShowDatePicker(false);
                           }}
                         >
@@ -1030,7 +1117,7 @@ export const OnboardingScreen: React.FC = () => {
           >
             <View style={styles.onboardingContent}>
               <OnboardingCard
-                image={'https://storage.googleapis.com/uxpilot-auth.appspot.com/8a42a5716e-f2f6be344a51add23326.png'}
+                image={require('../../../../assets/images/onboarding_preview.png')}
                 step={currentScreen}
                 totalSteps={4}
                 title={getStepTitle()}
@@ -1151,7 +1238,7 @@ export const OnboardingScreen: React.FC = () => {
           >
             <View style={styles.onboardingContent}>
               <OnboardingCard
-                image={'https://storage.googleapis.com/uxpilot-auth.appspot.com/d67032ddd3-1c2867ad7da78e6fd8e3.png'}
+                image={require('../../../../assets/images/onboarding_track.png')}
                 step={currentScreen}
                 totalSteps={4}
                 title={getStepTitle()}
@@ -1212,7 +1299,7 @@ export const OnboardingScreen: React.FC = () => {
           >
             <View style={styles.onboardingContent}>
               <OnboardingCard
-                image={'https://storage.googleapis.com/uxpilot-auth.appspot.com/6a15c26b7b-57c194c53675f07ef759.png'}
+                image={require('../../../../assets/images/onboarding_support.png')}
                 step={currentScreen}
                 totalSteps={4}
                 title={getStepTitle()}
@@ -2490,8 +2577,9 @@ const styles = StyleSheet.create({
     shadowRadius: 24,
     elevation: 12,
     padding: 0,
-    width: Math.min(width - 32, 360),
-    height: Math.min(width - 32, 360),
+    // фиксированные целочисленные размеры для чётких краёв при масштабировании
+    width: Math.round(Math.min(width - 32, 360)),
+    height: Math.round(Math.min(width - 32, 360)),
     alignSelf: 'center',
     overflow: 'hidden', // чтобы картинка не выходила за края
   },
@@ -2989,5 +3077,16 @@ const styles = StyleSheet.create({
   datePickerText: {
     fontSize: 16,
     color: '#374151',
+  },
+  // Error styles
+  errorInput: {
+    borderColor: '#ef4444',
+  },
+  errorOption: {
+    borderColor: '#ef4444',
+    backgroundColor: '#fef2f2',
+  },
+  errorGroup: {
+    borderColor: '#ef4444',
   },
 });

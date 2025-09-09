@@ -8,351 +8,287 @@ import {
   TouchableOpacity, 
   TextInput,
   Modal,
-  Alert
+  Alert,
+  Image,
+  Dimensions
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
+
+const { width } = Dimensions.get('window');
 
 interface JournalEntry {
   id: string;
-  date: Date;
-  text?: string;
-  mood?: 'great' | 'good' | 'neutral' | 'sad';
-  weight?: number;
-  symptoms: string[];
-  photos?: string[];
+  type: 'text' | 'photo' | 'tracker';
+  title: string;
+  content: string;
+  date: string;
+  time: string;
+  likes: number;
+  comments: number;
+  week: number;
+  category: string;
+  image?: string;
+  stats?: {
+    value: string;
+    unit: string;
+    change?: string;
+    status?: string;
+  };
 }
 
-const moodOptions = [
-  { id: 'great', emoji: '😊', label: 'Отлично', color: '#10b981' },
-  { id: 'good', emoji: '😌', label: 'Хорошо', color: '#3b82f6' },
-  { id: 'neutral', emoji: '😐', label: 'Нормально', color: '#f59e0b' },
-  { id: 'sad', emoji: '😔', label: 'Грустно', color: '#ef4444' },
-];
-
-const commonSymptoms = [
-  'Тошнота', 'Усталость', 'Головная боль', 'Изжога', 
-  'Отеки', 'Боль в спине', 'Запор', 'Головокружение',
-  'Бессонница', 'Судороги', 'Варикоз', 'Одышка'
+const sampleEntries: JournalEntry[] = [
+  {
+    id: '1',
+    type: 'text',
+    title: 'Первые толчки!',
+    content: 'Сегодня впервые почувствовала, как малыш толкается! Это такое невероятное ощущение 💕 Сидела за работой и вдруг почувствовала легкие движения внизу живота. Сначала подумала, что это просто газики, но потом поняла - это мой малыш!',
+    date: 'Сегодня',
+    time: '14:30',
+    likes: 12,
+    comments: 3,
+    week: 23,
+    category: 'baby'
+  },
+  {
+    id: '2',
+    type: 'photo',
+    title: 'Фото животика',
+    content: '23 недели! Животик растет с каждым днем. Уже не могу скрыть его под свободной одеждой 😊 Чувствую себя прекрасно!',
+    date: 'Вчера',
+    time: '19:45',
+    likes: 24,
+    comments: 8,
+    week: 23,
+    category: 'photo',
+    image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/default-placeholder.png'
+  },
+  {
+    id: '3',
+    type: 'tracker',
+    title: 'Трекер веса',
+    content: 'Вес набираю постепенно, врач говорит, что все в норме. Стараюсь питаться правильно и не переедать.',
+    date: '2 дня назад',
+    time: '10:00',
+    likes: 8,
+    comments: 2,
+    week: 23,
+    category: 'weight',
+    stats: {
+      value: '68.5',
+      unit: 'кг',
+      change: '+0.5 кг',
+      status: 'В норме'
+    }
+  }
 ];
 
 export const JournalScreen: React.FC = () => {
-  const [entries, setEntries] = useState<JournalEntry[]>([
-    {
-      id: '1',
-      date: new Date(2024, 8, 6),
-      text: 'Сегодня чувствую себя замечательно! Малыш активно шевелится, особенно после завтрака. Прошла пренатальную йогу - очень расслабляет.',
-      mood: 'great',
-      weight: 68.5,
-      symptoms: ['Легкая усталость'],
-    },
-    {
-      id: '2', 
-      date: new Date(2024, 8, 5),
-      text: 'Немного болела голова с утра, но после прогулки стало лучше. Врач сказал, что все показатели в норме.',
-      mood: 'good',
-      weight: 68.3,
-      symptoms: ['Головная боль'],
-    }
-  ]);
-  
+  const [entries, setEntries] = useState<JournalEntry[]>(sampleEntries);
   const [showNewEntryModal, setShowNewEntryModal] = useState(false);
-  const [newEntry, setNewEntry] = useState<Partial<JournalEntry>>({
-    text: '',
-    mood: undefined,
-    weight: undefined,
-    symptoms: [],
-  });
 
-  const handleSaveEntry = () => {
-    if (!newEntry.text?.trim() && !newEntry.mood && !newEntry.weight && newEntry.symptoms?.length === 0) {
-      Alert.alert('Ошибка', 'Добавьте хотя бы одну информацию в запись');
-      return;
-    }
-
-    const entry: JournalEntry = {
-      id: Date.now().toString(),
-      date: new Date(),
-      text: newEntry.text || '',
-      mood: newEntry.mood,
-      weight: newEntry.weight,
-      symptoms: newEntry.symptoms || [],
-    };
-
-    setEntries([entry, ...entries]);
-    setNewEntry({ text: '', mood: undefined, weight: undefined, symptoms: [] });
-    setShowNewEntryModal(false);
-  };
-
-  const toggleSymptom = (symptom: string) => {
-    const symptoms = newEntry.symptoms || [];
-    if (symptoms.includes(symptom)) {
-      setNewEntry({
-        ...newEntry,
-        symptoms: symptoms.filter(s => s !== symptom)
-      });
-    } else {
-      setNewEntry({
-        ...newEntry,
-        symptoms: [...symptoms, symptom]
-      });
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'text': return 'heart';
+      case 'photo': return 'camera';
+      case 'tracker': return 'chart-bar';
+      default: return 'edit';
     }
   };
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('ru', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    });
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'text': return '#ec4899';
+      case 'photo': return '#10b981';
+      case 'tracker': return '#3b82f6';
+      default: return '#6b7280';
+    }
   };
 
-  const getMoodStats = () => {
-    const moodCounts = entries.reduce((acc, entry) => {
-      if (entry.mood) {
-        acc[entry.mood] = (acc[entry.mood] || 0) + 1;
-      }
-      return acc;
-    }, {} as Record<string, number>);
-
-    const total = Object.values(moodCounts).reduce((sum, count) => sum + count, 0);
-    return { moodCounts, total };
-  };
-
-  const getAverageWeight = () => {
-    const weights = entries.filter(e => e.weight).map(e => e.weight!);
-    if (weights.length === 0) return 0;
-    return weights.reduce((sum, weight) => sum + weight, 0) / weights.length;
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'baby': return 'baby';
+      case 'photo': return 'image';
+      case 'weight': return 'weight';
+      default: return 'edit';
+    }
   };
 
   const renderEntry = (entry: JournalEntry) => {
-    const mood = moodOptions.find(m => m.id === entry.mood);
+    const typeColor = getTypeColor(entry.type);
     
     return (
       <View key={entry.id} style={styles.entryCard}>
         <View style={styles.entryHeader}>
-          <Text style={styles.entryDate}>{formatDate(entry.date)}</Text>
-          {mood && (
-            <View style={[styles.moodBadge, { backgroundColor: mood.color }]}>
-              <Text style={styles.moodEmoji}>{mood.emoji}</Text>
-              <Text style={styles.moodLabel}>{mood.label}</Text>
+          <View style={styles.entryTitleRow}>
+            <View style={[styles.typeIcon, { backgroundColor: typeColor }]}>
+              <FontAwesome5 name={getTypeIcon(entry.type) as keyof typeof FontAwesome5.glyphMap} size={16} color="#ffffff" />
             </View>
-          )}
+            <View style={styles.entryTitleContainer}>
+              <Text style={styles.entryTitle}>{entry.title}</Text>
+              <Text style={styles.entryDateTime}>{entry.date}, {entry.time}</Text>
+            </View>
+          </View>
+          <TouchableOpacity style={styles.moreButton}>
+            <Text style={styles.moreButtonText}>⋯</Text>
+          </TouchableOpacity>
         </View>
 
-        {entry.text && (
-          <Text style={styles.entryText}>{entry.text}</Text>
+        {entry.image && (
+          <Image source={{ uri: entry.image }} style={styles.entryImage} />
         )}
 
-        <View style={styles.entryMetrics}>
-          {entry.weight && (
-            <View style={styles.metricItem}>
-              <Text style={styles.metricLabel}>Вес:</Text>
-              <Text style={styles.metricValue}>{entry.weight} кг</Text>
+        {entry.stats && (
+          <View style={[styles.statsContainer, { backgroundColor: typeColor + '20' }]}>
+            <View style={styles.statsRow}>
+              <Text style={styles.statsLabel}>Текущий вес</Text>
+              <Text style={[styles.statsValue, { color: typeColor }]}>
+                {entry.stats.value} {entry.stats.unit}
+              </Text>
             </View>
-          )}
+            <View style={styles.statsSubRow}>
+              <Text style={styles.statsChange}>Прибавка за неделю: {entry.stats.change}</Text>
+              <Text style={[styles.statsStatus, { color: '#10b981' }]}>{entry.stats.status}</Text>
+            </View>
+            <View style={styles.progressBar}>
+              <View style={[styles.progressFill, { width: '65%', backgroundColor: typeColor }]} />
+            </View>
+          </View>
+        )}
 
-          {entry.symptoms.length > 0 && (
-            <View style={styles.symptomsContainer}>
-              <Text style={styles.symptomsLabel}>Симптомы:</Text>
-              <View style={styles.symptomsChips}>
-                {entry.symptoms.map((symptom, index) => (
-                  <View key={index} style={styles.symptomChip}>
-                    <Text style={styles.symptomChipText}>{symptom}</Text>
-                  </View>
-                ))}
-              </View>
+        <Text style={styles.entryContent}>{entry.content}</Text>
+
+        <View style={styles.entryFooter}>
+          <View style={styles.entryActions}>
+            <TouchableOpacity style={styles.actionButton}>
+              <FontAwesome5 name="heart" size={14} color="#ec4899" />
+              <Text style={styles.actionCount}>{entry.likes}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.actionButton}>
+              <FontAwesome5 name="comments" size={14} color="#3b82f6" />
+              <Text style={styles.actionCount}>{entry.comments}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.actionButton}>
+              <FontAwesome5 name="share-alt" size={14} color="#6b7280" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.entryCategory}>
+            <View style={[styles.categoryIcon, { backgroundColor: typeColor + '20' }]}>
+              <FontAwesome5 name={getCategoryIcon(entry.category) as keyof typeof FontAwesome5.glyphMap} size={12} color={typeColor} />
             </View>
-          )}
+            <Text style={styles.categoryText}>{entry.week} неделя</Text>
+          </View>
         </View>
       </View>
     );
   };
 
-  const { moodCounts, total } = getMoodStats();
-  const averageWeight = getAverageWeight();
-
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Дневник беременности</Text>
-        <TouchableOpacity 
-          style={styles.addButton}
-          onPress={() => setShowNewEntryModal(true)}
-        >
-          <Text style={styles.addButtonText}>+ Запись</Text>
-        </TouchableOpacity>
+        <View style={styles.headerLeft}>
+          <TouchableOpacity style={styles.backButton}>
+            <FontAwesome5 name="arrow-left" size={16} color="#ec4899" />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.headerTitle}>Мой дневник</Text>
+            <Text style={styles.headerSubtitle}>Записи и воспоминания</Text>
+          </View>
+        </View>
+        <View style={styles.headerRight}>
+          <TouchableOpacity style={styles.headerButton}>
+            <FontAwesome5 name="search" size={16} color="#10b981" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.headerButton}>
+            <FontAwesome5 name="cog" size={16} color="#10b981" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Stats Section */}
-        <View style={styles.statsSection}>
-          <Text style={styles.statsTitle}>Статистика</Text>
-          
-          <View style={styles.statsCards}>
+        <LinearGradient
+          colors={['#fef7f0', '#fdf2f8']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.statsSection}
+        >
+          <View style={styles.statsGrid}>
             <View style={styles.statCard}>
-              <Text style={styles.statValue}>{entries.length}</Text>
-              <Text style={styles.statLabel}>записей</Text>
+              <Text style={[styles.statValue, { color: '#ec4899' }]}>47</Text>
+              <Text style={styles.statLabel}>Записей</Text>
             </View>
-            
             <View style={styles.statCard}>
-              <Text style={styles.statValue}>{averageWeight.toFixed(1)}</Text>
-              <Text style={styles.statLabel}>средний вес</Text>
+              <Text style={[styles.statValue, { color: '#10b981' }]}>23</Text>
+              <Text style={styles.statLabel}>Фото</Text>
             </View>
-            
             <View style={styles.statCard}>
-              <Text style={styles.statValue}>
-                {total > 0 ? Math.round((moodCounts.great || 0) / total * 100) : 0}%
-              </Text>
-              <Text style={styles.statLabel}>хорошее настроение</Text>
+              <Text style={[styles.statValue, { color: '#3b82f6' }]}>12</Text>
+              <Text style={styles.statLabel}>Треков</Text>
+            </View>
+          </View>
+        </LinearGradient>
+
+        {/* Quick Add Section */}
+        <View style={styles.quickAddSection}>
+          <View style={styles.quickAddContainer}>
+            <Text style={styles.quickAddTitle}>Быстрое добавление</Text>
+            <View style={styles.quickAddButtons}>
+              <TouchableOpacity style={styles.quickAddButton}>
+                <View style={[styles.quickAddIcon, { backgroundColor: '#fce7f3' }]}>
+                  <FontAwesome5 name="edit" size={16} color="#ec4899" />
+                </View>
+                <Text style={styles.quickAddLabel}>Текст</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.quickAddButton}>
+                <View style={[styles.quickAddIcon, { backgroundColor: '#d1fae5' }]}>
+                  <FontAwesome5 name="camera" size={16} color="#10b981" />
+                </View>
+                <Text style={styles.quickAddLabel}>Фото</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.quickAddButton}>
+                <View style={[styles.quickAddIcon, { backgroundColor: '#dbeafe' }]}>
+                  <FontAwesome5 name="chart-bar" size={16} color="#3b82f6" />
+                </View>
+                <Text style={styles.quickAddLabel}>Трекер</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
 
-        {/* Mood Chart */}
-        {total > 0 && (
-          <View style={styles.moodChart}>
-            <Text style={styles.chartTitle}>Настроение за последнее время</Text>
-            <View style={styles.moodBars}>
-              {moodOptions.map(mood => {
-                const count = moodCounts[mood.id] || 0;
-                const percentage = total > 0 ? (count / total) * 100 : 0;
-                
-                return (
-                  <View key={mood.id} style={styles.moodBar}>
-                    <View style={styles.moodBarInfo}>
-                      <Text style={styles.moodBarEmoji}>{mood.emoji}</Text>
-                      <Text style={styles.moodBarLabel}>{mood.label}</Text>
-                    </View>
-                    <View style={styles.moodBarTrack}>
-                      <View 
-                        style={[
-                          styles.moodBarFill, 
-                          { width: `${percentage}%`, backgroundColor: mood.color }
-                        ]} 
-                      />
-                    </View>
-                    <Text style={styles.moodBarCount}>{count}</Text>
-                  </View>
-                );
-              })}
+        {/* Entries Section */}
+        <View style={styles.entriesSection}>
+          <View style={styles.entriesHeader}>
+            <Text style={styles.entriesTitle}>Последние записи</Text>
+            <View style={styles.filterButtons}>
+              <TouchableOpacity style={[styles.filterButton, styles.filterButtonActive]}>
+                <Text style={[styles.filterButtonText, styles.filterButtonTextActive]}>Все</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.filterButton}>
+                <Text style={styles.filterButtonText}>Сегодня</Text>
+              </TouchableOpacity>
             </View>
           </View>
-        )}
 
-        {/* Entries List */}
-        <View style={styles.entriesSection}>
-          <Text style={styles.entriesTitle}>Записи</Text>
-          {entries.length > 0 ? (
-            entries.map(renderEntry)
-          ) : (
-            <View style={styles.emptyState}>
-              <Text style={styles.emptyStateEmoji}>📝</Text>
-              <Text style={styles.emptyStateTitle}>Пока нет записей</Text>
-              <Text style={styles.emptyStateText}>
-                Создайте первую запись, чтобы начать отслеживать свое самочувствие
-              </Text>
-            </View>
-          )}
+          <View style={styles.entriesList}>
+            {entries.map(renderEntry)}
+          </View>
+
+          <View style={styles.loadMoreContainer}>
+            <TouchableOpacity style={styles.loadMoreButton}>
+              <Text style={styles.loadMoreText}>Загрузить еще записи</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={styles.bottomPadding} />
       </ScrollView>
 
-      {/* New Entry Modal */}
-      <Modal
-        visible={showNewEntryModal}
-        animationType="slide"
-        presentationStyle="pageSheet"
-        onRequestClose={() => setShowNewEntryModal(false)}
-      >
-        <SafeAreaView style={styles.modalContainer}>
-          <View style={styles.modalHeader}>
-            <TouchableOpacity onPress={() => setShowNewEntryModal(false)}>
-              <Text style={styles.modalCancelButton}>Отмена</Text>
-            </TouchableOpacity>
-            <Text style={styles.modalTitle}>Новая запись</Text>
-            <TouchableOpacity onPress={handleSaveEntry}>
-              <Text style={styles.modalSaveButton}>Сохранить</Text>
-            </TouchableOpacity>
-          </View>
-
-          <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
-            {/* Text Input */}
-            <View style={styles.inputSection}>
-              <Text style={styles.inputLabel}>Как дела? Что чувствуешь?</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder="Расскажи о своем дне, ощущениях, мыслях..."
-                placeholderTextColor="#9ca3af"
-                multiline
-                numberOfLines={4}
-                value={newEntry.text}
-                onChangeText={(text) => setNewEntry({ ...newEntry, text })}
-              />
-            </View>
-
-            {/* Mood Selector */}
-            <View style={styles.inputSection}>
-              <Text style={styles.inputLabel}>Настроение</Text>
-              <View style={styles.moodSelector}>
-                {moodOptions.map(mood => (
-                  <TouchableOpacity
-                    key={mood.id}
-                    style={[
-                      styles.moodOption,
-                      newEntry.mood === mood.id && styles.selectedMoodOption
-                    ]}
-                    onPress={() => setNewEntry({ ...newEntry, mood: mood.id as any })}
-                  >
-                    <Text style={styles.moodOptionEmoji}>{mood.emoji}</Text>
-                    <Text style={styles.moodOptionLabel}>{mood.label}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-
-            {/* Weight Input */}
-            <View style={styles.inputSection}>
-              <Text style={styles.inputLabel}>Вес (кг)</Text>
-              <TextInput
-                style={styles.weightInput}
-                placeholder="68.5"
-                placeholderTextColor="#9ca3af"
-                keyboardType="decimal-pad"
-                value={newEntry.weight?.toString() || ''}
-                onChangeText={(text) => {
-                  const weight = parseFloat(text);
-                  setNewEntry({ ...newEntry, weight: isNaN(weight) ? undefined : weight });
-                }}
-              />
-            </View>
-
-            {/* Symptoms Selector */}
-            <View style={styles.inputSection}>
-              <Text style={styles.inputLabel}>Симптомы (выберите подходящие)</Text>
-              <View style={styles.symptomsSelector}>
-                {commonSymptoms.map(symptom => (
-                  <TouchableOpacity
-                    key={symptom}
-                    style={[
-                      styles.symptomSelector,
-                      (newEntry.symptoms || []).includes(symptom) && styles.selectedSymptom
-                    ]}
-                    onPress={() => toggleSymptom(symptom)}
-                  >
-                    <Text style={[
-                      styles.symptomSelectorText,
-                      (newEntry.symptoms || []).includes(symptom) && styles.selectedSymptomText
-                    ]}>
-                      {symptom}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-          </ScrollView>
-        </SafeAreaView>
-      </Modal>
+      {/* Floating Add Button */}
+      <TouchableOpacity style={styles.floatingAddButton}>
+        <FontAwesome5 name="plus" size={24} color="#ffffff" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -360,63 +296,80 @@ export const JournalScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0fdfa',
+    backgroundColor: '#fef7f0',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     paddingVertical: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
+    borderBottomColor: '#fce7f3',
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#fdf2f8',
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: '#ec4899',
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontWeight: '600',
     color: '#1f2937',
   },
-  addButton: {
-    backgroundColor: '#10b981',
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+  headerSubtitle: {
+    fontSize: 12,
+    color: '#6b7280',
   },
-  addButtonText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: 'bold',
+  headerRight: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  headerButton: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#f0fdfa',
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerButtonText: {
+    fontSize: 16,
   },
   scrollView: {
     flex: 1,
   },
   statsSection: {
-    padding: 20,
-    backgroundColor: '#ffffff',
-    marginBottom: 12,
+    paddingHorizontal: 24,
+    paddingVertical: 16,
   },
-  statsTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1f2937',
-    marginBottom: 16,
-  },
-  statsCards: {
+  statsGrid: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 16,
   },
   statCard: {
     flex: 1,
-    backgroundColor: '#f0fdfa',
-    borderRadius: 12,
-    padding: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    borderRadius: 16,
+    padding: 12,
     alignItems: 'center',
   },
   statValue: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#059669',
     marginBottom: 4,
   },
   statLabel: {
@@ -424,277 +377,281 @@ const styles = StyleSheet.create({
     color: '#6b7280',
     textAlign: 'center',
   },
-  moodChart: {
-    backgroundColor: '#ffffff',
-    padding: 20,
+  quickAddSection: {
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+  },
+  quickAddContainer: {
+    backgroundColor: '#fbcfe8',
+    borderRadius: 16,
+    padding: 16,
+  },
+  quickAddTitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#1f2937',
     marginBottom: 12,
   },
-  chartTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#1f2937',
-    marginBottom: 16,
-  },
-  moodBars: {
+  quickAddButtons: {
+    flexDirection: 'row',
     gap: 12,
   },
-  moodBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  moodBarInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: 80,
-  },
-  moodBarEmoji: {
-    fontSize: 16,
-    marginRight: 6,
-  },
-  moodBarLabel: {
-    fontSize: 12,
-    color: '#6b7280',
-  },
-  moodBarTrack: {
+  quickAddButton: {
     flex: 1,
-    height: 8,
-    backgroundColor: '#f3f4f6',
-    borderRadius: 4,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: 12,
+    padding: 12,
+    alignItems: 'center',
+    gap: 8,
   },
-  moodBarFill: {
-    height: 8,
-    borderRadius: 4,
+  quickAddIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  moodBarCount: {
+  quickAddIconText: {
+    fontSize: 16,
+  },
+  quickAddLabel: {
     fontSize: 12,
-    color: '#6b7280',
-    width: 20,
-    textAlign: 'right',
+    fontWeight: '500',
+    color: '#1f2937',
   },
   entriesSection: {
-    backgroundColor: '#ffffff',
-    padding: 20,
+    paddingHorizontal: 24,
+    paddingBottom: 24,
   },
-  entriesTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1f2937',
-    marginBottom: 16,
-  },
-  entryCard: {
-    backgroundColor: '#f9fafb',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    borderLeftWidth: 4,
-    borderLeftColor: '#10b981',
-  },
-  entryHeader: {
+  entriesHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 12,
-  },
-  entryDate: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#374151',
-  },
-  moodBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 16,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  moodEmoji: {
-    fontSize: 14,
-    marginRight: 4,
-  },
-  moodLabel: {
-    fontSize: 12,
-    color: '#ffffff',
-    fontWeight: '500',
-  },
-  entryText: {
-    fontSize: 14,
-    color: '#374151',
-    lineHeight: 20,
-    marginBottom: 12,
-  },
-  entryMetrics: {
-    gap: 8,
-  },
-  metricItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  metricLabel: {
-    fontSize: 12,
-    color: '#6b7280',
-    marginRight: 8,
-  },
-  metricValue: {
-    fontSize: 12,
-    color: '#059669',
-    fontWeight: '500',
-  },
-  symptomsContainer: {
-    gap: 8,
-  },
-  symptomsLabel: {
-    fontSize: 12,
-    color: '#6b7280',
-  },
-  symptomsChips: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-  },
-  symptomChip: {
-    backgroundColor: '#fef2f2',
-    borderRadius: 12,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  symptomChipText: {
-    fontSize: 10,
-    color: '#dc2626',
-    fontWeight: '500',
-  },
-  emptyState: {
-    alignItems: 'center',
-    paddingVertical: 40,
-  },
-  emptyStateEmoji: {
-    fontSize: 48,
     marginBottom: 16,
   },
-  emptyStateTitle: {
+  entriesTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '600',
     color: '#1f2937',
+  },
+  filterButtons: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  filterButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 20,
+    backgroundColor: '#f3f4f6',
+  },
+  filterButtonActive: {
+    backgroundColor: '#fdf2f8',
+    borderWidth: 1,
+    borderColor: '#fce7f3',
+  },
+  filterButtonText: {
+    fontSize: 12,
+    color: '#6b7280',
+  },
+  filterButtonTextActive: {
+    color: '#ec4899',
+    fontWeight: '500',
+  },
+  entriesList: {
+    gap: 16,
+  },
+  entryCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#fce7f3',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  entryHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  entryTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flex: 1,
+  },
+  typeIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  typeIconText: {
+    fontSize: 16,
+  },
+  entryTitleContainer: {
+    flex: 1,
+  },
+  entryTitle: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#1f2937',
+    marginBottom: 2,
+  },
+  entryDateTime: {
+    fontSize: 12,
+    color: '#6b7280',
+  },
+  moreButton: {
+    width: 32,
+    height: 32,
+    backgroundColor: '#f3f4f6',
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  moreButtonText: {
+    fontSize: 16,
+    color: '#9ca3af',
+  },
+  entryImage: {
+    width: '100%',
+    height: 192,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  statsContainer: {
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 12,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 8,
   },
-  emptyStateText: {
+  statsLabel: {
     fontSize: 14,
+    fontWeight: '500',
+    color: '#1f2937',
+  },
+  statsValue: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  statsSubRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  statsChange: {
+    fontSize: 12,
     color: '#6b7280',
-    textAlign: 'center',
+  },
+  statsStatus: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  progressBar: {
+    height: 8,
+    backgroundColor: '#ffffff',
+    borderRadius: 4,
+  },
+  progressFill: {
+    height: 8,
+    borderRadius: 4,
+  },
+  entryContent: {
+    fontSize: 14,
+    color: '#374151',
     lineHeight: 20,
+    marginBottom: 12,
+  },
+  entryFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  entryActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  actionIcon: {
+    fontSize: 14,
+  },
+  actionCount: {
+    fontSize: 12,
+    color: '#6b7280',
+  },
+  entryCategory: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  categoryIcon: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  categoryIconText: {
+    fontSize: 12,
+  },
+  categoryText: {
+    fontSize: 12,
+    color: '#6b7280',
+  },
+  loadMoreContainer: {
+    alignItems: 'center',
+    paddingVertical: 32,
+  },
+  loadMoreButton: {
+    backgroundColor: '#fbcfe8',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 20,
+  },
+  loadMoreText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#1f2937',
   },
   bottomPadding: {
     height: 100,
   },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-  },
-  modalHeader: {
-    flexDirection: 'row',
+  floatingAddButton: {
+    position: 'absolute',
+    bottom: 80,
+    right: 24,
+    width: 64,
+    height: 64,
+    backgroundColor: '#ec4899',
+    borderRadius: 32,
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
-  modalCancelButton: {
-    fontSize: 16,
-    color: '#6b7280',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1f2937',
-  },
-  modalSaveButton: {
-    fontSize: 16,
-    color: '#10b981',
-    fontWeight: 'bold',
-  },
-  modalContent: {
-    flex: 1,
-    padding: 20,
-  },
-  inputSection: {
-    marginBottom: 24,
-  },
-  inputLabel: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#1f2937',
-    marginBottom: 12,
-  },
-  textInput: {
-    backgroundColor: '#f9fafb',
-    borderRadius: 12,
-    padding: 16,
-    fontSize: 14,
-    color: '#1f2937',
-    minHeight: 100,
-    textAlignVertical: 'top',
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-  },
-  moodSelector: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  moodOption: {
-    flex: 1,
-    alignItems: 'center',
-    padding: 16,
-    borderRadius: 12,
-    backgroundColor: '#f9fafb',
-    borderWidth: 2,
-    borderColor: '#e5e7eb',
-  },
-  selectedMoodOption: {
-    borderColor: '#10b981',
-    backgroundColor: '#f0fdf4',
-  },
-  moodOptionEmoji: {
+  floatingAddButtonText: {
     fontSize: 24,
-    marginBottom: 8,
-  },
-  moodOptionLabel: {
-    fontSize: 12,
-    color: '#374151',
-    fontWeight: '500',
-  },
-  weightInput: {
-    backgroundColor: '#f9fafb',
-    borderRadius: 12,
-    padding: 16,
-    fontSize: 14,
-    color: '#1f2937',
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-  },
-  symptomsSelector: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  symptomSelector: {
-    backgroundColor: '#f9fafb',
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-  },
-  selectedSymptom: {
-    backgroundColor: '#fef2f2',
-    borderColor: '#fca5a5',
-  },
-  symptomSelectorText: {
-    fontSize: 12,
-    color: '#6b7280',
-    fontWeight: '500',
-  },
-  selectedSymptomText: {
-    color: '#dc2626',
+    color: '#ffffff',
+    fontWeight: 'bold',
   },
 });
