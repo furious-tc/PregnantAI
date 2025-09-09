@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  ImageSourcePropType,
   Animated,
   TextInput,
   Alert,
@@ -41,7 +42,7 @@ const OnboardingCard = ({
   progressAnim,
   children
 }: {
-  image: string,
+  image: ImageSourcePropType | string,
   step: number,
   totalSteps: number,
   title: string,
@@ -52,7 +53,7 @@ const OnboardingCard = ({
   <View style={styles.visualCard}>
     <View style={styles.visualCardImageWrapper}>
       <Image
-        source={{ uri: image }}
+        source={typeof image === 'string' ? { uri: image } : image}
         style={styles.visualCardImage}
         resizeMode="cover"
       />
@@ -1116,7 +1117,7 @@ export const OnboardingScreen: React.FC = () => {
           >
             <View style={styles.onboardingContent}>
               <OnboardingCard
-                image={'https://storage.googleapis.com/uxpilot-auth.appspot.com/8a42a5716e-f2f6be344a51add23326.png'}
+                image={require('../../../../assets/images/onboarding_preview.png')}
                 step={currentScreen}
                 totalSteps={4}
                 title={getStepTitle()}
@@ -1237,7 +1238,7 @@ export const OnboardingScreen: React.FC = () => {
           >
             <View style={styles.onboardingContent}>
               <OnboardingCard
-                image={'https://storage.googleapis.com/uxpilot-auth.appspot.com/d67032ddd3-1c2867ad7da78e6fd8e3.png'}
+                image={require('../../../../assets/images/onboarding_track.png')}
                 step={currentScreen}
                 totalSteps={4}
                 title={getStepTitle()}
@@ -1298,7 +1299,7 @@ export const OnboardingScreen: React.FC = () => {
           >
             <View style={styles.onboardingContent}>
               <OnboardingCard
-                image={'https://storage.googleapis.com/uxpilot-auth.appspot.com/6a15c26b7b-57c194c53675f07ef759.png'}
+                image={require('../../../../assets/images/onboarding_support.png')}
                 step={currentScreen}
                 totalSteps={4}
                 title={getStepTitle()}
@@ -2576,8 +2577,9 @@ const styles = StyleSheet.create({
     shadowRadius: 24,
     elevation: 12,
     padding: 0,
-    width: Math.min(width - 32, 360),
-    height: Math.min(width - 32, 360),
+    // фиксированные целочисленные размеры для чётких краёв при масштабировании
+    width: Math.round(Math.min(width - 32, 360)),
+    height: Math.round(Math.min(width - 32, 360)),
     alignSelf: 'center',
     overflow: 'hidden', // чтобы картинка не выходила за края
   },
