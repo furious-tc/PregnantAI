@@ -6,6 +6,7 @@ import {
   SafeAreaView, 
   StyleSheet, 
   TouchableOpacity,
+  Pressable,
   Image,
   Animated
 } from 'react-native';
@@ -19,6 +20,7 @@ export const DashboardScreen: React.FC = () => {
   const [showAIChat, setShowAIChat] = useState(false);
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
+  const [showAITooltip, setShowAITooltip] = useState(false);
   
   // Animation for baby image
   const floatAnim = useRef(new Animated.Value(0)).current;
@@ -204,7 +206,7 @@ export const DashboardScreen: React.FC = () => {
                     colors={['#fdf2f8', '#ffffff']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
-                    style={styles.tipCard}
+                    style={[styles.tipCard, { borderColor: '#fce7f3' }]}
                   >
                     <View style={styles.tipIconContainer}>
                       <View style={styles.nutritionTipIcon}>
@@ -222,7 +224,7 @@ export const DashboardScreen: React.FC = () => {
                     colors={['#f0fdfa', '#ffffff']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
-                    style={styles.tipCard}
+                    style={[styles.tipCard, { borderColor: '#a7f3d0' }]}
                   >
                     <View style={styles.tipIconContainer}>
                       <View style={styles.exerciseTipIcon}>
@@ -240,7 +242,7 @@ export const DashboardScreen: React.FC = () => {
                     colors={['#f0f9ff', '#ffffff']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
-                    style={styles.tipCard}
+                    style={[styles.tipCard, { borderColor: '#dbeafe' }]}
                   >
                     <View style={styles.tipIconContainer}>
                       <View style={styles.sleepTipIcon}>
@@ -463,7 +465,7 @@ export const DashboardScreen: React.FC = () => {
                   colors={['#fef2f2', '#fce7f3']}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
-                  style={styles.healthCard}
+                  style={[styles.healthCard, { borderColor: '#fce7f3' }]}
                 >
                   <View style={styles.metricHeader}>
                     <View style={styles.metricInfo}>
@@ -488,7 +490,7 @@ export const DashboardScreen: React.FC = () => {
                   colors={['#eff6ff', '#e0f2fe']}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
-                  style={styles.healthCard}
+                  style={[styles.healthCard, { borderColor: '#dbeafe' }]}
                 >
                   <View style={styles.metricHeader}>
                     <View style={styles.metricInfo}>
@@ -650,10 +652,13 @@ export const DashboardScreen: React.FC = () => {
               }
             ]}
           >
-            <TouchableOpacity 
+            <Pressable 
               style={styles.floatingAIButton}
               onPress={handleAIButtonPress}
-              activeOpacity={0.8}
+              onHoverIn={() => setShowAITooltip(true)}
+              onHoverOut={() => setShowAITooltip(false)}
+              onPressIn={() => setShowAITooltip(true)}
+              onPressOut={() => setShowAITooltip(false)}
             >
               <LinearGradient
                 colors={['#ec4899', '#8b5cf6']}
@@ -663,10 +668,12 @@ export const DashboardScreen: React.FC = () => {
               >
                 <FontAwesome5 name="robot" size={18} color="#ffffff" solid />
               </LinearGradient>
-            </TouchableOpacity>
-            <View style={styles.aiTooltip}>
-              <Text style={styles.aiTooltipText}>AI помощник</Text>
-            </View>
+            </Pressable>
+            {showAITooltip && (
+              <View style={styles.aiTooltip}>
+                <Text style={styles.aiTooltipText}>AI помощник</Text>
+              </View>
+            )}
           </Animated.View>
 
           {/* AI Chat Modal */}
@@ -1548,7 +1555,7 @@ const styles = StyleSheet.create({
   },
   floatingAIContainer: {
     position: 'absolute',
-    bottom: 80, // Выше bottom navigation как в оригинале
+    bottom: 48, // ещё ниже кнопка
     right: 24,
     zIndex: 50,
   },
